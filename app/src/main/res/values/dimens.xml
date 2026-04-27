@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- CORNER RADII — Standardized Design System      -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <dimen name="corner_card">20dp</dimen>
+    <dimen name="corner_button">14dp</dimen>
+    <dimen name="corner_chip">8dp</dimen>
+    <dimen name="corner_input">12dp</dimen>
+    <dimen name="corner_dialog">24dp</dimen>
+    <dimen name="corner_bottom_sheet">28dp</dimen>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- ELEVATIONS — Card hierarchy                    -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <dimen name="elevation_hero">12dp</dimen>
+    <dimen name="elevation_primary">8dp</dimen>
+    <dimen name="elevation_secondary">4dp</dimen>
+    <dimen name="elevation_flat">0dp</dimen>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SPACING — 4dp grid system                      -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <dimen name="spacing_xxs">2dp</dimen>
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+    <dimen name="spacing_xxl">48dp</dimen>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- TOUCH TARGETS — Accessibility (min 48dp)       -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <dimen name="touch_target_min">48dp</dimen>
+    <dimen name="touch_target_comfortable">56dp</dimen>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- TYPOGRAPHY — Font sizes                        -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <dimen name="text_h1">28sp</dimen>
+    <dimen name="text_h2">24sp</dimen>
+    <dimen name="text_h3">20sp</dimen>
+    <dimen name="text_h4">18sp</dimen>
+    <dimen name="text_h5">16sp</dimen>
+    <dimen name="text_h6">14sp</dimen>
+    <dimen name="text_body1">16sp</dimen>
+    <dimen name="text_body2">14sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+    <dimen name="text_overline">10sp</dimen>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- COMPONENT SIZES                                -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <dimen name="button_height">52dp</dimen>
+    <dimen name="bottom_nav_height">64dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="screen_padding">20dp</dimen>
+    <dimen name="icon_size_sm">20dp</dimen>
+    <dimen name="icon_size_md">24dp</dimen>
+    <dimen name="icon_size_lg">32dp</dimen>
+    <dimen name="wellness_ring_size">160dp</dimen>
+    <dimen name="wellness_ring_stroke">12dp</dimen>
+</resources>

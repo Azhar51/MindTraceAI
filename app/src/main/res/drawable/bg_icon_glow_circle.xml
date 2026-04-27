@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Glowing circle for icon backgrounds (48dp lock, etc) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:centerColor="#1A7C8FFF"
+        android:endColor="#007C8FFF"
+        android:gradientRadius="48dp" />
+    <size android:width="96dp" android:height="96dp" />
+</shape>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_overview"
+        android:icon="@android:drawable/ic_menu_view"
+        android:title="Overview" />
+    <item
+        android:id="@+id/nav_usage"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:title="Usage" />
+    <item
+        android:id="@+id/nav_mood"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="Mood" />
+    <item
+        android:id="@+id/nav_tasks"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="Tasks" />
+    <item
+        android:id="@+id/nav_insights"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="Insights" />
+</menu>

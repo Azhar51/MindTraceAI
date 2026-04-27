@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="primary">#3B82F6</color>
+    <color name="primary_variant">#2563EB</color>
+    <color name="secondary">#38BDF8</color>
+
+    <color name="background">#0B0F14</color>
+    <color name="surface">#121821</color>
+    <color name="surface_variant">#18212D</color>
+    <color name="outline">#1F2937</color>
+
+    <color name="text_main">#E5E7EB</color>
+    <color name="text_secondary">#9CA3AF</color>
+    <color name="text_tertiary">#6B7280</color>
+    <color name="error">#EF4444</color>
+    <color name="crisis_alert">#EF4444</color>
+
+    <color name="calm_green">#22C55E</color>
+    <color name="calm_blue">#60A5FA</color>
+    <color name="calm_gray">#334155</color>
+
+    <color name="state_badge_bg">#182231</color>
+    <color name="warning_bg">#3A151D</color>
+    <color name="warning_red">#FB7185</color>
+
+    <color name="risk_low">#22C55E</color>
+    <color name="risk_low_bg">#10261A</color>
+    <color name="risk_moderate">#F59E0B</color>
+    <color name="risk_moderate_bg">#382809</color>
+    <color name="risk_high">#EF4444</color>
+    <color name="risk_high_bg">#381417</color>
+
+    <color name="ring_track">#243041</color>
+    <color name="ring_inner">#0F141C</color>
+    <color name="sparkline_fill">#403B82F6</color>
+    <color name="sparkline_stroke">#7CB8FF</color>
+
+    <!-- Usage Tracker -->
+    <color name="usage_delta_text">#8896B0</color>
+    <color name="usage_delta_up">#FF6B6B</color>
+    <color name="usage_delta_down">#4ADE80</color>
+    <color name="usage_score_high">#FF6B6B</color>
+    <color name="usage_score_medium">#D4A843</color>
+    <color name="usage_score_low">#4ADE80</color>
+
+    <!-- Onboarding — Dark premium palette -->
+    <color name="onboarding_bg">#0C1220</color>
+    <color name="onboarding_surface">#131D30</color>
+    <color name="onboarding_surface_alt">#161F33</color>
+    <color name="onboarding_outline">#1E2A42</color>
+    <color name="onboarding_heading">#E8ECF4</color>
+    <color name="onboarding_body">#8896B0</color>
+    <color name="onboarding_primary">#6C7FFF</color>
+    <color name="onboarding_primary_dark">#5468E0</color>
+    <color name="onboarding_selected_bg">#1C2747</color>
+    <color name="onboarding_selected_text">#93A8FF</color>
+    <color name="onboarding_selected_stroke">#4B63C9</color>
+    <color name="onboarding_unselected_bg">#151E30</color>
+    <color name="onboarding_unselected_text">#8896B0</color>
+    <color name="onboarding_unselected_stroke">#1E2A42</color>
+
+    <!-- Onboarding — Premium dark accents -->
+    <color name="onboarding_accent">#7C8FFF</color>
+    <color name="onboarding_accent_soft">#1C2747</color>
+    <color name="onboarding_step_label">#6B7A94</color>
+    <color name="onboarding_card_bg">#161F33</color>
+    <color name="onboarding_card_stroke">#1E2A42</color>
+    <color name="onboarding_slider_active">#7C8FFF</color>
+    <color name="onboarding_slider_inactive">#1E2A42</color>
+    <color name="onboarding_slider_thumb">#7C8FFF</color>
+    <color name="onboarding_progress_bg">#1A2540</color>
+    <color name="onboarding_progress_fill">#7C8FFF</color>
+    <color name="onboarding_helper">#6B7A94</color>
+    <color name="onboarding_divider">#1A2540</color>
+    <color name="onboarding_warning_bg">#2A1A10</color>
+    <color name="onboarding_warning_text">#F0A060</color>
+    <color name="onboarding_complete_bg">#0F2018</color>
+    <color name="onboarding_complete_accent">#4ADE80</color>
+    <color name="onboarding_switch_track">#1E2A42</color>
+    <color name="onboarding_switch_track_on">#3D4E80</color>
+    <color name="onboarding_switch_thumb_on">#7C8FFF</color>
+    <color name="onboarding_brand">#5C6ECC</color>
+    <color name="onboarding_footer_bg">#0E1525</color>
+
+    <!-- Task Category Colors -->
+    <color name="cat_mindfulness">#818CF8</color>
+    <color name="cat_journaling">#F59E0B</color>
+    <color name="cat_social">#F472B6</color>
+    <color name="cat_purpose">#34D399</color>
+    <color name="cat_detox">#FB923C</color>
+    <color name="cat_recovery">#60A5FA</color>
+    <color name="cat_focus">#A78BFA</color>
+
+    <!-- Gamification -->
+    <color name="xp_gold">#FBBF24</color>
+    <color name="streak_fire">#F97316</color>
+    <color name="badge_glow">#6366F1</color>
+    <color name="level_progress_bg">#1A2540</color>
+    <color name="level_progress_fill">#818CF8</color>
+
+    <!-- Crisis -->
+    <color name="crisis_bg">#1A0F0F</color>
+    <color name="crisis_accent">#F87171</color>
+    <color name="crisis_safe_green">#4ADE80</color>
+    <color name="crisis_card_bg">#1C1215</color>
+    <color name="crisis_text">#FCA5A5</color>
+
+    <!-- Exercise -->
+    <color name="breathe_in">#60A5FA</color>
+    <color name="breathe_out">#818CF8</color>
+    <color name="breathe_hold">#A78BFA</color>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SEMANTIC TOKENS — Design System 6.D.6          -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <color name="color_success">#22C55E</color>
+    <color name="color_success_bg">#0F261A</color>
+    <color name="color_success_text">#4ADE80</color>
+    <color name="color_warning">#F59E0B</color>
+    <color name="color_warning_bg">#261E0A</color>
+    <color name="color_warning_text">#FBBF24</color>
+    <color name="color_danger">#EF4444</color>
+    <color name="color_danger_bg">#260F0F</color>
+    <color name="color_danger_text">#FCA5A5</color>
+    <color name="color_info">#3B82F6</color>
+    <color name="color_info_bg">#0F1926</color>
+    <color name="color_info_text">#93C5FD</color>
+
+    <!-- Fulfilment Engine Colors -->
+    <color name="fulfilment_excellent">#22C55E</color>
+    <color name="fulfilment_good">#60A5FA</color>
+    <color name="fulfilment_moderate">#F59E0B</color>
+    <color name="fulfilment_low">#EF4444</color>
+    <color name="fulfilment_ring_track">#1A2540</color>
+
+    <!-- Shimmer Effect -->
+    <color name="shimmer_base">#121821</color>
+    <color name="shimmer_highlight">#1F2937</color>
+</resources>

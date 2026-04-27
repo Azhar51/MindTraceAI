@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium Signup Screen — Blueprint §2E1.3 -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#0A1128">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:src="@drawable/bg_glow_top"
+        android:scaleType="centerCrop"
+        android:alpha="0.5"
+        android:importantForAccessibility="no" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="80dp"
+            android:paddingBottom="32dp"
+            android:gravity="center_vertical">
+
+            <!-- Logo with glow -->
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="start">
+
+                <View
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_logo_glow"
+                    android:alpha="0.4" />
+
+                <FrameLayout
+                    android:id="@+id/ivLogo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_circle_dark"
+                    android:padding="18dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_mission_focus"
+                        app:tint="#7C8FFF"
+                        android:importantForAccessibility="no" />
+                </FrameLayout>
+            </FrameLayout>
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvSignupTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Begin your journey"
+                android:textColor="#E8ECF4"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium" />
+
+            <!-- Subtitle -->
+            <TextView
+                android:id="@+id/tvSignupSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Create your account to get started"
+                android:textColor="#8896B0"
+                android:textSize="14sp" />
+
+            <!-- Glassmorphism Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSignup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                app:cardBackgroundColor="#D9131D30"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="#1E2A42"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <!-- Name -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Full Name"
+                        app:hintTextColor="#7C8FFF"
+                        app:boxBackgroundMode="outline"
+                        app:boxBackgroundColor="#0F1729"
+                        app:boxStrokeColor="#7C8FFF"
+                        app:boxStrokeWidthFocused="1.5dp"
+                        app:errorTextColor="#FF6B6B"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:textColor="#E8ECF4"
+                            android:textSize="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Email -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:hint="Email"
+                        app:hintTextColor="#7C8FFF"
+                        app:boxBackgroundMode="outline"
+                        app:boxBackgroundColor="#0F1729"
+                        app:boxStrokeColor="#7C8FFF"
+                        app:boxStrokeWidthFocused="1.5dp"
+                        app:errorTextColor="#FF6B6B"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:inputType="textEmailAddress"
+                            android:textColor="#E8ECF4"
+                            android:textSize="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Password -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:hint="Password"
+                        app:hintTextColor="#7C8FFF"
+                        app:boxBackgroundMode="outline"
+                        app:boxBackgroundColor="#0F1729"
+                        app:boxStrokeColor="#7C8FFF"
+                        app:boxStrokeWidthFocused="1.5dp"
+                        app:passwordToggleEnabled="true"
+                        app:passwordToggleTint="#8896B0"
+                        app:errorTextColor="#FF6B6B"
+                        app:boxCornerRadiusTopStart="12dp"
+                        app:boxCornerRadiusTopEnd="12dp"
+                        app:boxCornerRadiusBottomStart="12dp"
+                        app:boxCornerRadiusBottomEnd="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:inputType="textPassword"
+                            android:textColor="#E8ECF4"
+                            android:textSize="15sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Password strength meter (animated gradient bar) -->
+                    <com.mindtrace.ai.ui.components.PasswordStrengthView
+                        android:id="@+id/password_strength"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="4dp" />
+
+                    <!-- CTA: Begin My Journey -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_signup"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="28dp"
+                        android:text="Begin My Journey"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"
+                        app:cornerRadius="14dp"
+                        app:backgroundTint="#7C8FFF" />
+
+                    <!-- Link to Login -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_link_login"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Already have an account? Sign in →"
+                        android:textColor="#8896B0"
+                        android:textAllCaps="false"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

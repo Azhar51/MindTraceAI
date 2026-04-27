@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- Allows querying installed packages (WhatsApp, YouTube) for launch intents on Android 11+ -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
+
+    <!-- Notifications (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Haptic feedback -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Re-schedule workers after reboot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Foreground service for crisis mode -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    
+    <!-- Exact alarm for daily reminders (API 31+) -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!-- Overlay permission for floating timer -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <application
+        android:name=".MindTraceApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MindTraceAI"
+        tools:targetApi="31">
+
+        <activity
+            android:name=".ui.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.SignupActivity" />
+        <activity android:name=".ui.PermissionActivity" />
+        <activity android:name=".ui.MainActivity" />
+        <activity
+            android:name=".ui.QuestionnaireActivity"
+            android:theme="@style/Theme.MindTraceAI.Onboarding" />
+        <activity android:name=".ui.DailyCheckInActivity" />
+        <activity android:name=".ui.DailyResetActivity" />
+        <activity android:name=".ui.CrisisActivity"
+            android:theme="@style/Theme.MindTraceAI" />
+        <activity android:name=".ui.WeeklyAssessmentActivity" />
+        <activity android:name=".ui.JournalActivity" />
+        <activity android:name=".ui.BreathingExerciseActivity"
+            android:theme="@style/Theme.MindTraceAI" />
+        <activity android:name=".ui.GroundingExerciseActivity"
+            android:theme="@style/Theme.MindTraceAI" />
+        <activity android:name=".ui.AppDetailActivity"
+            android:theme="@style/Theme.MindTraceAI" />
+        <activity android:name=".ui.FocusSessionActivity"
+            android:theme="@style/Theme.MindTraceAI" />
+        <activity android:name=".ui.FocusBlockActivity"
+            android:theme="@style/Theme.MindTraceAI"
+            android:launchMode="singleTask" />
+        <service android:name=".services.FocusBlockerService" android:foregroundServiceType="specialUse" />
+        <service android:name=".services.FloatingTimerService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
+            
+        <service android:name=".services.MindTraceAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!-- Phase 4: Notification response latency tracking -->
+        <service android:name=".services.MindTraceNotificationListener"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+
+        <activity android:name=".ui.OverUsageAlertActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask" />
+            
+        <activity android:name=".ui.FastChallengeActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask" />
+            
+        <activity android:name=".ui.DailyReportActivity"
+            android:theme="@style/Theme.MindTraceAI" />
+            
+        <activity android:name=".ui.FocusPanelActivity"
+            android:theme="@style/Theme.MindTraceAI" />
+            
+        <activity android:name=".ui.SafetyPlanActivity" />
+        <activity android:name=".ui.CrisisLockdownActivity"
+            android:theme="@style/Theme.MindTraceAI"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:excludeFromRecents="true" />
+            
+        <activity android:name=".ui.AiCoachActivity" android:exported="true"/>
+        <activity android:name=".ui.panel.HourlyReviewActivity" android:theme="@style/Theme.MindTraceAI" />
+        <!-- Boot receiver — re-schedule workers after reboot -->
+        <receiver
+            android:name=".services.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- FileProvider for data export sharing -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <!-- Notification action handler -->
+        <receiver
+            android:name=".services.NotificationActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.mindtrace.ai.ACTION_MARK_SAFE" />
+                <action android:name="com.mindtrace.ai.ACTION_SNOOZE_REMINDER" />
+                <action android:name="com.mindtrace.ai.ACTION_DISMISS" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

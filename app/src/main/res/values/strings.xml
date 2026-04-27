@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">MindTrace AI</string>
+    <string name="login_title">Welcome Back</string>
+    <string name="signup_title">Join MindTrace</string>
+    <string name="dashboard_title">Your Wellbeing</string>
+    <string name="permissions_title">Usage Access Required</string>
+    <string name="permissions_desc">To track your digital behavior and provide insights, we need your permission to access phone usage stats. This data remains on your device.</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="mood_question">How are you feeling right now?</string>
+    <string name="crisis_alert">We detected you might be going through a hard time.</string>
+    <string name="crisis_helpline_label">National Helpline:</string>
+    <string name="crisis_helpline_number">1-800-273-8255 (US)</string>
+    <string name="crisis_suggestion">Would you like to try a grounding exercise?</string>
+    <string name="task_list_title">Daily Focus Tasks</string>
+    <string name="accessibility_service_description">MindTrace uses Accessibility services to detect short-form video doomscrolling (Reels, Shorts) and block them to help you stay focused.</string>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- Phase 6: Trajectory & Trend Labels                            -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Trajectory labels (used in dashboard cards and notification body) -->
+    <string name="trajectory_rapidly_worsening">Rapidly Worsening</string>
+    <string name="trajectory_gradually_worsening">Gradually Worsening</string>
+    <string name="trajectory_stable">Stable</string>
+    <string name="trajectory_gradually_improving">Gradually Improving</string>
+    <string name="trajectory_rapidly_improving">Rapidly Improving</string>
+    <string name="trajectory_insufficient_data">Not Enough Data</string>
+
+    <!-- Trajectory card headers -->
+    <string name="trajectory_card_title">7-Day Trajectory</string>
+    <string name="trajectory_card_subtitle">Your risk trend over the past week</string>
+
+    <!-- Trajectory notification strings -->
+    <string name="trajectory_notification_title">📊 Your 7-day trend needs attention</string>
+    <string name="trajectory_notification_body">Your risk is rapidly worsening (now at %1$d%%). %2$s is rising fastest. Open MindTrace to review your trajectory and get a plan.</string>
+    <string name="trajectory_notification_action">Review Trend</string>
+
+    <!-- Trend insight card labels -->
+    <string name="trend_fastest_worsening">Fastest Rising</string>
+    <string name="trend_fastest_improving">Most Improved</string>
+    <string name="trend_confidence_label">Data Quality</string>
+    <string name="trend_top_driver_label">Top Risk Driver</string>
+    <string name="trend_feature_drift_label">Feature Drift</string>
+
+    <!-- Trend summary narratives -->
+    <string name="trend_narrative_improving">Encouragingly, your overall trend is improving.</string>
+    <string name="trend_narrative_worsening">Your trend is worsening — consider adjusting your routine.</string>
+    <string name="trend_narrative_stable">Your risk trend is stable. Consistency is key.</string>
+    <string name="trend_narrative_no_data">We need a few more days of data to show your trajectory.</string>
+
+    <!-- Risk category display names -->
+    <string name="category_digital_addiction">Digital Addiction</string>
+    <string name="category_stress_anxiety">Stress &amp; Anxiety</string>
+    <string name="category_depression">Depression</string>
+    <string name="category_social_isolation">Social Isolation</string>
+    <string name="category_sleep_disruption">Sleep Disruption</string>
+    <string name="category_low_fulfilment">Low Fulfilment</string>
+    <string name="category_overall">Overall Risk</string>
+
+    <!-- Crisis notification channel names -->
+    <string name="channel_crisis_alerts">Crisis Alerts</string>
+    <string name="channel_follow_up">Follow-up Check-ins</string>
+    <string name="channel_trajectory">Trend Insights</string>
+</resources>

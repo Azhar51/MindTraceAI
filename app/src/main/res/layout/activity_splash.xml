@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium Splash Screen — Blueprint §2E1.1 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_splash_radial">
+
+    <!-- Center content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- Logo with glow halo -->
+        <FrameLayout
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center">
+
+            <!-- Glow halo behind logo -->
+            <View
+                android:id="@+id/logoGlow"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_logo_glow"
+                android:alpha="0" />
+
+            <!-- Logo circle -->
+            <FrameLayout
+                android:id="@+id/logoContainer"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_circle_dark"
+                android:padding="28dp"
+                android:alpha="0">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_mission_focus"
+                    app:tint="#7C8FFF" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <!-- App name -->
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="MindTrace AI"
+            android:textColor="#E8ECF4"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
+            android:alpha="0" />
+
+        <!-- Tagline (fades in at 800ms) -->
+        <TextView
+            android:id="@+id/tvTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Understand. Transform. Thrive."
+            android:textColor="#8896B0"
+            android:textSize="16sp"
+            android:letterSpacing="0.1"
+            android:alpha="0" />
+
+        <!-- Loading dot pulse -->
+        <View
+            android:id="@+id/loadingDot"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/bg_loading_dot"
+            android:alpha="0.3" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MindTraceCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Category color strip -->
+        <View
+            android:id="@+id/view_category_strip"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:background="@color/cat_mindfulness" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Top row: icon + title + XP badge -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_task_icon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:gravity="center"
+                    android:text="🧘"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_task_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="Task Title"
+                    android:textColor="@color/text_main"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="Box Breathing" />
+
+                <TextView
+                    android:id="@+id/tv_task_xp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/card_background"
+                    android:paddingStart="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="3dp"
+                    android:text="+10 XP"
+                    android:textColor="@color/xp_gold"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    tools:text="+25 XP" />
+            </LinearLayout>
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/tv_task_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Description goes here."
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                tools:text="Breathe in 4s, hold 4s, out 4s. Repeat 6 cycles." />
+
+            <!-- Trigger reason: "Why: {reason}" — §2E1.5 -->
+            <TextView
+                android:id="@+id/tv_task_why"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="Why: Based on your stress score"
+                android:textColor="#8896B0"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:visibility="visible"
+                tools:text="Why: Your stress score is 4/5" />
+
+            <!-- Meta row: category + difficulty + duration + status -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_task_meta"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Detox | EASY | 5 min"
+                    android:textColor="@color/primary"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="Mindfulness | EASY | 5 min" />
+
+                <!-- Micro-intervention badge -->
+                <TextView
+                    android:id="@+id/tv_task_micro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/crisis_card_bg"
+                    android:paddingStart="6dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="6dp"
+                    android:paddingBottom="2dp"
+                    android:text="⚡ QUICK"
+                    android:textColor="@color/crisis_accent"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Action row: Complete + Skip buttons -->
+            <LinearLayout
+                android:id="@+id/layout_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_skip"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Skip"
+                    android:textColor="@color/text_tertiary"
+                    android:textSize="12sp"
+                    app:rippleColor="@color/outline" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_complete"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="Mark Complete"
+                    android:textColor="#4ADE80"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"
+                    app:strokeColor="#4ADE80"
+                    app:strokeWidth="1.5dp"
+                    app:cornerRadius="10dp"
+                    app:rippleColor="@color/risk_low_bg" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp"
+    android:gravity="top|end">
+
+    <TextView
+        android:id="@+id/tv_user_message_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:background="@drawable/bg_chat_bubble_user"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:text="I'm feeling really stressed."
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:lineSpacingExtra="4dp" />
+</LinearLayout>

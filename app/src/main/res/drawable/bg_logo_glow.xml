@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 40dp radial glow of #7C8FFF at 15% behind logo -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:centerColor="#267C8FFF"
+        android:endColor="#007C8FFF"
+        android:gradientRadius="80dp" />
+    <size android:width="160dp" android:height="160dp" />
+</shape>

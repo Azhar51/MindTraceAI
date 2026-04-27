@@ -1,0 +1,195 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/bg_app_background"
+    android:padding="24dp">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:id="@+id/ll_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
+            app:tint="@color/text_main" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Focus Mode"
+            android:textColor="@color/text_main"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Pomodoro Mode Selector -->
+    <LinearLayout
+        android:id="@+id/ll_modes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_top_bar"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_rounded_container"
+        android:padding="4dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tab_pomodoro"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Pomodoro"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_tab_selected"
+            android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/tab_short_break"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Short Break"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textColor="@color/text_secondary" />
+        <TextView
+            android:id="@+id/tab_long_break"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Long Break"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textColor="@color/text_secondary" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_session_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_modes"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:text="Session 1"
+        android:textColor="@color/text_secondary"
+        android:textSize="16sp"
+        android:letterSpacing="0.1"
+        android:textStyle="bold"/>
+
+    <!-- Soothing Circular Timer -->
+    <RelativeLayout
+        android:id="@+id/rl_timer_container"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/tv_session_count"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp">
+
+        <!-- Pulsating background -->
+        <View
+            android:id="@+id/view_pulse"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="12dp"
+            android:background="@drawable/bg_circle_pulse"
+            android:alpha="0.1"/>
+
+        <!-- Progress Indicator -->
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_timer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            app:indicatorSize="280dp"
+            app:trackThickness="12dp"
+            app:indicatorColor="@color/primary"
+            app:trackColor="#1E1E1E"
+            app:trackCornerRadius="6dp"
+            android:max="1000"
+            android:progress="1000" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_focus_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="30:00"
+                android:textColor="@color/text_main"
+                android:textSize="64sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tv_focus_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Focus Time"
+                android:textColor="@color/primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Strict Mode Toggle -->
+    <LinearLayout
+        android:id="@+id/ll_strict_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_timer_container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_mission_focus"
+            app:tint="@color/text_main" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="Strict App Blocking"
+            android:textColor="@color/text_main"
+            android:textSize="16sp" />
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switch_strict_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_start_focus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:padding="16dp"
+        android:text="Start Focus"
+        android:textSize="18sp"
+        app:cornerRadius="12dp" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_confetti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:elevation="10dp"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="false"
+        app:lottie_url="https://assets2.lottiefiles.com/packages/lf20_u4yrau.json" />
+
+</RelativeLayout>

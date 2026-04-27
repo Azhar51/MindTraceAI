@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Splash radial gradient: center #0F1729 → edges #0C1220 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:type="radial"
+        android:centerColor="#0F1729"
+        android:endColor="#0C1220"
+        android:gradientRadius="600dp"
+        android:centerX="0.5"
+        android:centerY="0.4" />
+</shape>

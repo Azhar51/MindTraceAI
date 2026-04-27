@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium Permission Gate — Blueprint §2E1.4 -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/onboarding_bg"
+    android:fillViewport="true"
+    android:scrollbars="none"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="80dp"
+        android:paddingBottom="40dp"
+        android:gravity="center_horizontal">
+
+        <!-- Icon with glow -->
+        <FrameLayout
+            android:layout_width="96dp"
+            android:layout_height="96dp">
+
+            <View
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_icon_glow_circle"
+                android:alpha="0.6" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="🔐"
+                android:textSize="48sp" />
+        </FrameLayout>
+
+        <!-- Dynamic title -->
+        <TextView
+            android:id="@+id/tv_permission_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="MindTrace needs to understand\nyour digital habits"
+            android:textColor="#E8ECF4"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center" />
+
+        <!-- Dynamic description -->
+        <TextView
+            android:id="@+id/tv_permission_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="To detect patterns and protect your wellbeing, we need usage access."
+            android:textColor="#8896B0"
+            android:textSize="14sp"
+            android:lineSpacingMultiplier="1.5"
+            android:gravity="center" />
+
+        <!-- Benefit list card -->
+        <LinearLayout
+            android:id="@+id/benefitCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/bg_permission_benefit_card"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Benefit 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingVertical="6dp">
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:text="📊"
+                    android:textSize="20sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:text="Track screen time patterns"
+                    android:textColor="#E8ECF4"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Benefit 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingVertical="6dp">
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:text="🔍"
+                    android:textSize="20sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:text="Detect addictive behavior"
+                    android:textColor="#E8ECF4"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Benefit 3 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingVertical="6dp">
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:text="🧠"
+                    android:textSize="20sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:text="Generate AI insights"
+                    android:textColor="#E8ECF4"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Benefit 4 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingVertical="6dp">
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:text="🔒"
+                    android:textSize="20sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:text="100% private — on device only"
+                    android:textColor="#E8ECF4"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Grant CTA (gradient) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_grant"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="32dp"
+            android:text="Grant Usage Access"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            app:cornerRadius="14dp"
+            app:backgroundTint="#7C8FFF" />
+
+        <!-- Skip link -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_skip"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:text="Skip for now"
+            android:textAllCaps="false"
+            android:textColor="#8896B0"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <!-- Privacy footer -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Your data never leaves your device.\nMindTrace works 100% offline."
+            android:textColor="#6B7A94"
+            android:textSize="12sp"
+            android:lineSpacingMultiplier="1.4"
+            android:gravity="center" />
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Selected mood emoji card: accent bg + border + glow -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#267C8FFF" />
+    <stroke android:width="2dp" android:color="#7C8FFF" />
+    <corners android:radius="14dp" />
+</shape>

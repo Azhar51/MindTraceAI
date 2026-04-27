@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_crisis_immersive"
+    android:fitsSystemWindows="true"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- HERO — Breathing heart + empathetic message               -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <TextView
+            android:id="@+id/tv_hero_emoji"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="🤍"
+            android:textSize="56sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="We're here for you."
+            android:textColor="#EAEAEA"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_crisis_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/crisis_alert"
+            android:textColor="#99FFFFFF"
+            android:textSize="14sp"
+            android:lineSpacingExtra="3dp" />
+
+        <!-- Time in support -->
+        <TextView
+            android:id="@+id/tv_time_here"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="You've been here for 0 min"
+            android:textColor="#66FFFFFF"
+            android:textSize="12sp" />
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- QUICK RELIEF                                              -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardBackgroundColor="#1A2D4A"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:strokeColor="#1A5C9DFF"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⚡ Quick Relief"
+                    android:textColor="#EAEAEA"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Choose an exercise to help you right now"
+                    android:textColor="#66FFFFFF"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_breathing"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="14dp"
+                    android:text="🌬️ Breathing Exercise"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    app:backgroundTint="#1E5C9DFF"
+                    app:cornerRadius="14dp"
+                    app:strokeColor="#335C9DFF"
+                    app:strokeWidth="1dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_grounding"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:text="🌿 5-4-3-2-1 Grounding"
+                    android:textAllCaps="false"
+                    android:textColor="#8BC6A3"
+                    android:textSize="15sp"
+                    app:cornerRadius="14dp"
+                    app:strokeColor="#338BC6A3"
+                    app:strokeWidth="1dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- DISTRESS LEVEL — Enhanced with emoji + gradient            -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#1A2D4A"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="How distressed are you?"
+                        android:textColor="#CCFFFFFF"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <!-- Emoji that changes with slider -->
+                    <TextView
+                        android:id="@+id/tv_distress_emoji"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="😐"
+                        android:textSize="28sp" />
+                </LinearLayout>
+
+                <!-- Distress number -->
+                <TextView
+                    android:id="@+id/tv_distress_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+                    android:text="5"
+                    android:textColor="#EAEAEA"
+                    android:textSize="32sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.slider.Slider
+                    android:id="@+id/slider_distress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:valueFrom="1"
+                    android:valueTo="10"
+                    android:stepSize="1"
+                    android:value="5"
+                    app:thumbColor="#5C9DFF"
+                    app:trackColorActive="#5C9DFF"
+                    app:trackColorInactive="#332E3E52" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="1 — Mild"
+                        android:textColor="#4DFFFFFF"
+                        android:textSize="11sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10 — Extreme"
+                        android:textColor="#4DFFFFFF"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- HELPLINE                                                  -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#1A2D4A"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/crisis_helpline_label"
+                    android:textColor="#EAEAEA"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/crisis_helpline_number"
+                    android:textColor="#5C9DFF"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Free, confidential, 24/7 support"
+                    android:textColor="#4DFFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- SAFETY ACTIONS                                            -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_contact_trusted"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="16dp"
+            android:text="📞 Reach Out to Someone"
+            android:textAllCaps="false"
+            android:textColor="#CCFFFFFF"
+            android:textSize="15sp"
+            app:cornerRadius="14dp"
+            app:strokeColor="#332E3E52"
+            app:strokeWidth="1dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_view_safety_plan"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="8dp"
+            android:text="🛡️ My Safety Plan"
+            android:textAllCaps="false"
+            android:textColor="#CCFFFFFF"
+            android:textSize="15sp"
+            app:cornerRadius="14dp"
+            app:strokeColor="#332E3E52"
+            app:strokeWidth="1dp" />
+
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <!-- I'M SAFE NOW                                              -->
+        <!-- ═══════════════════════════════════════════════════════════ -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_safe_now"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="28dp"
+            android:text="💚 I'm feeling safer now"
+            android:textAllCaps="false"
+            android:textColor="#0D1B2A"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="#66BB6A"
+            app:cornerRadius="16dp" />
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="32dp"
+            android:text="Take me back"
+            android:textColor="#5C9DFF"
+            android:textSize="14sp" />
+    </LinearLayout>
+</ScrollView>

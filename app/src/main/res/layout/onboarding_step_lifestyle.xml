@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:overScrollMode="never">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="24dp" android:paddingEnd="24dp" android:paddingBottom="16dp">
+
+        <com.google.android.material.card.MaterialCardView style="@style/Onboarding.Card.Premium" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="18dp">
+                <TextView style="@style/Onboarding.Text.CardTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🧭  Structure" />
+                <TextView style="@style/Onboarding.Text.CardHelper" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="This helps shape your daily plan." />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView style="@style/Onboarding.Text.SliderLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Routine consistency" />
+                    <TextView android:id="@+id/tv_routine_value" style="@style/Onboarding.Text.SliderValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3" />
+                </LinearLayout>
+                <com.google.android.material.slider.Slider android:id="@+id/slider_routine_consistency" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:valueFrom="1" android:valueTo="5" android:stepSize="1" android:value="3" />
+
+                <!-- Task 2.G.4 — Routine Stability -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView style="@style/Onboarding.Text.SliderLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Routine stability" />
+                    <TextView android:id="@+id/tv_routine_stability_value" style="@style/Onboarding.Text.SliderValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3" />
+                </LinearLayout>
+                <TextView style="@style/Onboarding.Text.SliderHint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="1 = chaotic · 3 = some structure · 5 = rock-solid" />
+                <com.google.android.material.slider.Slider android:id="@+id/slider_routine_stability" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:valueFrom="1" android:valueTo="5" android:stepSize="1" android:value="3" />
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView style="@style/Onboarding.Text.SliderLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Productive habits" />
+                    <TextView android:id="@+id/tv_productive_value" style="@style/Onboarding.Text.SliderValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3" />
+                </LinearLayout>
+                <com.google.android.material.slider.Slider android:id="@+id/slider_productive_habits" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:valueFrom="1" android:valueTo="5" android:stepSize="1" android:value="3" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView style="@style/Onboarding.Card.Premium" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="18dp">
+                <TextView style="@style/Onboarding.Text.CardTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔄  Progress blockers" />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView style="@style/Onboarding.Text.SliderLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Procrastination" />
+                    <TextView android:id="@+id/tv_procrastination_value" style="@style/Onboarding.Text.SliderValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3" />
+                </LinearLayout>
+                <TextView style="@style/Onboarding.Text.SliderHint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="1 = rarely · 5 = constant" />
+                <com.google.android.material.slider.Slider android:id="@+id/slider_procrastination" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:valueFrom="1" android:valueTo="5" android:stepSize="1" android:value="3" />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView style="@style/Onboarding.Text.SliderLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Feeling stuck" />
+                    <TextView android:id="@+id/tv_stuck_value" style="@style/Onboarding.Text.SliderValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3" />
+                </LinearLayout>
+                <com.google.android.material.slider.Slider android:id="@+id/slider_feeling_stuck" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:valueFrom="1" android:valueTo="5" android:stepSize="1" android:value="3" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView style="@style/Onboarding.Card.Premium" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="18dp">
+                <TextView style="@style/Onboarding.Text.CardTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🏃  Movement &amp; Offline" />
+
+                <!-- Task 2.G.5 — Exercise Frequency -->
+                <TextView style="@style/Onboarding.Text.SliderLabel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:text="How often do you exercise?" />
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_exercise_frequency"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:singleSelection="true"
+                    app:selectionRequired="true">
+                    <com.google.android.material.chip.Chip style="@style/Onboarding.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Never" />
+                    <com.google.android.material.chip.Chip style="@style/Onboarding.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1-2x" android:checked="true" />
+                    <com.google.android.material.chip.Chip style="@style/Onboarding.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3-4x" />
+                    <com.google.android.material.chip.Chip style="@style/Onboarding.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Daily" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView style="@style/Onboarding.Text.SliderLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Physical activity" />
+                    <TextView android:id="@+id/tv_physical_value" style="@style/Onboarding.Text.SliderValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3" />
+                </LinearLayout>
+                <TextView style="@style/Onboarding.Text.SliderHint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="1 = almost none · 5 = very active" />
+                <com.google.android.material.slider.Slider android:id="@+id/slider_physical_activity" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:valueFrom="1" android:valueTo="5" android:stepSize="1" android:value="3" />
+
+                <!-- Task 2.G.6 — Screen-Free Activities -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView style="@style/Onboarding.Text.SliderLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Screen-free activities" />
+                    <TextView android:id="@+id/tv_screen_free_value" style="@style/Onboarding.Text.SliderValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2" />
+                </LinearLayout>
+                <TextView style="@style/Onboarding.Text.SliderHint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="0 = none · 5 = rich offline life (hobbies, sports, reading)" />
+                <com.google.android.material.slider.Slider android:id="@+id/slider_screen_free" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:valueFrom="0" android:valueTo="5" android:stepSize="1" android:value="2" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Task 2.G.2/2.G.3 — Addiction Scale & Purpose Score -->
+        <com.google.android.material.card.MaterialCardView style="@style/Onboarding.Card.Premium" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="18dp">
+                <TextView style="@style/Onboarding.Text.CardTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🎯  Self-awareness" />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView style="@style/Onboarding.Text.SliderLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Addiction awareness" />
+                    <TextView android:id="@+id/tv_addiction_scale_value" style="@style/Onboarding.Text.SliderValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5" />
+                </LinearLayout>
+                <TextView style="@style/Onboarding.Text.SliderHint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="1 = no problem · 5 = aware · 10 = fully aware of dependency" />
+                <com.google.android.material.slider.Slider android:id="@+id/slider_addiction_scale" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:valueFrom="1" android:valueTo="10" android:stepSize="1" android:value="5" />
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center_vertical" android:orientation="horizontal">
+                    <TextView style="@style/Onboarding.Text.SliderLabel" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Sense of purpose" />
+                    <TextView android:id="@+id/tv_purpose_score_value" style="@style/Onboarding.Text.SliderValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3" />
+                </LinearLayout>
+                <TextView style="@style/Onboarding.Text.SliderHint" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="1 = no direction · 5 = clear mission" />
+                <com.google.android.material.slider.Slider android:id="@+id/slider_purpose_score" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:valueFrom="1" android:valueTo="5" android:stepSize="1" android:value="3" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Task 2.G.7 — Mental Health History -->
+        <com.google.android.material.card.MaterialCardView style="@style/Onboarding.Card.Premium" android:layout_width="match_parent" android:layout_height="wrap_content">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="18dp">
+                <TextView style="@style/Onboarding.Text.CardTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🧠  Mental health background" />
+                <TextView style="@style/Onboarding.Text.CardHelper" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Have you ever sought professional mental health support? This is optional and helps calibrate your experience." />
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_mental_health"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:singleSelection="true">
+                    <com.google.android.material.chip.Chip style="@style/Onboarding.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Never" />
+                    <com.google.android.material.chip.Chip style="@style/Onboarding.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Previously" />
+                    <com.google.android.material.chip.Chip style="@style/Onboarding.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Currently" />
+                    <com.google.android.material.chip.Chip style="@style/Onboarding.Chip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Considering" />
+                </com.google.android.material.chip.ChipGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

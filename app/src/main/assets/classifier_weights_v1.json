@@ -1,0 +1,221 @@
+{
+  "version": 1,
+  "description": "MindTrace AI Classifier Weights — Version 1.0.0",
+  "lastUpdated": "2026-04-27T00:00:00Z",
+  "notes": "Clinically informed weights. See Blueprint §3.F.2–3.F.10.",
+
+  "digital_addiction": {
+    "weights": {
+      "D1_screenTimeHours":       0.10,
+      "D2_screenTimeDeviation":   0.07,
+      "D3_appSwitchCount":        0.07,
+      "D4_rapidSwitchCount":      0.09,
+      "D5_bingeSessionCount":     0.09,
+      "D6_nightUsageMinutes":     0.07,
+      "D7_unlockCount":           0.09,
+      "D9_dominantAppPercent":    0.05,
+      "D11_passiveAppRatio":      0.07,
+      "D12_hasLoopPattern":       0.07,
+      "P9_addictionSelfScore":    0.10,
+      "T1_screenTimeTrend3d":     0.08,
+      "T4_weekendWeekdayRatio":   0.05
+    },
+    "interactions": [
+      {
+        "name": "compulsive_amplifier",
+        "condition": { "D12_hasLoopPattern": 0.5, "D7_unlockCount": 0.6 },
+        "boost": 0.08
+      },
+      {
+        "name": "crisis_trajectory",
+        "condition": { "T1_screenTimeTrend3d": 0.6, "D1_screenTimeHours": 0.7 },
+        "boost": 0.05
+      }
+    ]
+  },
+
+  "stress_anxiety": {
+    "weights": {
+      "P2_stressLevel":           0.17,
+      "P1_moodRisk":              0.08,
+      "P5_sleepDeficit":          0.10,
+      "P6_energyDeficit":         0.07,
+      "P7_focusDeficit":          0.08,
+      "C1_workPressure":          0.13,
+      "C6_routineInstability":    0.06,
+      "D6_nightUsageMinutes":     0.06,
+      "D2_screenTimeDeviation":   0.04,
+      "D10_fragmentationScore":   0.04,
+      "T2_moodStability7d":       0.10,
+      "T5_postCheckInChange":     0.07
+    },
+    "interactions": [
+      {
+        "name": "escape_behaviour",
+        "condition": { "P2_stressLevel": 0.7, "D1_screenTimeHours": 0.6 },
+        "boost": 0.06
+      },
+      {
+        "name": "spiralling",
+        "condition": { "T2_moodStability7d": 0.6, "P2_stressLevel": 0.6 },
+        "boost": 0.04
+      }
+    ]
+  },
+
+  "depression": {
+    "weights": {
+      "P1_moodRisk":              0.14,
+      "P10_consecutiveSadDays":   0.12,
+      "P4_motivationDeficit":     0.10,
+      "P6_energyDeficit":         0.08,
+      "P5_sleepDeficit":          0.07,
+      "P8_purposeDeficit":        0.08,
+      "C2_socialSupportDeficit":  0.07,
+      "C4_exerciseDeficit":       0.05,
+      "P3_lonelinessLevel":       0.06,
+      "C3_goalClarityDeficit":    0.04,
+      "T6_recoverySpeed":         0.10,
+      "T2_moodStability7d":       0.05,
+      "T3_sleepConsistency7d":    0.04
+    },
+    "interactions": [
+      {
+        "name": "clinical_flag",
+        "condition": { "P10_consecutiveSadDays": 0.6, "P4_motivationDeficit": 0.7 },
+        "boost": 0.10
+      },
+      {
+        "name": "deepening",
+        "condition": { "T6_recoverySpeed": 0.7, "P10_consecutiveSadDays": 0.5 },
+        "boost": 0.06
+      }
+    ]
+  },
+
+  "social_isolation": {
+    "weights": {
+      "P3_lonelinessLevel":       0.19,
+      "C2_socialSupportDeficit":  0.15,
+      "P1_moodRisk":              0.07,
+      "P4_motivationDeficit":     0.06,
+      "D1_screenTimeHours":       0.07,
+      "D11_passiveAppRatio":      0.08,
+      "D6_nightUsageMinutes":     0.05,
+      "C4_exerciseDeficit":       0.07,
+      "C6_routineInstability":    0.05,
+      "P8_purposeDeficit":        0.05,
+      "T4_weekendWeekdayRatio":   0.08,
+      "T6_recoverySpeed":         0.08
+    },
+    "interactions": [
+      {
+        "name": "digital_isolation",
+        "condition": { "P3_lonelinessLevel": 0.7, "D11_passiveAppRatio": 0.6 },
+        "boost": 0.07
+      },
+      {
+        "name": "structural_isolation",
+        "condition": { "T4_weekendWeekdayRatio": 0.6, "P3_lonelinessLevel": 0.5 },
+        "boost": 0.05
+      }
+    ]
+  },
+
+  "sleep_disruption": {
+    "weights": {
+      "P5_sleepDeficit":          0.17,
+      "D6_nightUsageMinutes":     0.15,
+      "P6_energyDeficit":         0.12,
+      "P2_stressLevel":           0.07,
+      "P1_moodRisk":              0.05,
+      "D1_screenTimeHours":       0.06,
+      "D7_unlockCount":           0.04,
+      "P7_focusDeficit":          0.06,
+      "C6_routineInstability":    0.05,
+      "D8_longestSessionMinutes": 0.04,
+      "T3_sleepConsistency7d":    0.12,
+      "T1_screenTimeTrend3d":     0.07
+    },
+    "interactions": [
+      {
+        "name": "vicious_cycle",
+        "condition": { "D6_nightUsageMinutes": 0.6, "P5_sleepDeficit": 0.6 },
+        "boost": 0.08
+      },
+      {
+        "name": "chronic_disruption",
+        "condition": { "T3_sleepConsistency7d": 0.6, "D6_nightUsageMinutes": 0.5 },
+        "boost": 0.05
+      }
+    ]
+  },
+
+  "low_fulfilment": {
+    "weights": {
+      "P8_purposeDeficit":        0.17,
+      "P4_motivationDeficit":     0.15,
+      "C3_goalClarityDeficit":    0.12,
+      "P1_moodRisk":              0.06,
+      "C4_exerciseDeficit":       0.07,
+      "C5_screenFreeDeficit":     0.08,
+      "D11_passiveAppRatio":      0.07,
+      "C6_routineInstability":    0.05,
+      "P9_addictionSelfScore":    0.05,
+      "T5_postCheckInChange":     0.09,
+      "T6_recoverySpeed":         0.09
+    },
+    "interactions": [
+      {
+        "name": "stagnation",
+        "condition": { "C3_goalClarityDeficit": 0.7, "C4_exerciseDeficit": 0.7 },
+        "boost": 0.06
+      },
+      {
+        "name": "deep_stagnation",
+        "condition": { "T5_postCheckInChange": 0.6, "P8_purposeDeficit": 0.6 },
+        "boost": 0.05
+      }
+    ]
+  },
+
+  "overall_risk": {
+    "category_weights": {
+      "digital_addiction":  0.18,
+      "stress_anxiety":     0.20,
+      "depression":         0.22,
+      "social_isolation":   0.15,
+      "sleep_disruption":   0.12,
+      "low_fulfilment":     0.13
+    }
+  },
+
+  "cross_signal_amplification": {
+    "threshold_4_elevated": { "boost": 0.08, "categories": "all" },
+    "threshold_3_elevated": { "boost": 0.04, "categories": ["digital_addiction", "stress_anxiety", "depression"] }
+  },
+
+  "crisis_detection": {
+    "depression_threshold": 0.85,
+    "stress_anxiety_threshold": 0.90,
+    "multi_category_elevated_count": 4,
+    "multi_category_overall_threshold": 0.70,
+    "combined_depression_threshold": 0.70,
+    "combined_sad_days_threshold": 0.80,
+    "combined_isolation_threshold": 0.60
+  },
+
+  "protective_dampening": {
+    "exercise_weight": 0.4,
+    "social_support_weight": 0.3,
+    "routine_stability_weight": 0.3,
+    "activation_threshold": 0.5,
+    "max_dampening_factor": 0.15,
+    "category_dampening": {
+      "stress_anxiety":    1.0,
+      "depression":        1.0,
+      "social_isolation":  0.8,
+      "sleep_disruption":  0.5
+    }
+  }
+}
