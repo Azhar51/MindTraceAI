@@ -14,7 +14,7 @@
 | **Database Version** | 27 |
 | **Target SDK** | 34 |
 | **Min SDK** | 26 (Android 8.0 Oreo) |
-| **Prepared For** | Senior Developer Review & Handoff |
+| **Prepared For** | Developer Review & Handoff |
 
 ---
 
@@ -35,7 +35,7 @@ This document is organized into six phases:
 
 ## 1.1 What Is MindTrace AI?
 
-MindTrace AI is a comprehensive Android mental wellness application that combines **passive digital behavior monitoring** with **active psychological self-assessment** to provide users with a holistic, data-driven understanding of their mental health. Unlike traditional screen time trackers that merely count hours, MindTrace AI operates as a **behavioral intelligence system**.
+MindTrace AI is a comprehensive Android mental wellness application that combines passive digital behavior monitoring with active psychological self-assessment to provide users with a holistic, data-driven understanding of their mental health. Unlike traditional screen time trackers that merely count hours, MindTrace AI operates as a **behavioral intelligence system**.
 
 The app captures usage patterns, detects behavioral risk signals (binge sessions, late-night usage, compulsive app-switching, dopamine loops), combines them with self-reported mood data and structured questionnaires, and runs a **multi-dimensional risk classification engine** across six clinical categories:
 
