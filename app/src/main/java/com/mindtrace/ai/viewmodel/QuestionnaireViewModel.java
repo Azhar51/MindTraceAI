@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * ViewModel for the Daily Check-In flow.
@@ -62,7 +61,7 @@ public class QuestionnaireViewModel extends AndroidViewModel {
         assessmentRepository = new AssessmentRepository(application);
         linguisticAnalyzer = new LinguisticAnalyzer();
         appDatabase = AppDatabase.getInstance(application);
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = com.mindtrace.ai.util.AppExecutors.diskIO();
     }
 
     public LiveData<SubmissionResult> getSubmissionResult() {
@@ -264,7 +263,7 @@ public class QuestionnaireViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        executorService.shutdown();
+        // executorService is AppExecutors.diskIO() — never shut down the shared pool
     }
 
     public static class SubmissionResult {

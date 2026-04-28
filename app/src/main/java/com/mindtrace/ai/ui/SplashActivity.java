@@ -15,13 +15,13 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.mindtrace.ai.R;
+import com.mindtrace.ai.databinding.ActivitySplashBinding;
 import com.mindtrace.ai.repository.OnboardingRepository;
 
 import java.util.List;
@@ -32,61 +32,51 @@ import java.util.List;
  * <p>Radial gradient background with staggered logo, tagline, and loading dot
  * animations. Auto-routes after 2 seconds to the appropriate destination.</p>
  *
- * <h3>Animation Timeline:</h3>
- * <pre>
- *   0ms   — Logo glow fades in
- *   0ms   — Logo container fade + scale (0.95→1.0) over 400ms
- *   200ms — App name fades in
- *   800ms — Tagline fades in (400ms duration)
- *   0ms   — Loading dot begins pulse loop (0.3→0.8→0.3, 1.5s)
- * </pre>
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
  */
 public class SplashActivity extends AppCompatActivity {
+
+    private ActivitySplashBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        binding = ActivitySplashBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // Transparent status bar
         getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-        // ── Animate splash elements ──
+        // Animate splash elements
         animateSplash();
 
-        // ── Auto-route after 2 seconds ──
-        new Handler(Looper.getMainLooper()).postDelayed(this::checkAuthAndPermissions, 2000);
+        // Auto-route after a short 500ms delay to make app feel fast
+        new Handler(Looper.getMainLooper()).postDelayed(this::checkAuthAndPermissions, 500);
     }
 
     /**
      * Staggered splash animation per blueprint + premium particles.
      */
     private void animateSplash() {
-        View logoGlow = findViewById(R.id.logoGlow);
-        View logoContainer = findViewById(R.id.logoContainer);
-        View tvAppName = findViewById(R.id.tvAppName);
-        View tvTagline = findViewById(R.id.tvTagline);
-        View loadingDot = findViewById(R.id.loadingDot);
-
-        // ── Logo glow: fade in 0→0.6 over 600ms + slow rotation ──
-        ObjectAnimator glowFade = ObjectAnimator.ofFloat(logoGlow, "alpha", 0f, 0.6f);
+        // Logo glow: fade in 0→0.6 over 600ms + slow rotation
+        ObjectAnimator glowFade = ObjectAnimator.ofFloat(binding.logoGlow, "alpha", 0f, 0.6f);
         glowFade.setDuration(600);
         glowFade.setInterpolator(new DecelerateInterpolator());
 
-        ObjectAnimator glowRotate = ObjectAnimator.ofFloat(logoGlow, "rotation", 0f, 360f);
+        ObjectAnimator glowRotate = ObjectAnimator.ofFloat(binding.logoGlow, "rotation", 0f, 360f);
         glowRotate.setDuration(12000);
         glowRotate.setRepeatCount(ValueAnimator.INFINITE);
         glowRotate.setInterpolator(new android.view.animation.LinearInterpolator());
         glowRotate.start();
 
-        // ── Logo container: fade 0→1 + scale 0.85→1.0 (bigger spring) over 500ms ──
-        ObjectAnimator logoFade = ObjectAnimator.ofFloat(logoContainer, "alpha", 0f, 1f);
+        // Logo container: fade 0→1 + scale 0.85→1.0 over 500ms
+        ObjectAnimator logoFade = ObjectAnimator.ofFloat(binding.logoContainer, "alpha", 0f, 1f);
         logoFade.setDuration(500);
-        ObjectAnimator logoScaleX = ObjectAnimator.ofFloat(logoContainer, "scaleX", 0.85f, 1.0f);
+        ObjectAnimator logoScaleX = ObjectAnimator.ofFloat(binding.logoContainer, "scaleX", 0.85f, 1.0f);
         logoScaleX.setDuration(500);
-        ObjectAnimator logoScaleY = ObjectAnimator.ofFloat(logoContainer, "scaleY", 0.85f, 1.0f);
+        ObjectAnimator logoScaleY = ObjectAnimator.ofFloat(binding.logoContainer, "scaleY", 0.85f, 1.0f);
         logoScaleY.setDuration(500);
 
         AnimatorSet logoSet = new AnimatorSet();
@@ -94,9 +84,9 @@ public class SplashActivity extends AppCompatActivity {
         logoSet.setInterpolator(new android.view.animation.OvershootInterpolator(1.3f));
         logoSet.start();
 
-        // ── App name: fade in + slide up at 200ms delay ──
-        tvAppName.setTranslationY(12f);
-        tvAppName.animate()
+        // App name: fade in + slide up at 200ms delay
+        binding.tvAppName.setTranslationY(12f);
+        binding.tvAppName.animate()
                 .alpha(1f)
                 .translationY(0f)
                 .setStartDelay(200)
@@ -104,9 +94,9 @@ public class SplashActivity extends AppCompatActivity {
                 .setInterpolator(new DecelerateInterpolator())
                 .start();
 
-        // ── Tagline: fade in at 800ms delay, 400ms duration ──
-        tvTagline.setTranslationY(8f);
-        tvTagline.animate()
+        // Tagline: fade in at 800ms delay
+        binding.tvTagline.setTranslationY(8f);
+        binding.tvTagline.animate()
                 .alpha(1f)
                 .translationY(0f)
                 .setStartDelay(800)
@@ -114,19 +104,18 @@ public class SplashActivity extends AppCompatActivity {
                 .setInterpolator(new DecelerateInterpolator())
                 .start();
 
-        // ── Loading dot: pulse opacity 0.3→0.8→0.3 in 1.5s loop ──
-        ObjectAnimator dotPulse = ObjectAnimator.ofFloat(loadingDot, "alpha", 0.3f, 0.8f, 0.3f);
+        // Loading dot: pulse opacity 0.3→0.8→0.3 in 1.5s loop
+        ObjectAnimator dotPulse = ObjectAnimator.ofFloat(binding.loadingDot, "alpha", 0.3f, 0.8f, 0.3f);
         dotPulse.setDuration(1500);
         dotPulse.setRepeatCount(ValueAnimator.INFINITE);
         dotPulse.start();
 
-        // ── Premium: floating particles ──
+        // Premium: floating particles
         spawnFloatingParticles();
     }
 
     /**
      * Spawns soft ambient particles that drift upward across the splash screen.
-     * Creates a premium, living atmosphere.
      */
     private void spawnFloatingParticles() {
         android.widget.FrameLayout root = (android.widget.FrameLayout) findViewById(android.R.id.content);
@@ -172,14 +161,13 @@ public class SplashActivity extends AppCompatActivity {
     private void checkAuthAndPermissions() {
         com.mindtrace.ai.database.AppDatabase db = com.mindtrace.ai.database.AppDatabase.getInstance(this);
         OnboardingRepository onboardingRepository = new OnboardingRepository(this);
-        java.util.concurrent.Executors.newSingleThreadExecutor().execute(() -> {
-            // ── Crash-safe crisis mode (7.F.5) ──
+        com.mindtrace.ai.util.AppExecutors.diskIO().execute(() -> {
+            // Crash-safe crisis mode (7.F.5)
             boolean crisisActive = getSharedPreferences("mindtrace_crisis", MODE_PRIVATE)
                     .getBoolean("active_crisis", false);
             int savedCsrrsTier = getSharedPreferences("mindtrace_crisis", MODE_PRIVATE)
                     .getInt("cssrs_tier", 0);
 
-            // Also check DB for unresolved crisis events
             if (!crisisActive) {
                 try {
                     com.mindtrace.ai.database.entity.CrisisEvent activeEvent =
@@ -194,7 +182,6 @@ public class SplashActivity extends AppCompatActivity {
             com.mindtrace.ai.database.entity.User user = db.userDao().getUser();
             boolean onboardingCompleted = onboardingRepository.isOnboardingCompleted();
             runOnUiThread(() -> {
-                // Crisis recovery takes priority over everything
                 if (shouldLaunchCrisis) {
                     if (shouldLockdown) {
                         Intent lockdownIntent = new Intent(this, CrisisLockdownActivity.class);
@@ -218,28 +205,12 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     /**
-     * Check if all core permissions needed for the data collection engine
-     * have been granted. Routes to PermissionActivity if any are missing.
-     *
-     * <p>Permissions checked:</p>
-     * <ol>
-     *   <li>PACKAGE_USAGE_STATS — screen time tracking (required)</li>
-     *   <li>POST_NOTIFICATIONS — reminders and crisis alerts (API 33+)</li>
-     *   <li>ACCESSIBILITY_SERVICE — scroll intensity telemetry D13</li>
-     *   <li>NOTIFICATION_LISTENER — response latency telemetry D14</li>
-     * </ol>
+     * Check if the <b>essential</b> permissions needed for core functionality
+     * have been granted.
      */
     private boolean hasAllRequiredPermissions() {
-        // 1. Usage Stats (mandatory — blocks everything)
         if (!hasUsageStatsPermission()) return false;
-
-        // 2-4. Secondary permissions: if ANY is missing, route to PermissionActivity
-        // so the user sees the remaining steps. PermissionActivity will skip
-        // already-granted steps automatically.
         if (!hasNotificationPermission()) return false;
-        if (!hasAccessibilityPermission()) return false;
-        if (!hasNotificationListenerPermission()) return false;
-
         return true;
     }
 
@@ -282,5 +253,11 @@ public class SplashActivity extends AppCompatActivity {
                 getContentResolver(), "enabled_notification_listeners");
         if (flat == null || flat.isEmpty()) return false;
         return flat.contains(getPackageName());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

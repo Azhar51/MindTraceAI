@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * ViewModel for hourly usage review — decouples data loading and business logic
@@ -36,7 +35,7 @@ import java.util.concurrent.Executors;
 public class UsageViewModel extends AndroidViewModel {
 
     private static final String TAG = "UsageViewModel";
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = com.mindtrace.ai.util.AppExecutors.diskIO();
     private final UsageRepository usageRepository;
 
     private final MutableLiveData<List<HourBucket>> hourlyData = new MutableLiveData<>();
@@ -135,7 +134,7 @@ public class UsageViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        executor.shutdown();
+        // Shared executor — do not shutdown
     }
 
     // ═══════════════════════════════════════════════════════════════════

@@ -13,7 +13,6 @@ import com.mindtrace.ai.database.entity.RiskClassification;
 
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Debug-only utility for injecting synthetic {@link RiskClassification} rows
@@ -51,7 +50,7 @@ public class TrajectorySimulator {
     public TrajectorySimulator(@NonNull Context context) {
         this.context = context.getApplicationContext();
         this.dao = AppDatabase.getInstance(this.context).riskClassificationDao();
-        this.executor = Executors.newSingleThreadExecutor();
+        this.executor = com.mindtrace.ai.util.AppExecutors.diskIO();
     }
 
     // ═══════════════════════════════════════════════════════════════════

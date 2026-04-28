@@ -20,6 +20,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 import com.mindtrace.ai.R;
+import com.mindtrace.ai.databinding.ActivityJournalBinding;
 import com.mindtrace.ai.ai.LinguisticAnalyzer;
 import com.mindtrace.ai.database.entity.JournalEntry;
 import com.mindtrace.ai.repository.AssessmentRepository;
@@ -30,7 +31,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -50,6 +50,8 @@ import android.content.Intent;
  * </pre>
  */
 public class JournalActivity extends AppCompatActivity {
+
+    private ActivityJournalBinding binding;
 
     // ── Entry type chips ──
     private TextView chipFreeForm, chipGratitude, chipVenting, chipReflection, chipGoal, chipTrigger;
@@ -135,12 +137,13 @@ public class JournalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_journal);
+        binding = ActivityJournalBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.background));
 
         repository = new AssessmentRepository(this);
         analyzer = new LinguisticAnalyzer();
-        executor = Executors.newSingleThreadExecutor();
+        executor = com.mindtrace.ai.util.AppExecutors.diskIO();
         writingStartTime = System.currentTimeMillis();
 
         bindViews();
@@ -180,60 +183,59 @@ public class JournalActivity extends AppCompatActivity {
 
     private void bindViews() {
         // Top bar
-        ImageButton btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(v -> finish());
-        tvTimer = findViewById(R.id.tvTimer);
+        binding.btnBack.setOnClickListener(v -> finish());
+        tvTimer = binding.tvTimer;
 
         // Type chips
-        chipFreeForm = findViewById(R.id.chipFreeForm);
-        chipGratitude = findViewById(R.id.chipGratitude);
-        chipVenting = findViewById(R.id.chipVenting);
-        chipReflection = findViewById(R.id.chipReflection);
-        chipGoal = findViewById(R.id.chipGoal);
-        chipTrigger = findViewById(R.id.chipTrigger);
+        chipFreeForm = binding.chipFreeForm;
+        chipGratitude = binding.chipGratitude;
+        chipVenting = binding.chipVenting;
+        chipReflection = binding.chipReflection;
+        chipGoal = binding.chipGoal;
+        chipTrigger = binding.chipTrigger;
 
         // Mood
-        moodHappy = findViewById(R.id.moodHappy);
-        moodCalm = findViewById(R.id.moodCalm);
-        moodNeutral = findViewById(R.id.moodNeutral);
-        moodAnxious = findViewById(R.id.moodAnxious);
-        moodSad = findViewById(R.id.moodSad);
-        moodAngry = findViewById(R.id.moodAngry);
-        moodNumb = findViewById(R.id.moodNumb);
-        tvMoodLabel = findViewById(R.id.tvMoodLabel);
+        moodHappy = binding.moodHappy;
+        moodCalm = binding.moodCalm;
+        moodNeutral = binding.moodNeutral;
+        moodAnxious = binding.moodAnxious;
+        moodSad = binding.moodSad;
+        moodAngry = binding.moodAngry;
+        moodNumb = binding.moodNumb;
+        tvMoodLabel = binding.tvMoodLabel;
 
         // Writing
-        etTitle = findViewById(R.id.etTitle);
-        etContent = findViewById(R.id.etContent);
-        etActionItem = findViewById(R.id.etActionItem);
-        tvWordCount = findViewById(R.id.tvWordCount);
-        seekStress = findViewById(R.id.seekStress);
-        tvStressValue = findViewById(R.id.tvStressValue);
+        etTitle = binding.etTitle;
+        etContent = binding.etContent;
+        etActionItem = binding.etActionItem;
+        tvWordCount = binding.tvWordCount;
+        seekStress = binding.seekStress;
+        tvStressValue = binding.tvStressValue;
 
         // Prompt
-        cardPrompt = findViewById(R.id.cardPrompt);
-        tvPrompt = findViewById(R.id.tvPrompt);
+        cardPrompt = binding.cardPrompt;
+        tvPrompt = binding.tvPrompt;
 
         // Analysis
-        cardAnalysis = findViewById(R.id.cardAnalysis);
-        tvSentimentLabel = findViewById(R.id.tvSentimentLabel);
-        tvEmotionTags = findViewById(R.id.tvEmotionTags);
-        tvTopicTags = findViewById(R.id.tvTopicTags);
-        tvDistressMessage = findViewById(R.id.tvDistressMessage);
-        tvDistortions = findViewById(R.id.tvDistortions);
-        tvReframe = findViewById(R.id.tvReframe);
-        distressWarning = findViewById(R.id.distressWarning);
-        reframeContainer = findViewById(R.id.reframeContainer);
-        sentimentBar = findViewById(R.id.sentimentBar);
+        cardAnalysis = binding.cardAnalysis;
+        tvSentimentLabel = binding.tvSentimentLabel;
+        tvEmotionTags = binding.tvEmotionTags;
+        tvTopicTags = binding.tvTopicTags;
+        tvDistressMessage = binding.tvDistressMessage;
+        tvDistortions = binding.tvDistortions;
+        tvReframe = binding.tvReframe;
+        distressWarning = binding.distressWarning;
+        reframeContainer = binding.reframeContainer;
+        sentimentBar = binding.sentimentBar;
 
         // History
-        cardHistory = findViewById(R.id.cardHistory);
-        historyContainer = findViewById(R.id.historyContainer);
-        tvNoEntries = findViewById(R.id.tvNoEntries);
-        tvStreak = findViewById(R.id.tvStreak);
+        cardHistory = binding.cardHistory;
+        historyContainer = binding.historyContainer;
+        tvNoEntries = binding.tvNoEntries;
+        tvStreak = binding.tvStreak;
 
         // Save
-        btnSave = findViewById(R.id.btnSave);
+        btnSave = binding.btnSave;
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -788,8 +790,7 @@ public class JournalActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         timerHandler.removeCallbacks(timerRunnable);
-        if (executor != null && !executor.isShutdown()) {
-            executor.shutdown();
-        }
+        // executor is AppExecutors.diskIO() — never shut down the shared pool
+        binding = null;
     }
 }

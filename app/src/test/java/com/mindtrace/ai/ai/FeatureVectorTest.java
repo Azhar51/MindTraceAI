@@ -114,12 +114,12 @@ public class FeatureVectorTest {
     @Test
     public void dataCompleteness_halfSet() {
         FeatureVector.Builder b = new FeatureVector.Builder();
-        for (int i = 0; i < 17; i++) {
+        for (int i = 0; i < 18; i++) {
             b.set(i, 0.0f); // Non-default
         }
         FeatureVector fv = b.build();
-        assertEquals(17, fv.nonDefaultCount);
-        assertEquals(17f / 34f, fv.dataCompleteness, EPSILON);
+        assertEquals(18, fv.nonDefaultCount);
+        assertEquals(18f / 36f, fv.dataCompleteness, EPSILON);
         assertTrue(fv.isReliable());
     }
 
@@ -130,10 +130,12 @@ public class FeatureVectorTest {
     @Test
     public void digitalRiskAvg_computesCorrectly() {
         FeatureVector.Builder b = new FeatureVector.Builder();
-        // Set all digital features to 0.6
+        // Set all digital features (D1-D12 + D13-D14) to 0.6
         for (int i = FeatureVector.IDX_D1; i <= FeatureVector.IDX_D12; i++) {
             b.set(i, 0.6f);
         }
+        b.set(FeatureVector.IDX_D13, 0.6f);
+        b.set(FeatureVector.IDX_D14, 0.6f);
         FeatureVector fv = b.build();
         assertEquals(0.6f, fv.digitalRiskAvg(), EPSILON);
     }
@@ -153,8 +155,10 @@ public class FeatureVectorTest {
         // Digital=30%, Psych=35%, Context=15%, Temporal=20%
         FeatureVector.Builder b = new FeatureVector.Builder();
         for (int i = 0; i < FeatureVector.TOTAL_FEATURES; i++) b.set(i, 0.0f);
-        // Set only digital to 1.0
+        // Set all digital to 1.0 (D1-D12 + D13-D14)
         for (int i = FeatureVector.IDX_D1; i <= FeatureVector.IDX_D12; i++) b.set(i, 1.0f);
+        b.set(FeatureVector.IDX_D13, 1.0f);
+        b.set(FeatureVector.IDX_D14, 1.0f);
         FeatureVector fv = b.build();
         // Digital avg = 1.0, rest = 0.0 → overall = 1.0 * 0.30 = 0.30
         assertEquals(0.30f, fv.overallRiskEstimate(), EPSILON);
@@ -385,13 +389,13 @@ public class FeatureVectorTest {
 
     @Test
     public void constants_featureCounts() {
-        assertEquals(34, FeatureVector.TOTAL_FEATURES);
+        assertEquals(36, FeatureVector.TOTAL_FEATURES);
         assertEquals(12, FeatureVector.DIGITAL_COUNT);
         assertEquals(10, FeatureVector.PSYCH_COUNT);
         assertEquals(6, FeatureVector.CONTEXT_COUNT);
         assertEquals(6, FeatureVector.TEMPORAL_COUNT);
-        assertEquals(34, FeatureVector.FEATURE_NAMES.length);
-        assertEquals(34, FeatureVector.FEATURE_WEIGHTS.length);
+        assertEquals(36, FeatureVector.FEATURE_NAMES.length);
+        assertEquals(36, FeatureVector.FEATURE_WEIGHTS.length);
     }
 
     @Test

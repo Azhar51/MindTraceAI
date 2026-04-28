@@ -1,0 +1,3728 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 28,
+    "identityHash": "c30f508cc2fd57527d7dc2b3a24f3acb",
+    "entities": [
+      {
+        "tableName": "users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `email` TEXT, `password` TEXT, `createdAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "password",
+            "columnName": "password",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "daily_usage",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` INTEGER NOT NULL, `snapshotCreatedAt` INTEGER NOT NULL DEFAULT 0, `screenTimeMillis` INTEGER NOT NULL, `activeForegroundTimeMillis` INTEGER NOT NULL DEFAULT 0, `appSwitches` INTEGER NOT NULL, `totalAppSwitchCount` INTEGER NOT NULL DEFAULT 0, `totalLaunchCount` INTEGER NOT NULL DEFAULT 0, `unlockCount` INTEGER NOT NULL, `firstUnlockTime` INTEGER NOT NULL DEFAULT 0, `lastScreenOffTime` INTEGER NOT NULL DEFAULT 0, `nightUsageMillis` INTEGER NOT NULL, `mostUsedApp` TEXT, `topAppPackageName` TEXT DEFAULT '', `appsTrackedCount` INTEGER NOT NULL DEFAULT 0, `highRiskAppCount` INTEGER NOT NULL DEFAULT 0, `passiveConsumptionRatio` REAL NOT NULL DEFAULT 0, `productiveTimeMillis` INTEGER NOT NULL DEFAULT 0, `socialMediaTimeMillis` INTEGER NOT NULL DEFAULT 0, `entertainmentTimeMillis` INTEGER NOT NULL DEFAULT 0, `scrollIntensityScore` REAL NOT NULL DEFAULT 0, `notificationResponseAvgMs` INTEGER NOT NULL DEFAULT 0, `categoryBreakdownJson` TEXT, `hourlyBreakdownJson` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "snapshotCreatedAt",
+            "columnName": "snapshotCreatedAt",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "screenTimeMillis",
+            "columnName": "screenTimeMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "activeForegroundTimeMillis",
+            "columnName": "activeForegroundTimeMillis",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "appSwitches",
+            "columnName": "appSwitches",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalAppSwitchCount",
+            "columnName": "totalAppSwitchCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalLaunchCount",
+            "columnName": "totalLaunchCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "unlockCount",
+            "columnName": "unlockCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firstUnlockTime",
+            "columnName": "firstUnlockTime",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "lastScreenOffTime",
+            "columnName": "lastScreenOffTime",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "nightUsageMillis",
+            "columnName": "nightUsageMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mostUsedApp",
+            "columnName": "mostUsedApp",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "topAppPackageName",
+            "columnName": "topAppPackageName",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "appsTrackedCount",
+            "columnName": "appsTrackedCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "highRiskAppCount",
+            "columnName": "highRiskAppCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "passiveConsumptionRatio",
+            "columnName": "passiveConsumptionRatio",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "productiveTimeMillis",
+            "columnName": "productiveTimeMillis",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "socialMediaTimeMillis",
+            "columnName": "socialMediaTimeMillis",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "entertainmentTimeMillis",
+            "columnName": "entertainmentTimeMillis",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "scrollIntensityScore",
+            "columnName": "scrollIntensityScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "notificationResponseAvgMs",
+            "columnName": "notificationResponseAvgMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "categoryBreakdownJson",
+            "columnName": "categoryBreakdownJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hourlyBreakdownJson",
+            "columnName": "hourlyBreakdownJson",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_daily_usage_date",
+            "unique": true,
+            "columnNames": [
+              "date"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_daily_usage_date` ON `${TABLE_NAME}` (`date`)"
+          },
+          {
+            "name": "index_daily_usage_snapshotCreatedAt",
+            "unique": false,
+            "columnNames": [
+              "snapshotCreatedAt"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_daily_usage_snapshotCreatedAt` ON `${TABLE_NAME}` (`snapshotCreatedAt`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "questionnaire_responses",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `dayTimestamp` INTEGER NOT NULL DEFAULT 0, `checkInType` TEXT DEFAULT '', `mood` TEXT, `anxietyLevel` INTEGER NOT NULL DEFAULT 0, `hopeLevel` INTEGER NOT NULL DEFAULT 0, `emotionalStability` INTEGER NOT NULL DEFAULT 0, `feltLikeCrying` INTEGER NOT NULL DEFAULT 0, `focusLevel` TEXT, `feltDistracted` INTEGER, `mentalClarity` INTEGER NOT NULL DEFAULT 0, `urgeToScrollLevel` INTEGER NOT NULL DEFAULT 0, `biggestDistraction` TEXT, `ruminationLevel` INTEGER NOT NULL DEFAULT 0, `decisionDifficulty` INTEGER NOT NULL DEFAULT 0, `stressLevel` INTEGER NOT NULL, `workPressure` TEXT, `overwhelmLevel` INTEGER NOT NULL DEFAULT 0, `copingMechanism` TEXT DEFAULT '', `lonelinessLevel` INTEGER NOT NULL, `socialSupport` INTEGER NOT NULL, `socialInteractionQuality` INTEGER NOT NULL DEFAULT 0, `meaningfulConversations` INTEGER NOT NULL DEFAULT 0, `wantedToWithdraw` INTEGER NOT NULL DEFAULT 0, `sleepHours` REAL NOT NULL, `sleepQuality` INTEGER NOT NULL DEFAULT 0, `energyLevel` TEXT, `exercisedToday` INTEGER NOT NULL DEFAULT 0, `appetiteStatus` TEXT DEFAULT '', `motivationLevel` INTEGER NOT NULL, `goalClarity` INTEGER NOT NULL, `selfWorthScore` INTEGER NOT NULL DEFAULT 0, `purposeScore` INTEGER NOT NULL DEFAULT 0, `addictionSelfScore` INTEGER NOT NULL DEFAULT 0, `gratitudeText` TEXT, `currentConcern` TEXT, `distressFlags` TEXT, `requestedSupport` INTEGER NOT NULL DEFAULT 0, `computedDistressSeverity` REAL NOT NULL DEFAULT 0)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayTimestamp",
+            "columnName": "dayTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "checkInType",
+            "columnName": "checkInType",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "mood",
+            "columnName": "mood",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "anxietyLevel",
+            "columnName": "anxietyLevel",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "hopeLevel",
+            "columnName": "hopeLevel",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "emotionalStability",
+            "columnName": "emotionalStability",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "feltLikeCrying",
+            "columnName": "feltLikeCrying",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "focusLevel",
+            "columnName": "focusLevel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "feltDistracted",
+            "columnName": "feltDistracted",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mentalClarity",
+            "columnName": "mentalClarity",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "urgeToScrollLevel",
+            "columnName": "urgeToScrollLevel",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "biggestDistraction",
+            "columnName": "biggestDistraction",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ruminationLevel",
+            "columnName": "ruminationLevel",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "decisionDifficulty",
+            "columnName": "decisionDifficulty",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "stressLevel",
+            "columnName": "stressLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "workPressure",
+            "columnName": "workPressure",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "overwhelmLevel",
+            "columnName": "overwhelmLevel",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "copingMechanism",
+            "columnName": "copingMechanism",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "lonelinessLevel",
+            "columnName": "lonelinessLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "socialSupport",
+            "columnName": "socialSupport",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "socialInteractionQuality",
+            "columnName": "socialInteractionQuality",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "meaningfulConversations",
+            "columnName": "meaningfulConversations",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "wantedToWithdraw",
+            "columnName": "wantedToWithdraw",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "sleepHours",
+            "columnName": "sleepHours",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepQuality",
+            "columnName": "sleepQuality",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "energyLevel",
+            "columnName": "energyLevel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "exercisedToday",
+            "columnName": "exercisedToday",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "appetiteStatus",
+            "columnName": "appetiteStatus",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "motivationLevel",
+            "columnName": "motivationLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goalClarity",
+            "columnName": "goalClarity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selfWorthScore",
+            "columnName": "selfWorthScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "purposeScore",
+            "columnName": "purposeScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "addictionSelfScore",
+            "columnName": "addictionSelfScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "gratitudeText",
+            "columnName": "gratitudeText",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "currentConcern",
+            "columnName": "currentConcern",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "distressFlags",
+            "columnName": "distressFlags",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "requestedSupport",
+            "columnName": "requestedSupport",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "computedDistressSeverity",
+            "columnName": "computedDistressSeverity",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_questionnaire_responses_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_questionnaire_responses_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_questionnaire_responses_dayTimestamp",
+            "unique": false,
+            "columnNames": [
+              "dayTimestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_questionnaire_responses_dayTimestamp` ON `${TABLE_NAME}` (`dayTimestamp`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "intervention_tasks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dateCreated` INTEGER NOT NULL, `title` TEXT, `description` TEXT, `category` TEXT, `durationMinutes` INTEGER NOT NULL, `isCompleted` INTEGER NOT NULL, `isSkipped` INTEGER NOT NULL, `completedAt` INTEGER NOT NULL, `skippedAt` INTEGER NOT NULL, `priority` INTEGER NOT NULL DEFAULT 3, `difficulty` TEXT NOT NULL DEFAULT 'EASY', `sourceTag` TEXT DEFAULT 'check_in', `linkedRiskCategory` TEXT DEFAULT 'general', `whyThisTask` TEXT, `scheduledTimeSlot` TEXT NOT NULL DEFAULT 'ANYTIME', `expiresAt` INTEGER NOT NULL DEFAULT 0, `snoozedUntil` INTEGER NOT NULL DEFAULT 0, `status` TEXT NOT NULL DEFAULT 'ACTIVE', `effectivenessRating` INTEGER NOT NULL DEFAULT 0, `preCompletionMood` TEXT, `postCompletionMood` TEXT, `xpReward` INTEGER NOT NULL DEFAULT 10, `isMicroIntervention` INTEGER NOT NULL DEFAULT 0, `sequenceId` TEXT, `sequenceOrder` INTEGER NOT NULL DEFAULT 0, `observationWindowEnd` INTEGER NOT NULL DEFAULT 0, `preInterventionRisk` REAL NOT NULL DEFAULT 0, `postInterventionRisk` REAL NOT NULL DEFAULT 0, `efficacyScore` REAL NOT NULL DEFAULT 0)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "durationMinutes",
+            "columnName": "durationMinutes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCompleted",
+            "columnName": "isCompleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isSkipped",
+            "columnName": "isSkipped",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completedAt",
+            "columnName": "completedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "skippedAt",
+            "columnName": "skippedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "priority",
+            "columnName": "priority",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "3"
+          },
+          {
+            "fieldPath": "difficulty",
+            "columnName": "difficulty",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'EASY'"
+          },
+          {
+            "fieldPath": "sourceTag",
+            "columnName": "sourceTag",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "'check_in'"
+          },
+          {
+            "fieldPath": "linkedRiskCategory",
+            "columnName": "linkedRiskCategory",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "'general'"
+          },
+          {
+            "fieldPath": "whyThisTask",
+            "columnName": "whyThisTask",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "scheduledTimeSlot",
+            "columnName": "scheduledTimeSlot",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'ANYTIME'"
+          },
+          {
+            "fieldPath": "expiresAt",
+            "columnName": "expiresAt",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "snoozedUntil",
+            "columnName": "snoozedUntil",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'ACTIVE'"
+          },
+          {
+            "fieldPath": "effectivenessRating",
+            "columnName": "effectivenessRating",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preCompletionMood",
+            "columnName": "preCompletionMood",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "postCompletionMood",
+            "columnName": "postCompletionMood",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "xpReward",
+            "columnName": "xpReward",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "10"
+          },
+          {
+            "fieldPath": "isMicroIntervention",
+            "columnName": "isMicroIntervention",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "sequenceId",
+            "columnName": "sequenceId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sequenceOrder",
+            "columnName": "sequenceOrder",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "observationWindowEnd",
+            "columnName": "observationWindowEnd",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preInterventionRisk",
+            "columnName": "preInterventionRisk",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "postInterventionRisk",
+            "columnName": "postInterventionRisk",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "efficacyScore",
+            "columnName": "efficacyScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_intervention_tasks_dateCreated",
+            "unique": false,
+            "columnNames": [
+              "dateCreated"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_intervention_tasks_dateCreated` ON `${TABLE_NAME}` (`dateCreated`)"
+          },
+          {
+            "name": "index_intervention_tasks_status",
+            "unique": false,
+            "columnNames": [
+              "status"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_intervention_tasks_status` ON `${TABLE_NAME}` (`status`)"
+          },
+          {
+            "name": "index_intervention_tasks_category",
+            "unique": false,
+            "columnNames": [
+              "category"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_intervention_tasks_category` ON `${TABLE_NAME}` (`category`)"
+          },
+          {
+            "name": "index_intervention_tasks_linkedRiskCategory",
+            "unique": false,
+            "columnNames": [
+              "linkedRiskCategory"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_intervention_tasks_linkedRiskCategory` ON `${TABLE_NAME}` (`linkedRiskCategory`)"
+          },
+          {
+            "name": "index_intervention_tasks_observationWindowEnd",
+            "unique": false,
+            "columnNames": [
+              "observationWindowEnd"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_intervention_tasks_observationWindowEnd` ON `${TABLE_NAME}` (`observationWindowEnd`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "onboarding_profile",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `ageRange` TEXT, `primaryGoal` TEXT, `helpAreasCsv` TEXT, `stressLevel` INTEGER NOT NULL, `anxietyLevel` INTEGER NOT NULL, `motivationLevel` INTEGER NOT NULL, `lonelinessLevel` INTEGER NOT NULL, `selfDoubtLevel` INTEGER NOT NULL, `overthinkingLevel` INTEGER NOT NULL, `sleepHours` REAL NOT NULL, `sleepQuality` INTEGER NOT NULL, `focusLevel` INTEGER NOT NULL, `energyLevel` INTEGER NOT NULL, `workPressure` INTEGER NOT NULL, `distractionLevel` INTEGER NOT NULL, `socialMediaUse` INTEGER NOT NULL, `lateNightPhoneUse` INTEGER NOT NULL, `appAddictionRisk` INTEGER NOT NULL, `overusePatternLevel` INTEGER NOT NULL, `bingeScrollingLevel` INTEGER NOT NULL, `appSwitchingHabit` INTEGER NOT NULL, `routineConsistency` INTEGER NOT NULL, `productiveHabits` INTEGER NOT NULL, `procrastinationLevel` INTEGER NOT NULL, `physicalActivity` INTEGER NOT NULL, `feelingStuck` INTEGER NOT NULL, `socialSupportLevel` INTEGER NOT NULL, `supportNeeded` INTEGER NOT NULL, `safetySupportEnabled` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `addictionScale` INTEGER NOT NULL, `purposeScore` INTEGER NOT NULL, `copingStyle` TEXT, `personalityArchetype` TEXT, `mentalHealthHistory` TEXT, `peakVulnerabilityTime` TEXT, `readinessToChange` INTEGER NOT NULL, `onboardingComplete` INTEGER NOT NULL, `routineStability` INTEGER NOT NULL, `exerciseFrequency` TEXT, `screenFreeActivities` INTEGER NOT NULL, `socialQualityBaseline` INTEGER NOT NULL, `screenTimeAwareness` INTEGER NOT NULL, `triggerApps` TEXT, `waterIntake` INTEGER NOT NULL, `caffeineLevel` INTEGER NOT NULL, `alcoholFrequency` TEXT, `dietQuality` INTEGER NOT NULL, `mealRegularity` INTEGER NOT NULL, `sugarIntake` INTEGER NOT NULL, `emotionalEating` INTEGER NOT NULL, `lateNightEating` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ageRange",
+            "columnName": "ageRange",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "primaryGoal",
+            "columnName": "primaryGoal",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "helpAreasCsv",
+            "columnName": "helpAreasCsv",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stressLevel",
+            "columnName": "stressLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "anxietyLevel",
+            "columnName": "anxietyLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "motivationLevel",
+            "columnName": "motivationLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lonelinessLevel",
+            "columnName": "lonelinessLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selfDoubtLevel",
+            "columnName": "selfDoubtLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "overthinkingLevel",
+            "columnName": "overthinkingLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepHours",
+            "columnName": "sleepHours",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sleepQuality",
+            "columnName": "sleepQuality",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "focusLevel",
+            "columnName": "focusLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "energyLevel",
+            "columnName": "energyLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "workPressure",
+            "columnName": "workPressure",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "distractionLevel",
+            "columnName": "distractionLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "socialMediaUse",
+            "columnName": "socialMediaUse",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lateNightPhoneUse",
+            "columnName": "lateNightPhoneUse",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appAddictionRisk",
+            "columnName": "appAddictionRisk",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "overusePatternLevel",
+            "columnName": "overusePatternLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bingeScrollingLevel",
+            "columnName": "bingeScrollingLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appSwitchingHabit",
+            "columnName": "appSwitchingHabit",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "routineConsistency",
+            "columnName": "routineConsistency",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "productiveHabits",
+            "columnName": "productiveHabits",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "procrastinationLevel",
+            "columnName": "procrastinationLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "physicalActivity",
+            "columnName": "physicalActivity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "feelingStuck",
+            "columnName": "feelingStuck",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "socialSupportLevel",
+            "columnName": "socialSupportLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "supportNeeded",
+            "columnName": "supportNeeded",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "safetySupportEnabled",
+            "columnName": "safetySupportEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "addictionScale",
+            "columnName": "addictionScale",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "purposeScore",
+            "columnName": "purposeScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "copingStyle",
+            "columnName": "copingStyle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "personalityArchetype",
+            "columnName": "personalityArchetype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mentalHealthHistory",
+            "columnName": "mentalHealthHistory",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "peakVulnerabilityTime",
+            "columnName": "peakVulnerabilityTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "readinessToChange",
+            "columnName": "readinessToChange",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onboardingComplete",
+            "columnName": "onboardingComplete",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "routineStability",
+            "columnName": "routineStability",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exerciseFrequency",
+            "columnName": "exerciseFrequency",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "screenFreeActivities",
+            "columnName": "screenFreeActivities",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "socialQualityBaseline",
+            "columnName": "socialQualityBaseline",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "screenTimeAwareness",
+            "columnName": "screenTimeAwareness",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "triggerApps",
+            "columnName": "triggerApps",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "waterIntake",
+            "columnName": "waterIntake",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "caffeineLevel",
+            "columnName": "caffeineLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "alcoholFrequency",
+            "columnName": "alcoholFrequency",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dietQuality",
+            "columnName": "dietQuality",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mealRegularity",
+            "columnName": "mealRegularity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sugarIntake",
+            "columnName": "sugarIntake",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "emotionalEating",
+            "columnName": "emotionalEating",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lateNightEating",
+            "columnName": "lateNightEating",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "app_usage_snapshots",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayTimestamp` INTEGER NOT NULL, `recordedAt` INTEGER NOT NULL, `packageName` TEXT NOT NULL, `appName` TEXT, `usageTimeMillis` INTEGER NOT NULL, `usagePercentage` INTEGER NOT NULL, `percentOfTotalUsage` INTEGER NOT NULL DEFAULT 0, `launchCount` INTEGER NOT NULL, `foregroundSessions` INTEGER NOT NULL DEFAULT 0, `firstOpenedTimestamp` INTEGER NOT NULL, `lastUsedTimestamp` INTEGER NOT NULL, `appCategory` TEXT, `isSystemApp` INTEGER NOT NULL, `isUserVisible` INTEGER NOT NULL DEFAULT 1, `isPassiveApp` INTEGER NOT NULL DEFAULT 0, `bingeFlag` INTEGER NOT NULL DEFAULT 0, `averageSessionLengthMs` INTEGER NOT NULL DEFAULT 0, `bingeSessionCount` INTEGER NOT NULL DEFAULT 0, `longestSessionMs` INTEGER NOT NULL DEFAULT 0, `nightUsagePercent` INTEGER NOT NULL DEFAULT 0)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayTimestamp",
+            "columnName": "dayTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "recordedAt",
+            "columnName": "recordedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "packageName",
+            "columnName": "packageName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appName",
+            "columnName": "appName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "usageTimeMillis",
+            "columnName": "usageTimeMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usagePercentage",
+            "columnName": "usagePercentage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "percentOfTotalUsage",
+            "columnName": "percentOfTotalUsage",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "launchCount",
+            "columnName": "launchCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "foregroundSessions",
+            "columnName": "foregroundSessions",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "firstOpenedTimestamp",
+            "columnName": "firstOpenedTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastUsedTimestamp",
+            "columnName": "lastUsedTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appCategory",
+            "columnName": "appCategory",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isSystemApp",
+            "columnName": "isSystemApp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUserVisible",
+            "columnName": "isUserVisible",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "1"
+          },
+          {
+            "fieldPath": "isPassiveApp",
+            "columnName": "isPassiveApp",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "bingeFlag",
+            "columnName": "bingeFlag",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "averageSessionLengthMs",
+            "columnName": "averageSessionLengthMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "bingeSessionCount",
+            "columnName": "bingeSessionCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "longestSessionMs",
+            "columnName": "longestSessionMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "nightUsagePercent",
+            "columnName": "nightUsagePercent",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_app_usage_snapshots_dayTimestamp_packageName",
+            "unique": true,
+            "columnNames": [
+              "dayTimestamp",
+              "packageName"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_app_usage_snapshots_dayTimestamp_packageName` ON `${TABLE_NAME}` (`dayTimestamp`, `packageName`)"
+          },
+          {
+            "name": "index_app_usage_snapshots_dayTimestamp",
+            "unique": false,
+            "columnNames": [
+              "dayTimestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_app_usage_snapshots_dayTimestamp` ON `${TABLE_NAME}` (`dayTimestamp`)"
+          },
+          {
+            "name": "index_app_usage_snapshots_appCategory",
+            "unique": false,
+            "columnNames": [
+              "appCategory"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_app_usage_snapshots_appCategory` ON `${TABLE_NAME}` (`appCategory`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "wellness_summaries",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayTimestamp` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `wellnessState` TEXT, `riskLevel` TEXT, `explanationText` TEXT, `reasonSummary` TEXT, `nextBestAction` TEXT, `screenTimeMillis` INTEGER NOT NULL, `taskCompletionScore` INTEGER NOT NULL, `topAppName` TEXT, `topAppPackage` TEXT, `supportSuggested` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayTimestamp",
+            "columnName": "dayTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wellnessState",
+            "columnName": "wellnessState",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "riskLevel",
+            "columnName": "riskLevel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "explanationText",
+            "columnName": "explanationText",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reasonSummary",
+            "columnName": "reasonSummary",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nextBestAction",
+            "columnName": "nextBestAction",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "screenTimeMillis",
+            "columnName": "screenTimeMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "taskCompletionScore",
+            "columnName": "taskCompletionScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "topAppName",
+            "columnName": "topAppName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "topAppPackage",
+            "columnName": "topAppPackage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "supportSuggested",
+            "columnName": "supportSuggested",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_wellness_summaries_dayTimestamp",
+            "unique": true,
+            "columnNames": [
+              "dayTimestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_wellness_summaries_dayTimestamp` ON `${TABLE_NAME}` (`dayTimestamp`)"
+          },
+          {
+            "name": "index_wellness_summaries_createdAt",
+            "unique": false,
+            "columnNames": [
+              "createdAt"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_wellness_summaries_createdAt` ON `${TABLE_NAME}` (`createdAt`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "user_baseline",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `avgScreenTime7d` REAL NOT NULL, `avgScreenTime30d` REAL NOT NULL, `avgSleep7d` REAL NOT NULL, `avgStress7d` REAL NOT NULL, `avgMoodScore7d` REAL NOT NULL, `avgTaskCompletion7d` REAL NOT NULL, `avgAppSwitches7d` REAL NOT NULL DEFAULT 0, `avgNightUsageMinutes7d` REAL NOT NULL DEFAULT 0, `avgUnlocks7d` REAL NOT NULL DEFAULT 0, `avgLaunches7d` REAL NOT NULL DEFAULT 0, `avgPassiveRatio7d` REAL NOT NULL DEFAULT 0, `stdScreenTime7d` REAL NOT NULL DEFAULT 0, `stdAppSwitches7d` REAL NOT NULL DEFAULT 0, `stdNightUsage7d` REAL NOT NULL DEFAULT 0, `stdUnlocks7d` REAL NOT NULL DEFAULT 0, `stdLaunches7d` REAL NOT NULL DEFAULT 0, `stdSleep7d` REAL NOT NULL DEFAULT 0, `stdStress7d` REAL NOT NULL DEFAULT 0, `stdMoodScore7d` REAL NOT NULL DEFAULT 0, `lastUpdated` INTEGER NOT NULL, `dataPointCount` INTEGER NOT NULL DEFAULT 0, `baselineStatus` TEXT DEFAULT 'INSUFFICIENT', PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgScreenTime7d",
+            "columnName": "avgScreenTime7d",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgScreenTime30d",
+            "columnName": "avgScreenTime30d",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgSleep7d",
+            "columnName": "avgSleep7d",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgStress7d",
+            "columnName": "avgStress7d",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgMoodScore7d",
+            "columnName": "avgMoodScore7d",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgTaskCompletion7d",
+            "columnName": "avgTaskCompletion7d",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avgAppSwitches7d",
+            "columnName": "avgAppSwitches7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgNightUsageMinutes7d",
+            "columnName": "avgNightUsageMinutes7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgUnlocks7d",
+            "columnName": "avgUnlocks7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgLaunches7d",
+            "columnName": "avgLaunches7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgPassiveRatio7d",
+            "columnName": "avgPassiveRatio7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "stdScreenTime7d",
+            "columnName": "stdScreenTime7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "stdAppSwitches7d",
+            "columnName": "stdAppSwitches7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "stdNightUsage7d",
+            "columnName": "stdNightUsage7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "stdUnlocks7d",
+            "columnName": "stdUnlocks7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "stdLaunches7d",
+            "columnName": "stdLaunches7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "stdSleep7d",
+            "columnName": "stdSleep7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "stdStress7d",
+            "columnName": "stdStress7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "stdMoodScore7d",
+            "columnName": "stdMoodScore7d",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "lastUpdated",
+            "columnName": "lastUpdated",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dataPointCount",
+            "columnName": "dataPointCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "baselineStatus",
+            "columnName": "baselineStatus",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "'INSUFFICIENT'"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "behavior_snapshots",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayTimestamp` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `appSwitchCount` INTEGER NOT NULL, `rapidSwitchCount` INTEGER NOT NULL, `fragmentationIndex` REAL NOT NULL DEFAULT 0, `attentionSpanAvgMs` INTEGER NOT NULL DEFAULT 0, `compulsiveCheckScore` REAL NOT NULL DEFAULT 0, `totalInterruptions` INTEGER NOT NULL DEFAULT 0, `unlockCount` INTEGER NOT NULL DEFAULT 0, `totalForegroundMillis` INTEGER NOT NULL, `bingeSessionCount` INTEGER NOT NULL, `longestSessionMillis` INTEGER NOT NULL, `hasLoopPattern` INTEGER NOT NULL, `loopAppPair` TEXT DEFAULT '', `dominantAppPackage` TEXT, `passiveConsumptionRatio` REAL NOT NULL DEFAULT 0, `digitalDietScore` REAL NOT NULL DEFAULT 0, `socialMediaTimeMillis` INTEGER NOT NULL DEFAULT 0, `productiveAppMinutes` INTEGER NOT NULL DEFAULT 0, `entertainmentTimeMillis` INTEGER NOT NULL DEFAULT 0, `dominantCategory` TEXT DEFAULT '', `appDiversityScore` REAL NOT NULL DEFAULT 0, `scrollIntensityScore` REAL NOT NULL DEFAULT 0, `lateNightUsageMillis` INTEGER NOT NULL, `morningPhoneGrabMs` INTEGER NOT NULL DEFAULT 0, `bedtimeScrollMs` INTEGER NOT NULL DEFAULT 0, `lateNightSessionCount` INTEGER NOT NULL DEFAULT 0, `escapeBehaviorScore` REAL NOT NULL DEFAULT 0, `isAvoidanceDayFlag` INTEGER NOT NULL DEFAULT 0, `overallBehaviorRiskScore` REAL NOT NULL DEFAULT 0, `summaryLabel` TEXT, `explanation` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayTimestamp",
+            "columnName": "dayTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "appSwitchCount",
+            "columnName": "appSwitchCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rapidSwitchCount",
+            "columnName": "rapidSwitchCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fragmentationIndex",
+            "columnName": "fragmentationIndex",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "attentionSpanAvgMs",
+            "columnName": "attentionSpanAvgMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "compulsiveCheckScore",
+            "columnName": "compulsiveCheckScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalInterruptions",
+            "columnName": "totalInterruptions",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "unlockCount",
+            "columnName": "unlockCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalForegroundMillis",
+            "columnName": "totalForegroundMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bingeSessionCount",
+            "columnName": "bingeSessionCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longestSessionMillis",
+            "columnName": "longestSessionMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasLoopPattern",
+            "columnName": "hasLoopPattern",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loopAppPair",
+            "columnName": "loopAppPair",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "dominantAppPackage",
+            "columnName": "dominantAppPackage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "passiveConsumptionRatio",
+            "columnName": "passiveConsumptionRatio",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "digitalDietScore",
+            "columnName": "digitalDietScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "socialMediaTimeMillis",
+            "columnName": "socialMediaTimeMillis",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "productiveAppMinutes",
+            "columnName": "productiveAppMinutes",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "entertainmentTimeMillis",
+            "columnName": "entertainmentTimeMillis",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "dominantCategory",
+            "columnName": "dominantCategory",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "appDiversityScore",
+            "columnName": "appDiversityScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "scrollIntensityScore",
+            "columnName": "scrollIntensityScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "lateNightUsageMillis",
+            "columnName": "lateNightUsageMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "morningPhoneGrabMs",
+            "columnName": "morningPhoneGrabMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "bedtimeScrollMs",
+            "columnName": "bedtimeScrollMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "lateNightSessionCount",
+            "columnName": "lateNightSessionCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "escapeBehaviorScore",
+            "columnName": "escapeBehaviorScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "isAvoidanceDayFlag",
+            "columnName": "isAvoidanceDayFlag",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "overallBehaviorRiskScore",
+            "columnName": "overallBehaviorRiskScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "summaryLabel",
+            "columnName": "summaryLabel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "explanation",
+            "columnName": "explanation",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_behavior_snapshots_dayTimestamp",
+            "unique": true,
+            "columnNames": [
+              "dayTimestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_behavior_snapshots_dayTimestamp` ON `${TABLE_NAME}` (`dayTimestamp`)"
+          },
+          {
+            "name": "index_behavior_snapshots_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_behavior_snapshots_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_behavior_snapshots_overallBehaviorRiskScore",
+            "unique": false,
+            "columnNames": [
+              "overallBehaviorRiskScore"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_behavior_snapshots_overallBehaviorRiskScore` ON `${TABLE_NAME}` (`overallBehaviorRiskScore`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "daily_reset_sessions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`dayTimestamp` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `startedAt` INTEGER NOT NULL, `resetTitle` TEXT, `focusTask` TEXT, `firstAction` TEXT, `warningItem` TEXT, `timerDurationMinutes` INTEGER NOT NULL, `isCompleted` INTEGER NOT NULL, `completedAt` INTEGER NOT NULL, `readinessLevel` INTEGER NOT NULL, `reflectionNote` TEXT, PRIMARY KEY(`dayTimestamp`))",
+        "fields": [
+          {
+            "fieldPath": "dayTimestamp",
+            "columnName": "dayTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startedAt",
+            "columnName": "startedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "resetTitle",
+            "columnName": "resetTitle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "focusTask",
+            "columnName": "focusTask",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "firstAction",
+            "columnName": "firstAction",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "warningItem",
+            "columnName": "warningItem",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timerDurationMinutes",
+            "columnName": "timerDurationMinutes",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCompleted",
+            "columnName": "isCompleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completedAt",
+            "columnName": "completedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "readinessLevel",
+            "columnName": "readinessLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reflectionNote",
+            "columnName": "reflectionNote",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "dayTimestamp"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "usage_sessions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayTimestamp` INTEGER NOT NULL, `packageName` TEXT, `sessionStart` INTEGER NOT NULL, `sessionEnd` INTEGER NOT NULL, `durationMillis` INTEGER NOT NULL, `wasShortSession` INTEGER NOT NULL, `wasLateNightSession` INTEGER NOT NULL, `sessionType` TEXT DEFAULT 'unknown', `interruptionCount` INTEGER NOT NULL DEFAULT 0, `durationCategory` TEXT DEFAULT 'normal', `wasNotificationTriggered` INTEGER NOT NULL DEFAULT 0, `previousAppPackage` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayTimestamp",
+            "columnName": "dayTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "packageName",
+            "columnName": "packageName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sessionStart",
+            "columnName": "sessionStart",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionEnd",
+            "columnName": "sessionEnd",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "durationMillis",
+            "columnName": "durationMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasShortSession",
+            "columnName": "wasShortSession",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wasLateNightSession",
+            "columnName": "wasLateNightSession",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionType",
+            "columnName": "sessionType",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "'unknown'"
+          },
+          {
+            "fieldPath": "interruptionCount",
+            "columnName": "interruptionCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "durationCategory",
+            "columnName": "durationCategory",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "'normal'"
+          },
+          {
+            "fieldPath": "wasNotificationTriggered",
+            "columnName": "wasNotificationTriggered",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "previousAppPackage",
+            "columnName": "previousAppPackage",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_usage_sessions_dayTimestamp",
+            "unique": false,
+            "columnNames": [
+              "dayTimestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_usage_sessions_dayTimestamp` ON `${TABLE_NAME}` (`dayTimestamp`)"
+          },
+          {
+            "name": "index_usage_sessions_packageName",
+            "unique": false,
+            "columnNames": [
+              "packageName"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_usage_sessions_packageName` ON `${TABLE_NAME}` (`packageName`)"
+          },
+          {
+            "name": "index_usage_sessions_dayTimestamp_packageName",
+            "unique": false,
+            "columnNames": [
+              "dayTimestamp",
+              "packageName"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_usage_sessions_dayTimestamp_packageName` ON `${TABLE_NAME}` (`dayTimestamp`, `packageName`)"
+          },
+          {
+            "name": "index_usage_sessions_sessionType",
+            "unique": false,
+            "columnNames": [
+              "sessionType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_usage_sessions_sessionType` ON `${TABLE_NAME}` (`sessionType`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "behavior_usage_summaries",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `dayTimestamp` INTEGER NOT NULL, `totalUsage` INTEGER NOT NULL, `fragmentedUsageScore` INTEGER NOT NULL, `bingeScore` INTEGER NOT NULL, `switchScore` INTEGER NOT NULL, `topAppDominanceScore` INTEGER NOT NULL, `lateNightPenaltyScore` INTEGER NOT NULL, `distractionPatternScore` INTEGER NOT NULL, `summaryLabel` TEXT, `explanatoryNotes` TEXT, `createdAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayTimestamp",
+            "columnName": "dayTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalUsage",
+            "columnName": "totalUsage",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fragmentedUsageScore",
+            "columnName": "fragmentedUsageScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bingeScore",
+            "columnName": "bingeScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "switchScore",
+            "columnName": "switchScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "topAppDominanceScore",
+            "columnName": "topAppDominanceScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lateNightPenaltyScore",
+            "columnName": "lateNightPenaltyScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "distractionPatternScore",
+            "columnName": "distractionPatternScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "summaryLabel",
+            "columnName": "summaryLabel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "explanatoryNotes",
+            "columnName": "explanatoryNotes",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_behavior_usage_summaries_dayTimestamp",
+            "unique": true,
+            "columnNames": [
+              "dayTimestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_behavior_usage_summaries_dayTimestamp` ON `${TABLE_NAME}` (`dayTimestamp`)"
+          },
+          {
+            "name": "index_behavior_usage_summaries_createdAt",
+            "unique": false,
+            "columnNames": [
+              "createdAt"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_behavior_usage_summaries_createdAt` ON `${TABLE_NAME}` (`createdAt`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "weekly_assessments",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `weekStartTimestamp` INTEGER NOT NULL, `weekEndTimestamp` INTEGER NOT NULL, `weekNumber` INTEGER NOT NULL DEFAULT 0, `year` INTEGER NOT NULL DEFAULT 0, `overallMood` TEXT, `coreStruggle` TEXT, `primaryWin` TEXT, `weeklyReflection` TEXT, `nextWeekIntention` TEXT, `emotionalStabilityScore` INTEGER NOT NULL DEFAULT 0, `moodVarietyCount` INTEGER NOT NULL DEFAULT 0, `negativeMoodDays` INTEGER NOT NULL DEFAULT 0, `cryingDays` INTEGER NOT NULL DEFAULT 0, `dominantMood` TEXT, `purposeScore` INTEGER NOT NULL DEFAULT 0, `socialConnectionScore` INTEGER NOT NULL DEFAULT 0, `burnoutRiskScore` INTEGER NOT NULL DEFAULT 0, `anhedoniaScore` INTEGER NOT NULL DEFAULT 0, `selfEfficacyScore` INTEGER NOT NULL DEFAULT 0, `addictionAwarenessScore` INTEGER NOT NULL DEFAULT 0, `exerciseDaysCount` INTEGER NOT NULL DEFAULT 0, `avgSleepHours` REAL NOT NULL DEFAULT 0, `avgSleepQuality` REAL NOT NULL DEFAULT 0, `socialInteractionDays` INTEGER NOT NULL DEFAULT 0, `exerciseFrequency` TEXT, `routineStabilityScore` INTEGER NOT NULL DEFAULT 0, `screenFreeActivities` INTEGER NOT NULL DEFAULT 0, `socialQualityScore` INTEGER NOT NULL DEFAULT 0, `gratitudeDays` INTEGER NOT NULL DEFAULT 0, `journalDays` INTEGER NOT NULL DEFAULT 0, `protectiveFactorScore` REAL NOT NULL DEFAULT 0, `avgScreenTimeMs` INTEGER NOT NULL DEFAULT 0, `avgPassiveRatio` REAL NOT NULL DEFAULT 0, `avgDigitalDietScore` REAL NOT NULL DEFAULT 0, `avgFragmentationIndex` REAL NOT NULL DEFAULT 0, `avgBehaviorRiskScore` REAL NOT NULL DEFAULT 0, `avgDistressSeverity` REAL NOT NULL DEFAULT 0, `highRiskDaysCount` INTEGER NOT NULL DEFAULT 0, `greenDaysCount` INTEGER NOT NULL DEFAULT 0, `avgUnlockCount` INTEGER NOT NULL DEFAULT 0, `totalBingeSessions` INTEGER NOT NULL DEFAULT 0, `escapeBehaviorDays` INTEGER NOT NULL DEFAULT 0, `screenTimeDeltaMs` INTEGER NOT NULL DEFAULT 0, `distressDelta` REAL NOT NULL DEFAULT 0, `purposeDelta` INTEGER NOT NULL DEFAULT 0, `overallTrajectory` TEXT, `generatedInsight` TEXT, `primaryRiskFactor` TEXT, `suggestedAction` TEXT, `actionRecommendations` TEXT, `systemicRiskFlag` INTEGER NOT NULL DEFAULT 0, `weeklyWellnessScore` REAL NOT NULL DEFAULT 0, `nlpSentiment` REAL NOT NULL DEFAULT 0, `nlpDistressFlags` TEXT, `nlpTopics` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weekStartTimestamp",
+            "columnName": "weekStartTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weekEndTimestamp",
+            "columnName": "weekEndTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weekNumber",
+            "columnName": "weekNumber",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "overallMood",
+            "columnName": "overallMood",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "coreStruggle",
+            "columnName": "coreStruggle",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "primaryWin",
+            "columnName": "primaryWin",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "weeklyReflection",
+            "columnName": "weeklyReflection",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nextWeekIntention",
+            "columnName": "nextWeekIntention",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "emotionalStabilityScore",
+            "columnName": "emotionalStabilityScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "moodVarietyCount",
+            "columnName": "moodVarietyCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "negativeMoodDays",
+            "columnName": "negativeMoodDays",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "cryingDays",
+            "columnName": "cryingDays",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "dominantMood",
+            "columnName": "dominantMood",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "purposeScore",
+            "columnName": "purposeScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "socialConnectionScore",
+            "columnName": "socialConnectionScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "burnoutRiskScore",
+            "columnName": "burnoutRiskScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "anhedoniaScore",
+            "columnName": "anhedoniaScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "selfEfficacyScore",
+            "columnName": "selfEfficacyScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "addictionAwarenessScore",
+            "columnName": "addictionAwarenessScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "exerciseDaysCount",
+            "columnName": "exerciseDaysCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgSleepHours",
+            "columnName": "avgSleepHours",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgSleepQuality",
+            "columnName": "avgSleepQuality",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "socialInteractionDays",
+            "columnName": "socialInteractionDays",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "exerciseFrequency",
+            "columnName": "exerciseFrequency",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "routineStabilityScore",
+            "columnName": "routineStabilityScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "screenFreeActivities",
+            "columnName": "screenFreeActivities",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "socialQualityScore",
+            "columnName": "socialQualityScore",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "gratitudeDays",
+            "columnName": "gratitudeDays",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "journalDays",
+            "columnName": "journalDays",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "protectiveFactorScore",
+            "columnName": "protectiveFactorScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgScreenTimeMs",
+            "columnName": "avgScreenTimeMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgPassiveRatio",
+            "columnName": "avgPassiveRatio",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgDigitalDietScore",
+            "columnName": "avgDigitalDietScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgFragmentationIndex",
+            "columnName": "avgFragmentationIndex",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgBehaviorRiskScore",
+            "columnName": "avgBehaviorRiskScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgDistressSeverity",
+            "columnName": "avgDistressSeverity",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "highRiskDaysCount",
+            "columnName": "highRiskDaysCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "greenDaysCount",
+            "columnName": "greenDaysCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "avgUnlockCount",
+            "columnName": "avgUnlockCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalBingeSessions",
+            "columnName": "totalBingeSessions",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "escapeBehaviorDays",
+            "columnName": "escapeBehaviorDays",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "screenTimeDeltaMs",
+            "columnName": "screenTimeDeltaMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "distressDelta",
+            "columnName": "distressDelta",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "purposeDelta",
+            "columnName": "purposeDelta",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "overallTrajectory",
+            "columnName": "overallTrajectory",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "generatedInsight",
+            "columnName": "generatedInsight",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "primaryRiskFactor",
+            "columnName": "primaryRiskFactor",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "suggestedAction",
+            "columnName": "suggestedAction",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "actionRecommendations",
+            "columnName": "actionRecommendations",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "systemicRiskFlag",
+            "columnName": "systemicRiskFlag",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "weeklyWellnessScore",
+            "columnName": "weeklyWellnessScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "nlpSentiment",
+            "columnName": "nlpSentiment",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "nlpDistressFlags",
+            "columnName": "nlpDistressFlags",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nlpTopics",
+            "columnName": "nlpTopics",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_weekly_assessments_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_weekly_assessments_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_weekly_assessments_weekStartTimestamp_weekEndTimestamp",
+            "unique": true,
+            "columnNames": [
+              "weekStartTimestamp",
+              "weekEndTimestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_weekly_assessments_weekStartTimestamp_weekEndTimestamp` ON `${TABLE_NAME}` (`weekStartTimestamp`, `weekEndTimestamp`)"
+          },
+          {
+            "name": "index_weekly_assessments_weekNumber",
+            "unique": false,
+            "columnNames": [
+              "weekNumber"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_weekly_assessments_weekNumber` ON `${TABLE_NAME}` (`weekNumber`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "journal_entries",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `dayTimestamp` INTEGER NOT NULL DEFAULT 0, `content` TEXT, `entryType` TEXT, `relatedPrompt` TEXT, `title` TEXT, `moodAtWriting` TEXT, `stressAtWriting` INTEGER NOT NULL DEFAULT 0, `triggerSource` TEXT, `linkedCheckInId` INTEGER NOT NULL DEFAULT 0, `aiSentiment` TEXT, `sentimentScore` REAL NOT NULL DEFAULT 0, `emotionTags` TEXT, `distressFlags` TEXT, `distressFlagCount` INTEGER NOT NULL DEFAULT 0, `topicTags` TEXT, `cognitiveDistortions` TEXT, `wordCount` INTEGER NOT NULL DEFAULT 0, `writingDurationMs` INTEGER NOT NULL DEFAULT 0, `isComplete` INTEGER NOT NULL DEFAULT 1, `wasEdited` INTEGER NOT NULL DEFAULT 0, `actionItem` TEXT, `actionItemCompleted` INTEGER NOT NULL DEFAULT 0, `gratitudeItemCount` INTEGER NOT NULL DEFAULT 0, `aiReframeSuggestion` TEXT, `aiInsightHelpful` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayTimestamp",
+            "columnName": "dayTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "content",
+            "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "entryType",
+            "columnName": "entryType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "relatedPrompt",
+            "columnName": "relatedPrompt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "moodAtWriting",
+            "columnName": "moodAtWriting",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stressAtWriting",
+            "columnName": "stressAtWriting",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "triggerSource",
+            "columnName": "triggerSource",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "linkedCheckInId",
+            "columnName": "linkedCheckInId",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "aiSentiment",
+            "columnName": "aiSentiment",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sentimentScore",
+            "columnName": "sentimentScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "emotionTags",
+            "columnName": "emotionTags",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "distressFlags",
+            "columnName": "distressFlags",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "distressFlagCount",
+            "columnName": "distressFlagCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "topicTags",
+            "columnName": "topicTags",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cognitiveDistortions",
+            "columnName": "cognitiveDistortions",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wordCount",
+            "columnName": "wordCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "writingDurationMs",
+            "columnName": "writingDurationMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "isComplete",
+            "columnName": "isComplete",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "1"
+          },
+          {
+            "fieldPath": "wasEdited",
+            "columnName": "wasEdited",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "actionItem",
+            "columnName": "actionItem",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "actionItemCompleted",
+            "columnName": "actionItemCompleted",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "gratitudeItemCount",
+            "columnName": "gratitudeItemCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "aiReframeSuggestion",
+            "columnName": "aiReframeSuggestion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "aiInsightHelpful",
+            "columnName": "aiInsightHelpful",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_journal_entries_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_journal_entries_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_journal_entries_dayTimestamp",
+            "unique": false,
+            "columnNames": [
+              "dayTimestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_journal_entries_dayTimestamp` ON `${TABLE_NAME}` (`dayTimestamp`)"
+          },
+          {
+            "name": "index_journal_entries_entryType",
+            "unique": false,
+            "columnNames": [
+              "entryType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_journal_entries_entryType` ON `${TABLE_NAME}` (`entryType`)"
+          },
+          {
+            "name": "index_journal_entries_aiSentiment",
+            "unique": false,
+            "columnNames": [
+              "aiSentiment"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_journal_entries_aiSentiment` ON `${TABLE_NAME}` (`aiSentiment`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "risk_classifications",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `dayTimestamp` INTEGER NOT NULL DEFAULT 0, `digitalAddictionScore` REAL NOT NULL DEFAULT 0, `stressAnxietyScore` REAL NOT NULL DEFAULT 0, `depressionRiskScore` REAL NOT NULL DEFAULT 0, `socialIsolationScore` REAL NOT NULL DEFAULT 0, `sleepDisruptionScore` REAL NOT NULL DEFAULT 0, `lowFulfilmentScore` REAL NOT NULL DEFAULT 0, `overallRiskScore` REAL NOT NULL DEFAULT 0, `primaryCategory` TEXT, `secondaryCategory` TEXT DEFAULT '', `confidence` REAL NOT NULL DEFAULT 0, `crisisFlag` INTEGER NOT NULL DEFAULT 0, `crisisReason` TEXT, `interventionShown` INTEGER NOT NULL DEFAULT 0, `classificationMode` TEXT DEFAULT 'full', `featureDataCount` INTEGER NOT NULL DEFAULT 0, `featureVectorJson` TEXT, `riskDelta` REAL NOT NULL DEFAULT 0, `riskMovingAverage` REAL NOT NULL DEFAULT 0)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dayTimestamp",
+            "columnName": "dayTimestamp",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "digitalAddictionScore",
+            "columnName": "digitalAddictionScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "stressAnxietyScore",
+            "columnName": "stressAnxietyScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "depressionRiskScore",
+            "columnName": "depressionRiskScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "socialIsolationScore",
+            "columnName": "socialIsolationScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "sleepDisruptionScore",
+            "columnName": "sleepDisruptionScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "lowFulfilmentScore",
+            "columnName": "lowFulfilmentScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "overallRiskScore",
+            "columnName": "overallRiskScore",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "primaryCategory",
+            "columnName": "primaryCategory",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "secondaryCategory",
+            "columnName": "secondaryCategory",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "''"
+          },
+          {
+            "fieldPath": "confidence",
+            "columnName": "confidence",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "crisisFlag",
+            "columnName": "crisisFlag",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "crisisReason",
+            "columnName": "crisisReason",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "interventionShown",
+            "columnName": "interventionShown",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "classificationMode",
+            "columnName": "classificationMode",
+            "affinity": "TEXT",
+            "notNull": false,
+            "defaultValue": "'full'"
+          },
+          {
+            "fieldPath": "featureDataCount",
+            "columnName": "featureDataCount",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "featureVectorJson",
+            "columnName": "featureVectorJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "riskDelta",
+            "columnName": "riskDelta",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "riskMovingAverage",
+            "columnName": "riskMovingAverage",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_risk_classifications_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_risk_classifications_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_risk_classifications_dayTimestamp",
+            "unique": true,
+            "columnNames": [
+              "dayTimestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_risk_classifications_dayTimestamp` ON `${TABLE_NAME}` (`dayTimestamp`)"
+          },
+          {
+            "name": "index_risk_classifications_overallRiskScore",
+            "unique": false,
+            "columnNames": [
+              "overallRiskScore"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_risk_classifications_overallRiskScore` ON `${TABLE_NAME}` (`overallRiskScore`)"
+          },
+          {
+            "name": "index_risk_classifications_primaryCategory",
+            "unique": false,
+            "columnNames": [
+              "primaryCategory"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_risk_classifications_primaryCategory` ON `${TABLE_NAME}` (`primaryCategory`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "user_progress",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `totalXp` INTEGER NOT NULL DEFAULT 0, `currentStreak` INTEGER NOT NULL DEFAULT 0, `longestStreak` INTEGER NOT NULL DEFAULT 0, `lastCompletionDay` INTEGER NOT NULL DEFAULT 0, `totalTasksCompleted` INTEGER NOT NULL DEFAULT 0, `totalTasksSkipped` INTEGER NOT NULL DEFAULT 0, `totalCrisisTasksCompleted` INTEGER NOT NULL DEFAULT 0, `badgesUnlockedJson` TEXT, `lastUpdated` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "totalXp",
+            "columnName": "totalXp",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "currentStreak",
+            "columnName": "currentStreak",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "longestStreak",
+            "columnName": "longestStreak",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "lastCompletionDay",
+            "columnName": "lastCompletionDay",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalTasksCompleted",
+            "columnName": "totalTasksCompleted",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalTasksSkipped",
+            "columnName": "totalTasksSkipped",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "totalCrisisTasksCompleted",
+            "columnName": "totalCrisisTasksCompleted",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "badgesUnlockedJson",
+            "columnName": "badgesUnlockedJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastUpdated",
+            "columnName": "lastUpdated",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "crisis_events",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `crisisLevel` TEXT NOT NULL, `status` TEXT NOT NULL DEFAULT 'ACTIVE', `triggerSignalsJson` TEXT, `actionsTakenJson` TEXT, `resolvedAt` INTEGER NOT NULL DEFAULT 0, `resolutionMethod` TEXT, `postCrisisMood` TEXT, `preDistressLevel` INTEGER NOT NULL DEFAULT 0, `postDistressLevel` INTEGER NOT NULL DEFAULT 0, `assessmentConfidence` REAL NOT NULL DEFAULT 0, `followUpScheduled` INTEGER NOT NULL DEFAULT 0, `debriefCompleted` INTEGER NOT NULL DEFAULT 0, `safetyCheckSent` INTEGER NOT NULL DEFAULT 0, `severityTier` INTEGER NOT NULL DEFAULT 0, `resolved` INTEGER NOT NULL DEFAULT 0, `triggerSource` TEXT, `level` TEXT, `createdAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "crisisLevel",
+            "columnName": "crisisLevel",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'ACTIVE'"
+          },
+          {
+            "fieldPath": "triggerSignalsJson",
+            "columnName": "triggerSignalsJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "actionsTakenJson",
+            "columnName": "actionsTakenJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resolvedAt",
+            "columnName": "resolvedAt",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "resolutionMethod",
+            "columnName": "resolutionMethod",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "postCrisisMood",
+            "columnName": "postCrisisMood",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "preDistressLevel",
+            "columnName": "preDistressLevel",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "postDistressLevel",
+            "columnName": "postDistressLevel",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "assessmentConfidence",
+            "columnName": "assessmentConfidence",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "followUpScheduled",
+            "columnName": "followUpScheduled",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "debriefCompleted",
+            "columnName": "debriefCompleted",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "safetyCheckSent",
+            "columnName": "safetyCheckSent",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "severityTier",
+            "columnName": "severityTier",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "resolved",
+            "columnName": "resolved",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "triggerSource",
+            "columnName": "triggerSource",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "level",
+            "columnName": "level",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_crisis_events_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_crisis_events_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_crisis_events_crisisLevel",
+            "unique": false,
+            "columnNames": [
+              "crisisLevel"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_crisis_events_crisisLevel` ON `${TABLE_NAME}` (`crisisLevel`)"
+          },
+          {
+            "name": "index_crisis_events_status",
+            "unique": false,
+            "columnNames": [
+              "status"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_crisis_events_status` ON `${TABLE_NAME}` (`status`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "safety_plan",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `warningSignalsJson` TEXT, `copingStrategiesJson` TEXT, `reasonsToLiveJson` TEXT, `trustedContactsJson` TEXT, `professionalContactsJson` TEXT, `safeEnvironmentsJson` TEXT, `createdAt` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL, `isComplete` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "warningSignalsJson",
+            "columnName": "warningSignalsJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "copingStrategiesJson",
+            "columnName": "copingStrategiesJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reasonsToLiveJson",
+            "columnName": "reasonsToLiveJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "trustedContactsJson",
+            "columnName": "trustedContactsJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "professionalContactsJson",
+            "columnName": "professionalContactsJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "safeEnvironmentsJson",
+            "columnName": "safeEnvironmentsJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isComplete",
+            "columnName": "isComplete",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "trusted_contacts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `phone` TEXT NOT NULL, `relationship` TEXT, `isEmergency` INTEGER NOT NULL DEFAULT 0, `notifyOnCrisis` INTEGER NOT NULL DEFAULT 0, `createdAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phone",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "relationship",
+            "columnName": "relationship",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isEmergency",
+            "columnName": "isEmergency",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "notifyOnCrisis",
+            "columnName": "notifyOnCrisis",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "exercise_completions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `exerciseType` TEXT NOT NULL, `exerciseName` TEXT NOT NULL, `completedAt` INTEGER NOT NULL, `durationMs` INTEGER NOT NULL DEFAULT 0, `preDistressLevel` INTEGER NOT NULL DEFAULT 0, `postDistressLevel` INTEGER NOT NULL DEFAULT 0, `completedFully` INTEGER NOT NULL DEFAULT 1)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exerciseType",
+            "columnName": "exerciseType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exerciseName",
+            "columnName": "exerciseName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completedAt",
+            "columnName": "completedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "durationMs",
+            "columnName": "durationMs",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "preDistressLevel",
+            "columnName": "preDistressLevel",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "postDistressLevel",
+            "columnName": "postDistressLevel",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "completedFully",
+            "columnName": "completedFully",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "1"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_exercise_completions_completedAt",
+            "unique": false,
+            "columnNames": [
+              "completedAt"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_completions_completedAt` ON `${TABLE_NAME}` (`completedAt`)"
+          },
+          {
+            "name": "index_exercise_completions_exerciseType",
+            "unique": false,
+            "columnNames": [
+              "exerciseType"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_exercise_completions_exerciseType` ON `${TABLE_NAME}` (`exerciseType`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "suicide_risk_events",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `csrrsTier` INTEGER NOT NULL, `severityLabel` TEXT, `textTier` INTEGER NOT NULL, `behaviorTier` INTEGER NOT NULL, `signalCount` INTEGER NOT NULL, `matchedPhrasesJson` TEXT, `activeSignalsJson` TEXT, `source` TEXT, `lockdownTriggered` INTEGER NOT NULL, `notificationSent` INTEGER NOT NULL, `autoContactSent` INTEGER NOT NULL, `distressLevel` INTEGER NOT NULL, `moodScore` INTEGER NOT NULL, `isNightTime` INTEGER NOT NULL, `linkedCrisisEventId` INTEGER NOT NULL, `resolution` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "csrrsTier",
+            "columnName": "csrrsTier",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "severityLabel",
+            "columnName": "severityLabel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "textTier",
+            "columnName": "textTier",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "behaviorTier",
+            "columnName": "behaviorTier",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "signalCount",
+            "columnName": "signalCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "matchedPhrasesJson",
+            "columnName": "matchedPhrasesJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "activeSignalsJson",
+            "columnName": "activeSignalsJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lockdownTriggered",
+            "columnName": "lockdownTriggered",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "notificationSent",
+            "columnName": "notificationSent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "autoContactSent",
+            "columnName": "autoContactSent",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "distressLevel",
+            "columnName": "distressLevel",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "moodScore",
+            "columnName": "moodScore",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isNightTime",
+            "columnName": "isNightTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "linkedCrisisEventId",
+            "columnName": "linkedCrisisEventId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "resolution",
+            "columnName": "resolution",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "error_logs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `workerName` TEXT NOT NULL, `category` TEXT NOT NULL, `exceptionType` TEXT, `message` TEXT, `stackTraceSnippet` TEXT, `resolution` TEXT NOT NULL, `attemptCount` INTEGER NOT NULL, `resolvedOnRetry` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "workerName",
+            "columnName": "workerName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "exceptionType",
+            "columnName": "exceptionType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "message",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stackTraceSnippet",
+            "columnName": "stackTraceSnippet",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "resolution",
+            "columnName": "resolution",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attemptCount",
+            "columnName": "attemptCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "resolvedOnRetry",
+            "columnName": "resolvedOnRetry",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_error_logs_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_error_logs_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          },
+          {
+            "name": "index_error_logs_workerName",
+            "unique": false,
+            "columnNames": [
+              "workerName"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_error_logs_workerName` ON `${TABLE_NAME}` (`workerName`)"
+          },
+          {
+            "name": "index_error_logs_category",
+            "unique": false,
+            "columnNames": [
+              "category"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_error_logs_category` ON `${TABLE_NAME}` (`category`)"
+          },
+          {
+            "name": "index_error_logs_workerName_category",
+            "unique": false,
+            "columnNames": [
+              "workerName",
+              "category"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_error_logs_workerName_category` ON `${TABLE_NAME}` (`workerName`, `category`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c30f508cc2fd57527d7dc2b3a24f3acb')"
+    ]
+  }
+}

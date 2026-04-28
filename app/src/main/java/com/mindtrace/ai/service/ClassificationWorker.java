@@ -104,8 +104,15 @@ public class ClassificationWorker extends Worker {
                 return Result.success();
             }
 
-            // ── 3. Run classifier ──
+            // ── 3. Validate classifier weights at runtime ──
             MultiModalClassifier classifier = new MultiModalClassifier(ctx);
+            if (!MultiModalClassifier.validateWeights()) {
+                Log.e(TAG, "⚠ Classifier weight validation FAILED — skipping " +
+                        "classification to prevent silent scoring drift");
+                return Result.success();
+            }
+
+            // ── 4. Run classifier ──
             RiskClassification rc = classifier.classifyToday(fv);
 
             if (rc == null) {

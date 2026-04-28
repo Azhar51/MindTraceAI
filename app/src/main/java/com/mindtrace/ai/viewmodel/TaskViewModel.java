@@ -20,7 +20,6 @@ import com.mindtrace.ai.repository.TaskRepository;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
@@ -40,7 +39,7 @@ import java.util.function.Consumer;
 public class TaskViewModel extends AndroidViewModel {
 
     private static final String TAG = "TaskViewModel";
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = com.mindtrace.ai.util.AppExecutors.diskIO();
 
     private final TaskRepository taskRepository;
     private final UserProgressDao progressDao;
@@ -279,6 +278,6 @@ public class TaskViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        executor.shutdown();
+        // Shared executor — do not shutdown
     }
 }

@@ -20,7 +20,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * ViewModel for the Mood & Journal screen (Part 2C — Advanced).
@@ -69,7 +68,7 @@ public class JournalViewModel extends AndroidViewModel {
     private final JournalDao journalDao;
     private final QuestionnaireDao questionnaireDao;
     private final TaskDao taskDao;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = com.mindtrace.ai.util.AppExecutors.diskIO();
 
     public JournalViewModel(@NonNull Application application) {
         super(application);
@@ -274,6 +273,6 @@ public class JournalViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        executor.shutdown();
+        // Shared executor — do not shutdown
     }
 }

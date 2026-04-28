@@ -114,7 +114,7 @@ public class OverviewFabDelegate {
         uiHandler.removeCallbacks(revealRunnable);
         if (Math.abs(delta) <= ViewUtils.dp(context, 4)) return;
         if (delta > 0 && scrollY > ViewUtils.dp(context, 100)) setHiddenByScroll(true, true);
-        else if (scrollY < ViewUtils.dp(context, 80)) setHiddenByScroll(false, true);
+        else if (delta < 0 || scrollY < ViewUtils.dp(context, 80)) setHiddenByScroll(false, true);
     }
 
     /** Update the badge count text. Zero or negative hides it. */
@@ -127,7 +127,7 @@ public class OverviewFabDelegate {
 
     /** Initial delayed hide after fragment entry. */
     public void scheduleInitialHide() {
-        if (fabPrimary != null) fabPrimary.postDelayed(() -> setHiddenByScroll(true, true), 1600L);
+        // Disabled: do not auto-hide the FAB initially.
     }
 
     /** Clean up handlers. */

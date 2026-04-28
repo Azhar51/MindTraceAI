@@ -24,7 +24,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class DailyResetViewModel extends AndroidViewModel {
     private final DailyResetRepository dailyResetRepository;
@@ -52,7 +51,7 @@ public class DailyResetViewModel extends AndroidViewModel {
         dailyResetRepository = new DailyResetRepository(application);
         onboardingRepository = new OnboardingRepository(application);
         onboardingProfileAnalyzer = new OnboardingProfileAnalyzer();
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = com.mindtrace.ai.util.AppExecutors.diskIO();
         mainHandler = new Handler(Looper.getMainLooper());
     }
 
@@ -328,6 +327,6 @@ public class DailyResetViewModel extends AndroidViewModel {
     protected void onCleared() {
         super.onCleared();
         cancelTimer();
-        executorService.shutdown();
+        // executorService is AppExecutors.diskIO() — never shut down the shared pool
     }
 }

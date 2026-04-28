@@ -5,17 +5,15 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.button.MaterialButton;
 import com.mindtrace.ai.R;
 import com.mindtrace.ai.ai.ExerciseEngine;
+import com.mindtrace.ai.databinding.ActivityGroundingExerciseBinding;
 import com.mindtrace.ai.viewmodel.CrisisViewModel;
 
 import java.util.List;
@@ -26,6 +24,8 @@ import java.util.Locale;
  *
  * <p>Shows one grounding step at a time with large typography,
  * progress dots, and smooth transitions between steps.</p>
+ *
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
  */
 public class GroundingExerciseActivity extends AppCompatActivity {
 
@@ -34,9 +34,7 @@ public class GroundingExerciseActivity extends AppCompatActivity {
 
     private static final String[] STEP_ICONS = {"👁️", "👂", "✋", "👃", "👅"};
 
-    private TextView tvStepIcon, tvStepNumber, tvStepInstruction, tvStepDescription;
-    private TextView tvExerciseName, tvStepTimer;
-    private MaterialButton btnNext;
+    private ActivityGroundingExerciseBinding binding;
     private View[] dots;
 
     private ExerciseEngine.GroundingExercise exercise;
@@ -56,7 +54,8 @@ public class GroundingExerciseActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.crisis_bg));
 
-        setContentView(R.layout.activity_grounding_exercise);
+        binding = ActivityGroundingExerciseBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         crisisViewModel = new ViewModelProvider(this).get(CrisisViewModel.class);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -68,28 +67,20 @@ public class GroundingExerciseActivity extends AppCompatActivity {
         List<ExerciseEngine.GroundingExercise> all = ExerciseEngine.getAllGroundingExercises();
         exercise = all.get(Math.min(idx, all.size() - 1));
 
-        bindViews();
+        setupViews();
         showStep(0);
     }
 
-    private void bindViews() {
-        tvStepIcon = findViewById(R.id.tv_step_icon);
-        tvStepNumber = findViewById(R.id.tv_step_number);
-        tvStepInstruction = findViewById(R.id.tv_step_instruction);
-        tvStepDescription = findViewById(R.id.tv_step_description);
-        tvExerciseName = findViewById(R.id.tv_exercise_name);
-        tvStepTimer = findViewById(R.id.tv_step_timer);
-        btnNext = findViewById(R.id.btn_next);
-
+    private void setupViews() {
         dots = new View[]{
-                findViewById(R.id.dot_1), findViewById(R.id.dot_2),
-                findViewById(R.id.dot_3), findViewById(R.id.dot_4),
-                findViewById(R.id.dot_5)
+                binding.dot1, binding.dot2,
+                binding.dot3, binding.dot4,
+                binding.dot5
         };
 
-        tvExerciseName.setText(exercise.name);
-        findViewById(R.id.btn_close).setOnClickListener(v -> finishExercise(false));
-        btnNext.setOnClickListener(v -> nextStep());
+        binding.tvExerciseName.setText(exercise.name);
+        binding.btnClose.setOnClickListener(v -> finishExercise(false));
+        binding.btnNext.setOnClickListener(v -> nextStep());
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -107,50 +98,50 @@ public class GroundingExerciseActivity extends AppCompatActivity {
 
         // Icon
         String icon = stepIndex < STEP_ICONS.length ? STEP_ICONS[stepIndex] : "🌿";
-        tvStepIcon.setText(icon);
+        binding.tvStepIcon.setText(icon);
 
         // Text
-        tvStepNumber.setText(String.format(Locale.US, "Step %d of %d",
+        binding.tvStepNumber.setText(String.format(Locale.US, "Step %d of %d",
                 stepIndex + 1, exercise.steps.size()));
-        tvStepInstruction.setText(step.instruction);
-        tvStepDescription.setText(step.detail != null ? step.detail :
+        binding.tvStepInstruction.setText(step.instruction);
+        binding.tvStepDescription.setText(step.detail != null ? step.detail :
                 "Take a moment to notice...");
 
         // Timer hint
-        tvStepTimer.setText("Take your time...");
+        binding.tvStepTimer.setText("Take your time...");
 
         // Button text
         if (stepIndex == exercise.steps.size() - 1) {
-            btnNext.setText("Finish ✨");
+            binding.btnNext.setText("Finish ✨");
         } else {
-            btnNext.setText("Next →");
+            binding.btnNext.setText("Next →");
         }
 
         // Progress dots
         updateDots(stepIndex);
 
         // Animate in with spring physics
-        tvStepIcon.setAlpha(0f);
-        tvStepIcon.setScaleX(0.5f);
-        tvStepIcon.setScaleY(0.5f);
-        tvStepIcon.animate()
+        binding.tvStepIcon.setAlpha(0f);
+        binding.tvStepIcon.setScaleX(0.5f);
+        binding.tvStepIcon.setScaleY(0.5f);
+        binding.tvStepIcon.animate()
                 .alpha(1f).scaleX(1f).scaleY(1f)
                 .setDuration(350)
                 .setInterpolator(new android.view.animation.OvershootInterpolator(2.5f))
                 .start();
 
-        tvStepInstruction.setAlpha(0f);
-        tvStepInstruction.setTranslationY(30f);
-        tvStepInstruction.animate().alpha(1f).translationY(0f)
+        binding.tvStepInstruction.setAlpha(0f);
+        binding.tvStepInstruction.setTranslationY(30f);
+        binding.tvStepInstruction.animate().alpha(1f).translationY(0f)
                 .setDuration(500).setStartDelay(100)
                 .setInterpolator(new android.view.animation.DecelerateInterpolator())
                 .start();
 
-        tvStepDescription.setAlpha(0f);
-        tvStepDescription.animate().alpha(1f).setDuration(500).setStartDelay(200).start();
+        binding.tvStepDescription.setAlpha(0f);
+        binding.tvStepDescription.animate().alpha(1f).setDuration(500).setStartDelay(200).start();
 
         // Haptic
-        UiMotion.hapticClick(tvStepIcon);
+        UiMotion.hapticClick(binding.tvStepIcon);
     }
 
     private void nextStep() {
@@ -162,11 +153,9 @@ public class GroundingExerciseActivity extends AppCompatActivity {
             if (i < exercise.steps.size()) {
                 dots[i].setVisibility(View.VISIBLE);
                 if (i < activeIndex) {
-                    // Completed
                     dots[i].setBackgroundResource(R.drawable.bg_chip_selected);
                     dots[i].setAlpha(0.6f);
                 } else if (i == activeIndex) {
-                    // Active — scale pulse
                     dots[i].setBackgroundResource(R.drawable.bg_chip_selected);
                     dots[i].setAlpha(1.0f);
                     dots[i].animate()
@@ -175,7 +164,6 @@ public class GroundingExerciseActivity extends AppCompatActivity {
                             .setInterpolator(new android.view.animation.OvershootInterpolator(2f))
                             .start();
                 } else {
-                    // Upcoming
                     dots[i].setBackgroundResource(R.drawable.bg_chip_unselected);
                     dots[i].setAlpha(0.4f);
                     dots[i].setScaleX(1.0f);
@@ -207,11 +195,8 @@ public class GroundingExerciseActivity extends AppCompatActivity {
                 preDistress, 0, completedFully);
 
         if (completedFully) {
-            // ── Premium nature-themed celebration ──
-            UiMotion.hapticHeavy(btnNext);
-            UiMotion.confettiBurst(btnNext, 12);
-
-            // Post-exercise distress prompt
+            UiMotion.hapticHeavy(binding.btnNext);
+            UiMotion.confettiBurst(binding.btnNext, 12);
             showPostExercisePrompt(durationMs);
         } else {
             finish();
@@ -252,5 +237,11 @@ public class GroundingExerciseActivity extends AppCompatActivity {
                 })
                 .setCancelable(false)
                 .show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

@@ -4,16 +4,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.button.MaterialButton;
 import com.mindtrace.ai.R;
 import com.mindtrace.ai.database.entity.WeeklyAssessment;
+import com.mindtrace.ai.databinding.ActivityWeeklyAssessmentBinding;
 import com.mindtrace.ai.repository.AssessmentRepository;
 
 import java.text.SimpleDateFormat;
@@ -21,7 +20,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Weekly Assessment Activity — long-term psychological trend capture.
@@ -58,55 +56,9 @@ import java.util.concurrent.Executors;
  */
 public class WeeklyAssessmentActivity extends AppCompatActivity {
 
+    private ActivityWeeklyAssessmentBinding binding;
     private AssessmentRepository assessmentRepository;
     private ExecutorService executor;
-
-    // ── Card 1: Overall Mood & Struggle ──
-    private RadioGroup rgOverallMood;
-    private RadioGroup rgCoreStruggle;
-
-    // ── Card 2: Clinical Markers ──
-    private SeekBar sbAddictionAwareness;
-    private SeekBar sbPurpose;
-    private SeekBar sbSocialConnection;
-    private SeekBar sbBurnout;
-    private SeekBar sbSelfEfficacy;
-    private SeekBar sbAnhedonia;
-
-    // ── Card 2: Live value labels ──
-    private TextView tvAddictionLabel;
-    private TextView tvPurposeLabel;
-    private TextView tvSocialLabel;
-    private TextView tvBurnoutLabel;
-    private TextView tvEfficacyLabel;
-    private TextView tvAnhedoniaLabel;
-
-    // ── Card 3: Protective Factors ──
-    private RadioGroup rgExerciseFrequency;
-    private SeekBar sbRoutineStability;
-    private TextView tvRoutineLabel;
-    private EditText etAvgSleep;
-    private SeekBar sbSleepQuality;
-    private SeekBar sbSocialDays;
-    private SeekBar sbEmotionalStability;
-    private SeekBar sbNegativeDays;
-    private SeekBar sbScreenFree;           // Task 2.F.7
-    private TextView tvScreenFreeLabel;
-    private SeekBar sbSocialQuality;         // Task 2.F.8
-    private TextView tvSocialQualityLabel;
-
-    // ── Card 4: Free-Text ──
-    private EditText etPrimaryWin;           // Task 2.F.9
-    private EditText etCoreStruggleText;     // Task 2.F.10
-    private EditText etNextWeekIntention;
-    private TextView tvWinCharCount;
-    private TextView tvStruggleCharCount;
-    private TextView tvIntentionCharCount;
-
-    // ── Header ──
-    private TextView tvWeekRange;
-
-    private MaterialButton btnSubmit;
 
     // ── Week window ──
     private long weekStartTimestamp;
@@ -115,72 +67,23 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_weekly_assessment);
+        binding = ActivityWeeklyAssessmentBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         assessmentRepository = new AssessmentRepository(this);
-        executor = Executors.newSingleThreadExecutor();
+        executor = com.mindtrace.ai.util.AppExecutors.diskIO();
 
-        bindViews();
         computeWeekWindow();
         attachSeekBarLabels();
         attachCharCountWatchers();
 
-        UiMotion.attachPressAnimation(btnSubmit);
-        btnSubmit.setOnClickListener(v -> submitAssessment());
+        UiMotion.attachPressAnimation(binding.btnSubmitWeekly);
+        binding.btnSubmitWeekly.setOnClickListener(v -> submitAssessment());
     }
 
     // ═════════════════════════════════════════════════════════════════════
-    // VIEW BINDING
+    // VIEW BINDING — now using ActivityWeeklyAssessmentBinding
     // ═════════════════════════════════════════════════════════════════════
-
-    private void bindViews() {
-        // Header
-        tvWeekRange = findViewById(R.id.tv_week_range);
-
-        // Card 1
-        rgOverallMood = findViewById(R.id.rg_overall_mood);
-        rgCoreStruggle = findViewById(R.id.rg_core_struggle);
-
-        // Card 2
-        sbAddictionAwareness = findViewById(R.id.sb_addiction_awareness);
-        sbPurpose = findViewById(R.id.sb_purpose);
-        sbSocialConnection = findViewById(R.id.sb_social_connection);
-        sbBurnout = findViewById(R.id.sb_burnout);
-        sbSelfEfficacy = findViewById(R.id.sb_self_efficacy);
-        sbAnhedonia = findViewById(R.id.sb_anhedonia);
-
-        // Card 2: Labels
-        tvAddictionLabel = findViewById(R.id.tv_addiction_label);
-        tvPurposeLabel = findViewById(R.id.tv_purpose_label);
-        tvSocialLabel = findViewById(R.id.tv_social_label);
-        tvBurnoutLabel = findViewById(R.id.tv_burnout_label);
-        tvEfficacyLabel = findViewById(R.id.tv_efficacy_label);
-        tvAnhedoniaLabel = findViewById(R.id.tv_anhedonia_label);
-
-        // Card 3
-        rgExerciseFrequency = findViewById(R.id.rg_exercise_frequency);
-        sbRoutineStability = findViewById(R.id.sb_routine_stability);
-        tvRoutineLabel = findViewById(R.id.tv_routine_label);
-        etAvgSleep = findViewById(R.id.et_avg_sleep);
-        sbSleepQuality = findViewById(R.id.sb_sleep_quality);
-        sbSocialDays = findViewById(R.id.sb_social_days);
-        sbEmotionalStability = findViewById(R.id.sb_emotional_stability);
-        sbNegativeDays = findViewById(R.id.sb_negative_days);
-        sbScreenFree = findViewById(R.id.sb_screen_free);
-        tvScreenFreeLabel = findViewById(R.id.tv_screen_free_label);
-        sbSocialQuality = findViewById(R.id.sb_social_quality);
-        tvSocialQualityLabel = findViewById(R.id.tv_social_quality_label);
-
-        // Card 4
-        etPrimaryWin = findViewById(R.id.et_primary_win);
-        etCoreStruggleText = findViewById(R.id.et_core_struggle_text);
-        etNextWeekIntention = findViewById(R.id.et_next_week_intention);
-        tvWinCharCount = findViewById(R.id.tv_win_char_count);
-        tvStruggleCharCount = findViewById(R.id.tv_struggle_char_count);
-        tvIntentionCharCount = findViewById(R.id.tv_intention_char_count);
-
-        btnSubmit = findViewById(R.id.btn_submit_weekly);
-    }
 
     // ═════════════════════════════════════════════════════════════════════
     // WEEK WINDOW COMPUTATION
@@ -214,7 +117,7 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM d", Locale.getDefault());
         String startStr = sdf.format(new Date(weekStartTimestamp));
         String endStr = sdf.format(new Date(weekEndTimestamp));
-        tvWeekRange.setText("Week of " + startStr + " – " + endStr);
+        binding.tvWeekRange.setText("Week of " + startStr + " – " + endStr);
     }
 
     // ═════════════════════════════════════════════════════════════════════
@@ -232,43 +135,43 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
         assessment.coreStruggle = resolveCoreStruggle();
 
         // ── Card 2: Clinical Markers (1-10) ──
-        assessment.addictionAwarenessScore = sbAddictionAwareness.getProgress();
-        assessment.purposeScore = sbPurpose.getProgress();
-        assessment.socialConnectionScore = sbSocialConnection.getProgress();
-        assessment.burnoutRiskScore = sbBurnout.getProgress();
-        assessment.selfEfficacyScore = sbSelfEfficacy.getProgress();
-        assessment.anhedoniaScore = sbAnhedonia.getProgress();
+        assessment.addictionAwarenessScore = binding.sbAddictionAwareness.getProgress();
+        assessment.purposeScore = binding.sbPurpose.getProgress();
+        assessment.socialConnectionScore = binding.sbSocialConnection.getProgress();
+        assessment.burnoutRiskScore = binding.sbBurnout.getProgress();
+        assessment.selfEfficacyScore = binding.sbSelfEfficacy.getProgress();
+        assessment.anhedoniaScore = binding.sbAnhedonia.getProgress();
 
         // ── Card 3: Protective Factors ──
         assessment.exerciseFrequency = resolveExerciseFrequency();
         assessment.exerciseDaysCount = exerciseFrequencyToDays(assessment.exerciseFrequency);
-        assessment.routineStabilityScore = sbRoutineStability.getProgress();
-        assessment.socialInteractionDays = sbSocialDays.getProgress();
-        assessment.avgSleepQuality = sbSleepQuality.getProgress();
-        assessment.emotionalStabilityScore = sbEmotionalStability.getProgress();
-        assessment.negativeMoodDays = sbNegativeDays.getProgress();
-        assessment.screenFreeActivities = sbScreenFree.getProgress();     // 2.F.7
-        assessment.socialQualityScore = sbSocialQuality.getProgress();    // 2.F.8
+        assessment.routineStabilityScore = binding.sbRoutineStability.getProgress();
+        assessment.socialInteractionDays = binding.sbSocialDays.getProgress();
+        assessment.avgSleepQuality = binding.sbSleepQuality.getProgress();
+        assessment.emotionalStabilityScore = binding.sbEmotionalStability.getProgress();
+        assessment.negativeMoodDays = binding.sbNegativeDays.getProgress();
+        assessment.screenFreeActivities = binding.sbScreenFree.getProgress();     // 2.F.7
+        assessment.socialQualityScore = binding.sbSocialQuality.getProgress();    // 2.F.8
 
         try {
-            assessment.avgSleepHours = Float.parseFloat(etAvgSleep.getText().toString());
+            assessment.avgSleepHours = Float.parseFloat(binding.etAvgSleep.getText().toString());
         } catch (Exception e) {
             assessment.avgSleepHours = 7.0f;
         }
 
         // ── Card 4: Free-Text ──
-        String win = etPrimaryWin.getText().toString().trim();
+        String win = binding.etPrimaryWin.getText().toString().trim();
         if (!win.isEmpty()) assessment.primaryWin = win;
 
-        String struggle = etCoreStruggleText.getText().toString().trim();
+        String struggle = binding.etCoreStruggleText.getText().toString().trim();
         if (!struggle.isEmpty()) assessment.weeklyReflection = struggle;
 
-        String intention = etNextWeekIntention.getText().toString().trim();
+        String intention = binding.etNextWeekIntention.getText().toString().trim();
         if (!intention.isEmpty()) assessment.nextWeekIntention = intention;
 
         // ── Save with NLP enrichment (Task 2.F.11 — Advanced) ──
-        btnSubmit.setEnabled(false);
-        btnSubmit.setText("Analyzing reflections...");
+        binding.btnSubmitWeekly.setEnabled(false);
+        binding.btnSubmitWeekly.setText("Analyzing reflections...");
 
         executor.execute(() -> {
             try {
@@ -310,7 +213,7 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
                 }
 
                 // Step 3: Persist assessment (computes wellness/risk/deltas)
-                runOnUiThread(() -> btnSubmit.setText("Computing wellness score..."));
+                runOnUiThread(() -> binding.btnSubmitWeekly.setText("Computing wellness score..."));
                 assessmentRepository.saveWeeklyAssessmentSync(assessment);
 
                 runOnUiThread(() -> {
@@ -334,8 +237,8 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
                 });
             } catch (Exception e) {
                 runOnUiThread(() -> {
-                    btnSubmit.setEnabled(true);
-                    btnSubmit.setText("Complete Weekly Assessment");
+                    binding.btnSubmitWeekly.setEnabled(true);
+                    binding.btnSubmitWeekly.setText("Complete Weekly Assessment");
                     Toast.makeText(this,
                             "Failed to save assessment. Please try again.",
                             Toast.LENGTH_SHORT).show();
@@ -349,7 +252,7 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
     // ═════════════════════════════════════════════════════════════════════
 
     private String resolveOverallMood() {
-        int id = rgOverallMood.getCheckedRadioButtonId();
+        int id = binding.rgOverallMood.getCheckedRadioButtonId();
         if (id == R.id.rb_mood_thriving) return "Thriving";
         if (id == R.id.rb_mood_good) return "Good";
         if (id == R.id.rb_mood_struggling) return "Struggling";
@@ -359,7 +262,7 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
     }
 
     private String resolveCoreStruggle() {
-        int id = rgCoreStruggle.getCheckedRadioButtonId();
+        int id = binding.rgCoreStruggle.getCheckedRadioButtonId();
         if (id == R.id.rb_struggle_distraction) return "Distraction";
         if (id == R.id.rb_struggle_anxiety) return "Anxiety";
         if (id == R.id.rb_struggle_loneliness) return "Loneliness";
@@ -371,7 +274,7 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
 
     /** Resolve exercise frequency from RadioGroup (Task 2.F.6). */
     private String resolveExerciseFrequency() {
-        int id = rgExerciseFrequency.getCheckedRadioButtonId();
+        int id = binding.rgExerciseFrequency.getCheckedRadioButtonId();
         if (id == R.id.rb_exercise_never) return "Never";
         if (id == R.id.rb_exercise_3_4) return "3-4x";
         if (id == R.id.rb_exercise_daily) return "Daily";
@@ -399,15 +302,15 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
      * As the user slides, the label updates with a value and clinical descriptor.
      */
     private void attachSeekBarLabels() {
-        attachLabel(sbAddictionAwareness, tvAddictionLabel, this::describeAddiction);
-        attachLabel(sbPurpose, tvPurposeLabel, this::describePurpose);
-        attachLabel(sbSocialConnection, tvSocialLabel, this::describeSocial);
-        attachLabel(sbBurnout, tvBurnoutLabel, this::describeBurnout);
-        attachLabel(sbSelfEfficacy, tvEfficacyLabel, this::describeEfficacy);
-        attachLabel(sbAnhedonia, tvAnhedoniaLabel, this::describeAnhedonia);
-        attachLabel(sbRoutineStability, tvRoutineLabel, this::describeRoutine);
-        attachLabel(sbScreenFree, tvScreenFreeLabel, this::describeScreenFree);
-        attachLabel(sbSocialQuality, tvSocialQualityLabel, this::describeSocialQuality);
+        attachLabel(binding.sbAddictionAwareness, binding.tvAddictionLabel, this::describeAddiction);
+        attachLabel(binding.sbPurpose, binding.tvPurposeLabel, this::describePurpose);
+        attachLabel(binding.sbSocialConnection, binding.tvSocialLabel, this::describeSocial);
+        attachLabel(binding.sbBurnout, binding.tvBurnoutLabel, this::describeBurnout);
+        attachLabel(binding.sbSelfEfficacy, binding.tvEfficacyLabel, this::describeEfficacy);
+        attachLabel(binding.sbAnhedonia, binding.tvAnhedoniaLabel, this::describeAnhedonia);
+        attachLabel(binding.sbRoutineStability, binding.tvRoutineLabel, this::describeRoutine);
+        attachLabel(binding.sbScreenFree, binding.tvScreenFreeLabel, this::describeScreenFree);
+        attachLabel(binding.sbSocialQuality, binding.tvSocialQualityLabel, this::describeSocialQuality);
     }
 
     private void attachLabel(SeekBar seekBar, TextView label, LabelFormatter formatter) {
@@ -526,9 +429,9 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
      * Longer entries produce richer NLP data for trend analysis.
      */
     private void attachCharCountWatchers() {
-        attachCharWatcher(etPrimaryWin, tvWinCharCount);
-        attachCharWatcher(etCoreStruggleText, tvStruggleCharCount);
-        attachCharWatcher(etNextWeekIntention, tvIntentionCharCount);
+        attachCharWatcher(binding.etPrimaryWin, binding.tvWinCharCount);
+        attachCharWatcher(binding.etCoreStruggleText, binding.tvStruggleCharCount);
+        attachCharWatcher(binding.etNextWeekIntention, binding.tvIntentionCharCount);
     }
 
     private void attachCharWatcher(EditText editText, TextView counter) {
@@ -551,6 +454,7 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (executor != null) executor.shutdown();
+        // executor is AppExecutors.diskIO() — never shut down the shared pool
+        binding = null;
     }
 }

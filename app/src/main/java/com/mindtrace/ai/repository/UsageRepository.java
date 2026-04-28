@@ -34,7 +34,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class UsageRepository {
     private static final int DEFAULT_TOP_APPS_LIMIT = 10;
@@ -69,7 +68,7 @@ public class UsageRepository {
         behaviorAnalyzer = new BehaviorAnalyzer();
         settingsRepository = new SettingsRepository(appContext);
         usageIntelligenceEngine = new UsageIntelligenceEngine();
-        executorService = Executors.newFixedThreadPool(2);
+        executorService = com.mindtrace.ai.util.AppExecutors.diskIO();
     }
 
     public void insertUsage(DailyUsage usage) {
@@ -491,33 +490,36 @@ public class UsageRepository {
             return;
         }
 
-        long dayTimestamp = intelligence.dayTimestamp;
-        DailyUsage existingUsage = usageDao.getUsageForDay(dayTimestamp);
-        DailyUsage dailyUsage = intelligence.dailyUsage;
-        if (existingUsage == null) {
-            usageDao.insert(dailyUsage);
-        } else {
-            dailyUsage.id = existingUsage.id;
-            usageDao.update(dailyUsage);
-        }
-
-        appUsageSnapshotDao.deleteForDay(dayTimestamp);
-        for (AppUsageSnapshot snapshot : intelligence.appSnapshots) {
-            appUsageSnapshotDao.insertOrReplace(snapshot);
-        }
-
-        usageSessionDao.deleteForDay(dayTimestamp);
-        for (UsageSession session : intelligence.sessions) {
-            usageSessionDao.insert(session);
-        }
-
-        if (intelligence.behaviorSummary != null) {
-            BehaviorUsageSummary existingSummary = behaviorUsageSummaryDao.getSummaryForDaySync(dayTimestamp);
-            if (existingSummary != null) {
-                intelligence.behaviorSummary.id = existingSummary.id;
+        AppDatabase db = AppDatabase.getInstance(appContext);
+        db.runInTransaction(() -> {
+            long dayTimestamp = intelligence.dayTimestamp;
+            DailyUsage existingUsage = usageDao.getUsageForDay(dayTimestamp);
+            DailyUsage dailyUsage = intelligence.dailyUsage;
+            if (existingUsage == null) {
+                usageDao.insert(dailyUsage);
+            } else {
+                dailyUsage.id = existingUsage.id;
+                usageDao.update(dailyUsage);
             }
-            behaviorUsageSummaryDao.insertOrReplace(intelligence.behaviorSummary);
-        }
+
+            appUsageSnapshotDao.deleteForDay(dayTimestamp);
+            for (AppUsageSnapshot snapshot : intelligence.appSnapshots) {
+                appUsageSnapshotDao.insertOrReplace(snapshot);
+            }
+
+            usageSessionDao.deleteForDay(dayTimestamp);
+            for (UsageSession session : intelligence.sessions) {
+                usageSessionDao.insert(session);
+            }
+
+            if (intelligence.behaviorSummary != null) {
+                BehaviorUsageSummary existingSummary = behaviorUsageSummaryDao.getSummaryForDaySync(dayTimestamp);
+                if (existingSummary != null) {
+                    intelligence.behaviorSummary.id = existingSummary.id;
+                }
+                behaviorUsageSummaryDao.insertOrReplace(intelligence.behaviorSummary);
+            }
+        });
     }
 
     /**

@@ -3,29 +3,30 @@ package com.mindtrace.ai.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mindtrace.ai.R;
+import com.mindtrace.ai.databinding.ActivityFastChallengeBinding;
 
+/**
+ * Fast Challenge Activity — 30-second timer challenge before unlocking apps.
+ *
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
+ */
 public class FastChallengeActivity extends AppCompatActivity {
 
-    private TextView timerText;
+    private ActivityFastChallengeBinding binding;
     private CountDownTimer countDownTimer;
     private long timeLeftInMillis = 30000; // 30 seconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fast_challenge);
+        binding = ActivityFastChallengeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        timerText = findViewById(R.id.challenge_timer_text);
-        Button btnQuit = findViewById(R.id.btn_quit_challenge);
-
-        btnQuit.setOnClickListener(v -> {
+        binding.btnQuitChallenge.setOnClickListener(v -> {
             if (countDownTimer != null) {
                 countDownTimer.cancel();
             }
@@ -47,12 +48,12 @@ public class FastChallengeActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 Toast.makeText(FastChallengeActivity.this, "Challenge Failed! Returning Home.", Toast.LENGTH_LONG).show();
-                
+
                 Intent homeIntent = new Intent(Intent.ACTION_MAIN);
                 homeIntent.addCategory(Intent.CATEGORY_HOME);
                 homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(homeIntent);
-                
+
                 finish();
             }
         }.start();
@@ -60,7 +61,7 @@ public class FastChallengeActivity extends AppCompatActivity {
 
     private void updateTimerText() {
         int seconds = (int) (timeLeftInMillis / 1000) % 60;
-        timerText.setText("Fast Challenge will fail in " + seconds + " seconds.");
+        binding.challengeTimerText.setText("Fast Challenge will fail in " + seconds + " seconds.");
     }
 
     @Override
@@ -69,11 +70,11 @@ public class FastChallengeActivity extends AppCompatActivity {
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
+        binding = null;
     }
 
     @Override
     public void onBackPressed() {
-        // Disable back button during challenge
         Toast.makeText(this, "Complete or quit the challenge to continue.", Toast.LENGTH_SHORT).show();
     }
 }

@@ -18,7 +18,6 @@ import com.mindtrace.ai.repository.UsageRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class OnboardingViewModel extends AndroidViewModel {
     private final OnboardingRepository onboardingRepository;
@@ -32,7 +31,7 @@ public class OnboardingViewModel extends AndroidViewModel {
         onboardingRepository = new OnboardingRepository(application);
         usageRepository = new UsageRepository(application);
         profileAnalyzer = new OnboardingProfileAnalyzer();
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = com.mindtrace.ai.util.AppExecutors.diskIO();
     }
 
     public LiveData<SubmissionResult> getSubmissionResult() {
@@ -248,7 +247,7 @@ public class OnboardingViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        executorService.shutdown();
+        // executorService is AppExecutors.diskIO() — never shut down the shared pool
     }
 
     public static class SubmissionResult {

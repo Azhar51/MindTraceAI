@@ -16,7 +16,6 @@ import com.mindtrace.ai.util.MoodMapper;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Central repository for all psychological assessment data — check-ins,
@@ -67,7 +66,7 @@ public class AssessmentRepository {
         questionnaireDao = db.questionnaireDao();
         journalDao = db.journalDao();
         weeklyAssessmentDao = db.weeklyAssessmentDao();
-        executor = Executors.newSingleThreadExecutor();
+        executor = com.mindtrace.ai.util.AppExecutors.diskIO();
     }
 
     // ═════════════════════════════════════════════════════════════════════

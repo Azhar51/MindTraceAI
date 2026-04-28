@@ -16,6 +16,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.mindtrace.ai.R;
+import com.mindtrace.ai.databinding.ActivityDailyCheckInBinding;
 import com.mindtrace.ai.ai.LinguisticAnalyzer;
 import com.mindtrace.ai.database.entity.QuestionnaireResponse;
 import com.mindtrace.ai.repository.AssessmentRepository;
@@ -42,6 +43,7 @@ import java.util.Calendar;
  * </ul>
  */
 public class DailyCheckInActivity extends AppCompatActivity {
+    private ActivityDailyCheckInBinding binding;
     private QuestionnaireViewModel viewModel;
     private AssessmentRepository assessmentRepository;
     private LinguisticAnalyzer linguisticAnalyzer;
@@ -105,7 +107,8 @@ public class DailyCheckInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_daily_check_in);
+        binding = ActivityDailyCheckInBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(QuestionnaireViewModel.class);
         assessmentRepository = new AssessmentRepository(this);
@@ -121,9 +124,8 @@ public class DailyCheckInActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(v -> submitForm());
 
         // Back button
-        View btnBack = findViewById(R.id.btnBack);
-        if (btnBack != null) {
-            btnBack.setOnClickListener(v -> finish());
+        if (binding.btnBack != null) {
+            binding.btnBack.setOnClickListener(v -> finish());
         }
 
         viewModel.getSubmissionResult().observe(this, result -> {
@@ -158,48 +160,48 @@ public class DailyCheckInActivity extends AppCompatActivity {
 
     private void bindViews() {
         // Card 1
-        rgMood = findViewById(R.id.rg_mood);
-        sbStress = findViewById(R.id.sb_stress);
-        sbLoneliness = findViewById(R.id.sb_loneliness);
-        sbMotivation = findViewById(R.id.sb_motivation);
+        rgMood = binding.rgMood;
+        sbStress = binding.sbStress;
+        sbLoneliness = binding.sbLoneliness;
+        sbMotivation = binding.sbMotivation;
 
         // Card 2
-        rgWorkPressure = findViewById(R.id.rg_work_pressure);
-        rgFocus = findViewById(R.id.rg_focus);
-        rgDistracted = findViewById(R.id.rg_distracted);
-        rgEnergy = findViewById(R.id.rg_energy);
-        etSleep = findViewById(R.id.et_sleep);
-        sbUrgeScroll = findViewById(R.id.sb_urge_scroll);
-        etBiggestDistraction = findViewById(R.id.et_biggest_distraction);
-        tvUrgeScrollDescriptor = findViewById(R.id.tv_urge_scroll_descriptor);
+        rgWorkPressure = binding.rgWorkPressure;
+        rgFocus = binding.rgFocus;
+        rgDistracted = binding.rgDistracted;
+        rgEnergy = binding.rgEnergy;
+        etSleep = binding.etSleep;
+        sbUrgeScroll = binding.sbUrgeScroll;
+        etBiggestDistraction = binding.etBiggestDistraction;
+        tvUrgeScrollDescriptor = binding.tvUrgeScrollDescriptor;
 
         // Card 3
-        switchSocialSupport = findViewById(R.id.switch_social_support);
-        switchGoalClarity = findViewById(R.id.switch_goal_clarity);
-        switchFeltCrying = findViewById(R.id.switch_felt_crying);
-        switchWantedWithdraw = findViewById(R.id.switch_wanted_withdraw);
+        switchSocialSupport = binding.switchSocialSupport;
+        switchGoalClarity = binding.switchGoalClarity;
+        switchFeltCrying = binding.switchFeltCrying;
+        switchWantedWithdraw = binding.switchWantedWithdraw;
 
         // Card 4
-        etGratitude = findViewById(R.id.et_gratitude);
-        tvGratitudeLabel = findViewById(R.id.tv_gratitude_label);
-        sbSelfWorth = findViewById(R.id.sb_self_worth);
-        sbPurpose = findViewById(R.id.sb_purpose);
-        sbHope = findViewById(R.id.sb_hope);
+        etGratitude = binding.etGratitude;
+        tvGratitudeLabel = binding.tvGratitudeLabel;
+        sbSelfWorth = binding.sbSelfWorth;
+        sbPurpose = binding.sbPurpose;
+        sbHope = binding.sbHope;
 
         // Card 5
-        sbAnxiety = findViewById(R.id.sb_anxiety);
-        sbSleepQuality = findViewById(R.id.sb_sleep_quality);
-        switchExercisedToday = findViewById(R.id.switch_exercised_today);
-        etCurrentConcern = findViewById(R.id.et_current_concern);
-        tvAnxietyDescriptor = findViewById(R.id.tv_anxiety_descriptor);
-        tvSleepQualityDescriptor = findViewById(R.id.tv_sleep_quality_descriptor);
+        sbAnxiety = binding.sbAnxiety;
+        sbSleepQuality = binding.sbSleepQuality;
+        switchExercisedToday = binding.switchExercisedToday;
+        etCurrentConcern = binding.etCurrentConcern;
+        tvAnxietyDescriptor = binding.tvAnxietyDescriptor;
+        tvSleepQualityDescriptor = binding.tvSleepQualityDescriptor;
 
         // Adaptive
-        cardAdaptiveSupport = findViewById(R.id.card_adaptive_support);
-        tvAdaptiveMessage = findViewById(R.id.tv_adaptive_message);
-        switchRequestSupport = findViewById(R.id.switch_request_support);
+        cardAdaptiveSupport = binding.cardAdaptiveSupport;
+        tvAdaptiveMessage = binding.tvAdaptiveMessage;
+        switchRequestSupport = binding.switchRequestSupport;
 
-        btnSubmit = findViewById(R.id.btn_submit);
+        btnSubmit = binding.btnSubmit;
 
         // Descriptor labels — lookup by name so the build doesn't fail
         // when the layout hasn't been updated with these views yet.
@@ -220,10 +222,10 @@ public class DailyCheckInActivity extends AppCompatActivity {
      * states and sync with the hidden RadioGroup for data collection.
      */
     private void wireEmojiCards() {
-        View emojiHappy = findViewById(R.id.emoji_happy);
-        View emojiNeutral = findViewById(R.id.emoji_neutral);
-        View emojiSad = findViewById(R.id.emoji_sad);
-        View emojiAnxious = findViewById(R.id.emoji_anxious);
+        View emojiHappy = binding.emojiHappy;
+        View emojiNeutral = binding.emojiNeutral;
+        View emojiSad = binding.emojiSad;
+        View emojiAnxious = binding.emojiAnxious;
 
         View[] allCards = {emojiHappy, emojiNeutral, emojiSad, emojiAnxious};
         int[] radioIds = {R.id.rb_happy, R.id.rb_neutral, R.id.rb_sad, R.id.rb_anxious};
@@ -606,5 +608,11 @@ public class DailyCheckInActivity extends AppCompatActivity {
         if (selectedId == R.id.rb_energy_low) return "Low";
         if (selectedId == R.id.rb_energy_high) return "High";
         return "Medium";
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

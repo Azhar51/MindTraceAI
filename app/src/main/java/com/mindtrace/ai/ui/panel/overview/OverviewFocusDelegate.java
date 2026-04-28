@@ -56,8 +56,8 @@ public class OverviewFocusDelegate {
         tvFocusBadge.setText(focusCard.badgeText == null ? "Momentum window" : focusCard.badgeText);
         tvFocusTitle.setText(focusCard.title == null
                 ? "Shape the next block before the day shapes it" : focusCard.title);
-        String windowText = focusCard.windowLabel == null ? "Next clean block" : focusCard.windowLabel;
-        tvFocusWindow.setText(windowText);
+        // Hide the timestamp — not relevant for coach card
+        tvFocusWindow.setVisibility(View.GONE);
         tvFocusBody.setText(focusCard.coachText == null
                 ? "MindTrace is shaping a premium focus plan for the next clean stretch of your day."
                 : focusCard.coachText);

@@ -9,16 +9,15 @@ import android.os.Vibrator;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.button.MaterialButton;
 import com.mindtrace.ai.R;
 import com.mindtrace.ai.ai.ExerciseEngine;
+import com.mindtrace.ai.databinding.ActivityBreathingExerciseBinding;
 import com.mindtrace.ai.viewmodel.CrisisViewModel;
 
 import java.util.Locale;
@@ -36,16 +35,15 @@ import java.util.Locale;
  *   <li>Timer showing total elapsed time</li>
  *   <li>Logs completion to CrisisViewModel with distress data</li>
  * </ul>
+ *
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
  */
 public class BreathingExerciseActivity extends AppCompatActivity {
 
     public static final String EXTRA_EXERCISE_INDEX = "exercise_index";
     public static final String EXTRA_PRE_DISTRESS = "pre_distress";
 
-    private com.mindtrace.ai.ui.components.BreathingRingView breathingCircle;
-    private TextView tvPhaseLbl, tvCountdown, tvCycleCounter, tvExerciseName, tvTimer;
-    private View dotInhale, dotHold1, dotExhale, dotHold2;
-    private MaterialButton btnPause, btnFinish;
+    private ActivityBreathingExerciseBinding binding;
 
     private ExerciseEngine.BreathingExercise exercise;
     private CrisisViewModel crisisViewModel;
@@ -73,7 +71,8 @@ public class BreathingExerciseActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.crisis_bg));
 
-        setContentView(R.layout.activity_breathing_exercise);
+        binding = ActivityBreathingExerciseBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         crisisViewModel = new ViewModelProvider(this).get(CrisisViewModel.class);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -89,41 +88,27 @@ public class BreathingExerciseActivity extends AppCompatActivity {
         colorHold = ContextCompat.getColor(this, R.color.breathe_hold);
         colorExhale = ContextCompat.getColor(this, R.color.breathe_out);
 
-        bindViews();
+        setupViews();
         setupButtons();
         startExercise();
     }
 
-    private void bindViews() {
-        breathingCircle = findViewById(R.id.breathing_circle);
-        breathingCircle.setPhaseColors(
-                colorInhale, colorHold, colorExhale);
-        tvPhaseLbl = findViewById(R.id.tv_phase_label);
-        tvCountdown = findViewById(R.id.tv_phase_countdown);
-        tvCycleCounter = findViewById(R.id.tv_cycle_counter);
-        tvExerciseName = findViewById(R.id.tv_exercise_name);
-        tvTimer = findViewById(R.id.tv_timer);
-        dotInhale = findViewById(R.id.dot_inhale);
-        dotHold1 = findViewById(R.id.dot_hold1);
-        dotExhale = findViewById(R.id.dot_exhale);
-        dotHold2 = findViewById(R.id.dot_hold2);
-        btnPause = findViewById(R.id.btn_pause);
-        btnFinish = findViewById(R.id.btn_finish);
-
-        tvExerciseName.setText(exercise.name);
+    private void setupViews() {
+        binding.breathingCircle.setPhaseColors(colorInhale, colorHold, colorExhale);
+        binding.tvExerciseName.setText(exercise.name);
         updateCycleCounter();
     }
 
     private void setupButtons() {
-        findViewById(R.id.btn_close).setOnClickListener(v -> finishExercise(false));
+        binding.btnClose.setOnClickListener(v -> finishExercise(false));
 
-        btnPause.setOnClickListener(v -> {
+        binding.btnPause.setOnClickListener(v -> {
             isPaused = !isPaused;
-            btnPause.setText(isPaused ? "Resume" : "Pause");
+            binding.btnPause.setText(isPaused ? "Resume" : "Pause");
             if (!isPaused) runCurrentPhase();
         });
 
-        btnFinish.setOnClickListener(v -> finishExercise(currentCycle > 1));
+        binding.btnFinish.setOnClickListener(v -> finishExercise(currentCycle > 1));
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -152,28 +137,28 @@ public class BreathingExerciseActivity extends AppCompatActivity {
                 label = "Breathe In";
                 color = colorInhale;
                 targetScale = 1.4f;
-                highlightDot(dotInhale);
+                highlightDot(binding.dotInhale);
                 break;
             case 1: // Hold 1
                 durationMs = exercise.hold1Ms;
                 label = "Hold";
                 color = colorHold;
                 targetScale = 1.4f;
-                highlightDot(dotHold1);
+                highlightDot(binding.dotHold1);
                 break;
             case 2: // Exhale
                 durationMs = exercise.exhaleMs;
                 label = "Breathe Out";
                 color = colorExhale;
                 targetScale = 0.8f;
-                highlightDot(dotExhale);
+                highlightDot(binding.dotExhale);
                 break;
             case 3: // Hold 2
                 durationMs = exercise.hold2Ms;
                 label = "Hold";
                 color = colorHold;
                 targetScale = 0.8f;
-                highlightDot(dotHold2);
+                highlightDot(binding.dotHold2);
                 break;
             default:
                 return;
@@ -192,7 +177,7 @@ public class BreathingExerciseActivity extends AppCompatActivity {
         hapticPhase(currentPhase);
 
         // Animate circle scale + phase color
-        breathingCircle.setPhaseColor(currentPhase, 400);
+        binding.breathingCircle.setPhaseColor(currentPhase, 400);
         animateCircle(targetScale, durationMs);
 
         // Countdown
@@ -203,19 +188,18 @@ public class BreathingExerciseActivity extends AppCompatActivity {
      * Crossfade text: fade out old label, swap, fade in new.
      */
     private void crossfadePhaseLabel(String newLabel, int color) {
-        tvPhaseLbl.animate().alpha(0f).setDuration(120).withEndAction(() -> {
-            tvPhaseLbl.setText(newLabel);
-            tvPhaseLbl.setTextColor(color);
-            tvCountdown.setTextColor(color);
-            tvPhaseLbl.animate().alpha(1f).setDuration(200).start();
+        binding.tvPhaseLabel.animate().alpha(0f).setDuration(120).withEndAction(() -> {
+            binding.tvPhaseLabel.setText(newLabel);
+            binding.tvPhaseLabel.setTextColor(color);
+            binding.tvPhaseCountdown.setTextColor(color);
+            binding.tvPhaseLabel.animate().alpha(1f).setDuration(200).start();
         }).start();
     }
 
     private void animateCircle(float targetScale, long durationMs) {
         if (circleAnimator != null) circleAnimator.cancel();
 
-        float currentScale = breathingCircle.getScaleX();
-        // Map view-scale to ring-scale (0.3 to 1.0 range)
+        float currentScale = binding.breathingCircle.getScaleX();
         float startRing = mapScale(currentScale);
         float endRing = mapScale(targetScale);
 
@@ -224,7 +208,7 @@ public class BreathingExerciseActivity extends AppCompatActivity {
         circleAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         circleAnimator.addUpdateListener(anim -> {
             float scale = (float) anim.getAnimatedValue();
-            breathingCircle.setBreathingScale(scale);
+            binding.breathingCircle.setBreathingScale(scale);
         });
         circleAnimator.start();
     }
@@ -240,12 +224,11 @@ public class BreathingExerciseActivity extends AppCompatActivity {
             final int sec = i;
             handler.postDelayed(() -> {
                 if (!isPaused && !isFinished) {
-                    tvCountdown.setText(String.valueOf(sec));
+                    binding.tvPhaseCountdown.setText(String.valueOf(sec));
                 }
             }, (totalSeconds - i) * 1000L);
         }
 
-        // Advance after duration
         handler.postDelayed(() -> {
             if (!isPaused && !isFinished) advancePhase();
         }, durationMs);
@@ -270,7 +253,7 @@ public class BreathingExerciseActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void highlightDot(View active) {
-        View[] dots = {dotInhale, dotHold1, dotExhale, dotHold2};
+        View[] dots = {binding.dotInhale, binding.dotHold1, binding.dotExhale, binding.dotHold2};
         for (View dot : dots) {
             dot.setAlpha(dot == active ? 1.0f : 0.3f);
             dot.setScaleX(dot == active ? 1.3f : 1.0f);
@@ -279,7 +262,7 @@ public class BreathingExerciseActivity extends AppCompatActivity {
     }
 
     private void updateCycleCounter() {
-        tvCycleCounter.setText(String.format(Locale.US, "Cycle %d of %d",
+        binding.tvCycleCounter.setText(String.format(Locale.US, "Cycle %d of %d",
                 currentCycle, exercise.totalCycles));
     }
 
@@ -321,7 +304,7 @@ public class BreathingExerciseActivity extends AppCompatActivity {
                 long elapsed = (System.currentTimeMillis() - startTimeMs) / 1000;
                 int mins = (int) (elapsed / 60);
                 int secs = (int) (elapsed % 60);
-                tvTimer.setText(String.format(Locale.US, "%d:%02d", mins, secs));
+                binding.tvTimer.setText(String.format(Locale.US, "%d:%02d", mins, secs));
                 handler.postDelayed(this, 1000);
             }
         }
@@ -340,17 +323,13 @@ public class BreathingExerciseActivity extends AppCompatActivity {
 
         long durationMs = System.currentTimeMillis() - startTimeMs;
 
-        // Log completion
         crisisViewModel.logExerciseCompletion(
                 "breathing", exercise.name, durationMs,
                 preDistress, 0, completedFully);
 
         if (completedFully) {
-            // ── Premium celebration ──
-            UiMotion.hapticHeavy(breathingCircle);
-            UiMotion.confettiBurst(breathingCircle, 16);
-
-            // Post-exercise distress prompt
+            UiMotion.hapticHeavy(binding.breathingCircle);
+            UiMotion.confettiBurst(binding.breathingCircle, 16);
             showPostExercisePrompt(durationMs);
         } else {
             finish();
@@ -384,7 +363,6 @@ public class BreathingExerciseActivity extends AppCompatActivity {
                 .setView(layout)
                 .setPositiveButton("Done", (d, w) -> {
                     int postDistress = (int) slider.getValue();
-                    // Re-log with actual post-distress
                     crisisViewModel.logExerciseCompletion(
                             "breathing", exercise.name, durationMs,
                             preDistress, postDistress, true);
@@ -399,5 +377,6 @@ public class BreathingExerciseActivity extends AppCompatActivity {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
         if (circleAnimator != null) circleAnimator.cancel();
+        binding = null;
     }
 }

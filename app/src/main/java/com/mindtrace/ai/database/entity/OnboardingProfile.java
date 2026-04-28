@@ -220,6 +220,90 @@ public class OnboardingProfile {
     public String triggerApps;
 
     // ═════════════════════════════════════════════════════════════════════
+    // NUTRITION & HYDRATION BASELINE (gut-brain axis, cortisol, sleep)
+    // ═════════════════════════════════════════════════════════════════════
+
+    /**
+     * Daily water intake self-assessment (1-5).
+     * 1 = "Barely any water" → 5 = "Well hydrated (2+ liters)"
+     *
+     * <p>Clinical significance: Dehydration directly impairs cognitive
+     * function, elevates cortisol, and worsens anxiety/irritability.
+     * Even mild dehydration (1-2% body weight) reduces focus by ~15%.</p>
+     */
+    public int waterIntake;
+
+    /**
+     * Daily caffeine consumption level (1-5).
+     * 1 = "None" → 3 = "Moderate (2-3 cups)" → 5 = "Heavy (5+ cups)"
+     *
+     * <p>Clinical significance: Caffeine above ~400mg/day (≈4 cups)
+     * exacerbates anxiety, disrupts sleep architecture, and triggers
+     * cortisol spikes that compound with digital overstimulation.</p>
+     */
+    public int caffeineLevel;
+
+    /**
+     * Alcohol consumption frequency.
+     * Values: "Never", "Rarely", "Weekly", "Daily"
+     *
+     * <p>Clinical significance: Even moderate alcohol disrupts REM sleep,
+     * depletes serotonin/GABA, and impairs next-day cognitive function.
+     * Correlates strongly with late-night phone use patterns.</p>
+     */
+    public String alcoholFrequency;
+
+    /**
+     * Overall diet quality self-assessment (1-5).
+     * 1 = "Mostly processed/fast food" → 5 = "Balanced whole foods"
+     *
+     * <p>Clinical significance: Mediterranean-style diets show 25-35%
+     * lower depression risk. Processed food diets correlate with
+     * increased inflammation markers and mood instability.</p>
+     */
+    public int dietQuality;
+
+    /**
+     * Meal regularity / consistency (1-5).
+     * 1 = "Skip meals often" → 5 = "Consistent meal times"
+     *
+     * <p>Clinical significance: Irregular eating disrupts circadian
+     * rhythms, causes blood sugar crashes (triggering anxiety/irritability),
+     * and correlates with binge eating patterns and mood swings.</p>
+     */
+    public int mealRegularity;
+
+    /**
+     * Sugar and junk food intake level (1-5).
+     * 1 = "Minimal" → 5 = "Daily high sugar/junk food"
+     *
+     * <p>Clinical significance: High glycemic load diets increase
+     * inflammation, disrupt gut microbiome (serotonin production),
+     * and create dopamine-crash cycles that parallel digital addiction.</p>
+     */
+    public int sugarIntake;
+
+    /**
+     * Emotional/stress eating tendency (1-5).
+     * 1 = "Never" → 3 = "Sometimes when stressed" → 5 = "Constant comfort eating"
+     *
+     * <p>Clinical significance: Emotional eating is a maladaptive coping
+     * mechanism that often co-occurs with digital escapism. Both are
+     * dopamine-seeking behaviors that compound each other.</p>
+     */
+    public int emotionalEating;
+
+    /**
+     * Late-night eating frequency (1-5).
+     * 1 = "Never eat late" → 5 = "Regularly eat after 10pm"
+     *
+     * <p>Clinical significance: Late eating disrupts circadian metabolism,
+     * worsens sleep quality, and strongly correlates with late-night
+     * phone use — creating a feedback loop of poor sleep hygiene.</p>
+     */
+    public int lateNightEating;
+
+    // ═════════════════════════════════════════════════════════════════════
     // COMPUTED INTELLIGENCE (Task 2.G.1 — Advanced Analysis Methods)
     // ═════════════════════════════════════════════════════════════════════
 
@@ -316,23 +400,54 @@ public class OnboardingProfile {
      *
      * <p>Formula:</p>
      * <ul>
-     *   <li>25% — Exercise frequency (converted to 0-1 scale)</li>
-     *   <li>20% — Routine stability</li>
-     *   <li>20% — Screen-free activities</li>
+     *   <li>20% — Exercise frequency (converted to 0-1 scale)</li>
+     *   <li>15% — Routine stability</li>
+     *   <li>15% — Screen-free activities</li>
      *   <li>15% — Sleep quality</li>
+     *   <li>10% — Diet quality (nutrition)</li>
      *   <li>10% — Social quality</li>
      *   <li>10% — Physical activity</li>
+     *   <li>5%  — Hydration</li>
      * </ul>
      */
     @Ignore
     public float getLifestyleHealthIndex() {
         float score = 0f;
-        score += exerciseFrequencyToFloat() * 0.25f;
-        score += normalize(routineStability, 5) * 0.20f;
-        score += normalize(screenFreeActivities, 5) * 0.20f;
+        score += exerciseFrequencyToFloat() * 0.20f;
+        score += normalize(routineStability, 5) * 0.15f;
+        score += normalize(screenFreeActivities, 5) * 0.15f;
         score += normalize(sleepQuality, 5) * 0.15f;
+        score += normalize(dietQuality, 5) * 0.10f;
         score += normalize(socialQualityBaseline, 5) * 0.10f;
         score += normalize(physicalActivity, 5) * 0.10f;
+        score += normalize(waterIntake, 5) * 0.05f;
+        return Math.min(1.0f, score);
+    }
+
+    /**
+     * Computes a Nutrition Health Index (0.0–1.0).
+     * Measures how healthy the user's nutritional habits are.
+     *
+     * <p>Formula:</p>
+     * <ul>
+     *   <li>20% — Diet quality</li>
+     *   <li>20% — Meal regularity</li>
+     *   <li>20% — Water intake</li>
+     *   <li>15% — Low sugar (inverted)</li>
+     *   <li>15% — Low emotional eating (inverted)</li>
+     *   <li>10% — Low late-night eating (inverted)</li>
+     * </ul>
+     */
+    @Ignore
+    public float getNutritionHealthIndex() {
+        float score = 0f;
+        score += normalize(dietQuality, 5) * 0.20f;
+        score += normalize(mealRegularity, 5) * 0.20f;
+        score += normalize(waterIntake, 5) * 0.20f;
+        // Inverted: lower sugar/emotional/late eating = healthier
+        score += (1.0f - normalize(sugarIntake, 5)) * 0.15f;
+        score += (1.0f - normalize(emotionalEating, 5)) * 0.15f;
+        score += (1.0f - normalize(lateNightEating, 5)) * 0.10f;
         return Math.min(1.0f, score);
     }
 
@@ -343,7 +458,7 @@ public class OnboardingProfile {
     @Ignore
     public int getProfileCompleteness() {
         int filled = 0;
-        int total = 36;
+        int total = 44;
 
         // Identity
         if (name != null && !name.isEmpty()) filled++;
@@ -392,6 +507,16 @@ public class OnboardingProfile {
         if (socialQualityBaseline > 0) filled++;
         if (screenTimeAwareness > 0) filled++;
         if (triggerApps != null) filled++;
+
+        // Nutrition & hydration
+        if (waterIntake > 0) filled++;
+        if (caffeineLevel > 0) filled++;
+        if (alcoholFrequency != null) filled++;
+        if (dietQuality > 0) filled++;
+        if (mealRegularity > 0) filled++;
+        if (sugarIntake > 0) filled++;
+        if (emotionalEating > 0) filled++;
+        if (lateNightEating > 0) filled++;
 
         if (socialSupportLevel > 0) filled++;
         if (timestamp > 0) filled++;

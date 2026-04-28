@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * ViewModel for the Daily Report dashboard.
@@ -54,7 +53,7 @@ public class DailyReportViewModel extends AndroidViewModel {
     private final BehaviorSnapshotDao behaviorSnapshotDao;
 
     // ── Background executor ──────────────────────────────────────────────
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = com.mindtrace.ai.util.AppExecutors.diskIO();
 
     // ── Usage metrics ────────────────────────────────────────────────────
     private final MutableLiveData<DailyUsage> todayUsage = new MutableLiveData<>();
@@ -390,6 +389,6 @@ public class DailyReportViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        executor.shutdownNow();
+        // Shared executor — do not shutdown
     }
 }

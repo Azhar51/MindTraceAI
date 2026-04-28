@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -14,6 +15,13 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Room schema export for migration testing & audit trail
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildFeatures {
@@ -29,16 +37,19 @@ android {
         }
     }
     def geminiApiKey = localProperties.getProperty('GEMINI_API_KEY', '')
+    def groqApiKey = localProperties.getProperty('GROQ_API_KEY', '')
 
     buildTypes {
         debug {
             buildConfigField "String", "GEMINI_API_KEY", "\"${geminiApiKey}\""
+            buildConfigField "String", "GROQ_API_KEY", "\"${groqApiKey}\""
         }
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "GEMINI_API_KEY", "\"${geminiApiKey}\""
+            buildConfigField "String", "GROQ_API_KEY", "\"${groqApiKey}\""
         }
     }
     compileOptions {
@@ -84,8 +95,15 @@ dependencies {
     // Animations
     implementation 'com.airbnb.android:lottie:6.4.0'
 
+    // Hilt DI
+    implementation "com.google.dagger:hilt-android:2.51.1"
+    annotationProcessor "com.google.dagger:hilt-compiler:2.51.1"
+
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:5.11.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // Room migration testing
+    androidTestImplementation "androidx.room:room-testing:$room_version"
 }

@@ -9,19 +9,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.button.MaterialButton;
 import com.mindtrace.ai.R;
 import com.mindtrace.ai.database.entity.TrustedContact;
+import com.mindtrace.ai.databinding.ActivityCrisisLockdownBinding;
 import com.mindtrace.ai.viewmodel.CrisisViewModel;
-
-import java.util.List;
 
 /**
  * Crisis Lockdown Activity — full-screen safety mode for C-SSRS ≥4.
@@ -37,6 +34,8 @@ import java.util.List;
  *
  * <p><b>IMPORTANT:</b> This screen is intentionally restrictive to ensure
  * the user engages with at least one support resource before dismissing.</p>
+ *
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
  */
 public class CrisisLockdownActivity extends AppCompatActivity {
 
@@ -45,6 +44,7 @@ public class CrisisLockdownActivity extends AppCompatActivity {
 
     private static final int LOCKDOWN_SECONDS = 60;
 
+    private ActivityCrisisLockdownBinding binding;
     private CrisisViewModel crisisViewModel;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private int secondsRemaining = LOCKDOWN_SECONDS;
@@ -67,7 +67,8 @@ public class CrisisLockdownActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(0xFF000000);
         getWindow().setNavigationBarColor(0xFF000000);
 
-        setContentView(R.layout.activity_crisis_lockdown);
+        binding = ActivityCrisisLockdownBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         crisisViewModel = new ViewModelProvider(this).get(CrisisViewModel.class);
 
@@ -78,7 +79,7 @@ public class CrisisLockdownActivity extends AppCompatActivity {
         startHeartAnimation();
         startLockdownTimer();
 
-        // ── Premium enhancements ──
+        // Premium enhancements
         startHeartbeatHaptics();
         startContinuousParticles();
         startCountdownArc();
@@ -93,19 +94,17 @@ public class CrisisLockdownActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void setupHelpline() {
-        android.view.View btn988 = findViewById(R.id.btn_call_988);
-        UiMotion.attachPressAnimation(btn988);
-        UiMotion.pulseGlow(btn988); // Persistent red CTA glow
-        btn988.setOnClickListener(v -> {
+        UiMotion.attachPressAnimation(binding.btnCall988);
+        UiMotion.pulseGlow(binding.btnCall988);
+        binding.btnCall988.setOnClickListener(v -> {
             UiMotion.hapticHeavy(v);
             Intent callIntent = new Intent(Intent.ACTION_DIAL);
             callIntent.setData(Uri.parse("tel:988"));
             startActivity(callIntent);
         });
 
-        android.view.View btnText = findViewById(R.id.btn_text_741741);
-        UiMotion.attachPressAnimation(btnText);
-        btnText.setOnClickListener(v -> {
+        UiMotion.attachPressAnimation(binding.btnText741741);
+        binding.btnText741741.setOnClickListener(v -> {
             UiMotion.hapticClick(v);
             Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
             smsIntent.setData(Uri.parse("smsto:741741"));
@@ -119,21 +118,18 @@ public class CrisisLockdownActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void setupEmergencyContacts() {
-        android.view.View btnContacts = findViewById(R.id.btn_emergency_contacts);
-        UiMotion.attachPressAnimation(btnContacts);
-        btnContacts.setOnClickListener(v -> {
+        UiMotion.attachPressAnimation(binding.btnEmergencyContacts);
+        binding.btnEmergencyContacts.setOnClickListener(v -> {
             UiMotion.hapticClick(v);
             crisisViewModel.loadTrustedContacts(contacts -> {
                 runOnUiThread(() -> {
                     if (contacts == null || contacts.isEmpty()) {
-                        // Fall back to 988
                         Intent callIntent = new Intent(Intent.ACTION_DIAL);
                         callIntent.setData(Uri.parse("tel:988"));
                         startActivity(callIntent);
                         return;
                     }
 
-                    // Show first emergency contact (quickest path)
                     TrustedContact primary = contacts.get(0);
                     new AlertDialog.Builder(this)
                             .setTitle("Call " + primary.name + "?")
@@ -161,9 +157,8 @@ public class CrisisLockdownActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void setupBreathing() {
-        android.view.View btnBreathing = findViewById(R.id.btn_breathing);
-        UiMotion.attachPressAnimation(btnBreathing);
-        btnBreathing.setOnClickListener(v -> {
+        UiMotion.attachPressAnimation(binding.btnBreathing);
+        binding.btnBreathing.setOnClickListener(v -> {
             UiMotion.hapticClick(v);
             Intent intent = new Intent(this, BreathingExerciseActivity.class);
             intent.putExtra(BreathingExerciseActivity.EXTRA_EXERCISE_INDEX, 0);
@@ -176,44 +171,38 @@ public class CrisisLockdownActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void startLockdownTimer() {
-        TextView tvTimer = findViewById(R.id.tv_dismiss_timer);
-        MaterialButton btnDismiss = findViewById(R.id.btn_dismiss);
-
         handler.post(new Runnable() {
             @Override
             public void run() {
                 secondsRemaining--;
 
                 if (secondsRemaining > 0) {
-                    // Animated fade on countdown text
-                    tvTimer.animate().alpha(0f).setDuration(100).withEndAction(() -> {
-                        tvTimer.setText("Please stay for " + secondsRemaining + " seconds");
-                        tvTimer.animate().alpha(1f).setDuration(200).start();
+                    binding.tvDismissTimer.animate().alpha(0f).setDuration(100).withEndAction(() -> {
+                        binding.tvDismissTimer.setText("Please stay for " + secondsRemaining + " seconds");
+                        binding.tvDismissTimer.animate().alpha(1f).setDuration(200).start();
                     }).start();
                     handler.postDelayed(this, 1000);
                 } else {
                     canDismiss = true;
-                    tvTimer.setText("Take all the time you need");
+                    binding.tvDismissTimer.setText("Take all the time you need");
 
-                    // Green fade-in for dismiss button
-                    btnDismiss.setVisibility(android.view.View.VISIBLE);
-                    btnDismiss.setEnabled(true);
-                    btnDismiss.setTextColor(0xCC66BB6A);
-                    btnDismiss.setAlpha(0f);
-                    btnDismiss.animate()
+                    binding.btnDismiss.setVisibility(android.view.View.VISIBLE);
+                    binding.btnDismiss.setEnabled(true);
+                    binding.btnDismiss.setTextColor(0xCC66BB6A);
+                    binding.btnDismiss.setAlpha(0f);
+                    binding.btnDismiss.animate()
                             .alpha(1f)
                             .setDuration(800)
                             .setInterpolator(new android.view.animation.DecelerateInterpolator())
                             .start();
-                    UiMotion.pulseGlow(btnDismiss);
+                    UiMotion.pulseGlow(binding.btnDismiss);
                 }
             }
         });
     }
 
     private void setupDismiss() {
-        MaterialButton btnDismiss = findViewById(R.id.btn_dismiss);
-        btnDismiss.setOnClickListener(v -> {
+        binding.btnDismiss.setOnClickListener(v -> {
             if (canDismiss) {
                 new AlertDialog.Builder(this)
                         .setTitle("Before you go")
@@ -236,9 +225,8 @@ public class CrisisLockdownActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void startHeartAnimation() {
-        TextView heart = findViewById(R.id.tv_lockdown_heart);
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(heart, "scaleX", 1.0f, 1.2f, 1.0f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(heart, "scaleY", 1.0f, 1.2f, 1.0f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(binding.tvLockdownHeart, "scaleX", 1.0f, 1.2f, 1.0f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(binding.tvLockdownHeart, "scaleY", 1.0f, 1.2f, 1.0f);
         scaleX.setDuration(2500);
         scaleY.setDuration(2500);
         scaleX.setRepeatCount(ValueAnimator.INFINITE);
@@ -268,6 +256,7 @@ public class CrisisLockdownActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
+        binding = null;
     }
 
     // ═════════════════════════════════════════════════════════════════
@@ -279,7 +268,7 @@ public class CrisisLockdownActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (!isFinishing()) {
-                    UiMotion.hapticClick(findViewById(R.id.tv_lockdown_heart));
+                    UiMotion.hapticClick(binding.tvLockdownHeart);
                     handler.postDelayed(this, 2500);
                 }
             }
@@ -292,7 +281,6 @@ public class CrisisLockdownActivity extends AppCompatActivity {
 
     private void startContinuousParticles() {
         spawnSubtleParticles();
-        // Re-spawn every 8 seconds for continuous effect
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -346,11 +334,9 @@ public class CrisisLockdownActivity extends AppCompatActivity {
     // ═════════════════════════════════════════════════════════════════
 
     private void startCountdownArc() {
-        com.mindtrace.ai.ui.components.CircularCountdownView arc =
-                findViewById(R.id.countdown_arc);
-        if (arc != null) {
-            arc.setColors(0xFF66BB6A, 0x201A2540);
-            arc.startCountdown(LOCKDOWN_SECONDS * 1000L);
+        if (binding.countdownArc != null) {
+            binding.countdownArc.setColors(0xFF66BB6A, 0x201A2540);
+            binding.countdownArc.startCountdown(LOCKDOWN_SECONDS * 1000L);
         }
     }
 }

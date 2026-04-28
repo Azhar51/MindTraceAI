@@ -10,8 +10,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,20 +22,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.mindtrace.ai.R;
+import com.mindtrace.ai.databinding.ActivityPermissionBinding;
 
 /**
  * Unified Permission Activity — handles all runtime permissions with
  * step-by-step rationale screens and graceful degradation.
  *
- * <h3>Permission Flow (4 steps):</h3>
- * <ol>
- *   <li>PACKAGE_USAGE_STATS — required for screen time tracking</li>
- *   <li>POST_NOTIFICATIONS (API 33+) — required for reminders and crisis alerts</li>
- *   <li>ACCESSIBILITY_SERVICE — required for scroll intensity telemetry (D13)</li>
- *   <li>NOTIFICATION_LISTENER — required for notification response latency (D14)</li>
- * </ol>
+ * <h3>Progressive Permission Flow:</h3>
+ * <ul>
+ *   <li><b>Default</b>: 2 required steps (UsageStats, Notifications) → Main</li>
+ *   <li><b>Enhancement mode</b>: Shows optional steps (Accessibility, NotificationListener)
+ *       when launched with {@link #EXTRA_SHOW_OPTIONAL} = true</li>
+ * </ul>
+ *
+ * <p>This progressive approach lets users reach the dashboard in ~2 minutes
+ * instead of ~10+ minutes, dramatically reducing onboarding abandonment.</p>
+ *
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
  */
 public class PermissionActivity extends AppCompatActivity {
+
+    /** Extra: set to true to show optional enhancement permissions (Accessibility, NotifListener). */
+    public static final String EXTRA_SHOW_OPTIONAL = "show_optional_permissions";
 
     private static final int STEP_USAGE = 0;
     private static final int STEP_NOTIFICATIONS = 1;
@@ -45,11 +51,11 @@ public class PermissionActivity extends AppCompatActivity {
     private static final int STEP_NOTIF_ACCESS = 3;
     private static final int STEP_DONE = 4;
 
+    /** In enhancement mode, we start from optional steps. Otherwise, stop after required steps. */
+    private boolean showOptionalSteps = false;
+
     private int currentStep = STEP_USAGE;
-    private TextView tvTitle;
-    private TextView tvDescription;
-    private View btnGrant;
-    private View btnSkip;
+    private ActivityPermissionBinding binding;
 
     private final ActivityResultLauncher<String> notificationPermLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
@@ -60,52 +66,57 @@ public class PermissionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_permission);
+        binding = ActivityPermissionBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        tvTitle = findViewById(R.id.tv_permission_title);
-        tvDescription = findViewById(R.id.tv_permission_description);
-        btnGrant = findViewById(R.id.btn_grant);
-        btnSkip = findViewById(R.id.btn_skip);
+        // Check if we should show optional enhancement permissions
+        showOptionalSteps = getIntent().getBooleanExtra(EXTRA_SHOW_OPTIONAL, false);
 
         // Determine starting step — skip already-granted permissions
-        if (hasUsageStatsPermission()) {
-            currentStep = STEP_NOTIFICATIONS;
-        }
-        if (currentStep == STEP_NOTIFICATIONS && hasNotificationPermission()) {
+        if (showOptionalSteps) {
+            // Enhancement mode: jump straight to optional steps
             currentStep = STEP_ACCESSIBILITY;
-        }
-        if (currentStep == STEP_ACCESSIBILITY && hasAccessibilityPermission()) {
-            currentStep = STEP_NOTIF_ACCESS;
-        }
-        if (currentStep == STEP_NOTIF_ACCESS && hasNotificationListenerPermission()) {
-            currentStep = STEP_DONE;
+            if (hasAccessibilityPermission()) {
+                currentStep = STEP_NOTIF_ACCESS;
+            }
+            if (currentStep == STEP_NOTIF_ACCESS && hasNotificationListenerPermission()) {
+                currentStep = STEP_DONE;
+            }
+        } else {
+            // Default mode: only required permissions
+            if (hasUsageStatsPermission()) {
+                currentStep = STEP_NOTIFICATIONS;
+            }
+            if (currentStep == STEP_NOTIFICATIONS && hasNotificationPermission()) {
+                // All required permissions granted — done
+                currentStep = STEP_DONE;
+            }
         }
 
-        btnGrant.setOnClickListener(v -> {
+        binding.btnGrant.setOnClickListener(v -> {
             UiMotion.hapticClick(v);
             handleGrantClicked();
         });
 
-        if (btnSkip != null) {
-            btnSkip.setOnClickListener(v -> advanceToNextStep());
+        if (binding.btnSkip != null) {
+            binding.btnSkip.setOnClickListener(v -> advanceToNextStep());
         }
 
         updateUI();
 
-        // ── Premium: stagger benefit list entry ──
+        // Premium: stagger benefit list entry
         animateBenefitList();
 
-        // ── CTA pulsing glow ──
-        UiMotion.pulseGlow(btnGrant);
+        // CTA pulsing glow
+        UiMotion.pulseGlow(binding.btnGrant);
     }
 
     /**
      * Stagger-animate the benefit list items one by one.
      */
     private void animateBenefitList() {
-        LinearLayout benefitCard = findViewById(R.id.benefitCard);
-        if (benefitCard != null) {
-            UiMotion.staggerChildren(benefitCard, 100, true);
+        if (binding.benefitCard != null) {
+            UiMotion.staggerChildren(binding.benefitCard, 100, true);
         }
     }
 
@@ -165,15 +176,28 @@ public class PermissionActivity extends AppCompatActivity {
     private void advanceToNextStep() {
         currentStep++;
 
+        // In default mode, stop after required permissions (Usage + Notifications)
+        if (!showOptionalSteps && currentStep >= STEP_ACCESSIBILITY) {
+            currentStep = STEP_DONE;
+        }
+
         // Skip already-granted steps
         if (currentStep == STEP_NOTIFICATIONS && hasNotificationPermission()) {
             currentStep++;
         }
-        if (currentStep == STEP_ACCESSIBILITY && hasAccessibilityPermission()) {
-            currentStep++;
+        // Only check optional permissions in enhancement mode
+        if (showOptionalSteps) {
+            if (currentStep == STEP_ACCESSIBILITY && hasAccessibilityPermission()) {
+                currentStep++;
+            }
+            if (currentStep == STEP_NOTIF_ACCESS && hasNotificationListenerPermission()) {
+                currentStep++;
+            }
         }
-        if (currentStep == STEP_NOTIF_ACCESS && hasNotificationListenerPermission()) {
-            currentStep++;
+
+        // In default mode, cap at DONE after required steps
+        if (!showOptionalSteps && currentStep >= STEP_ACCESSIBILITY) {
+            currentStep = STEP_DONE;
         }
 
         if (currentStep >= STEP_DONE) {
@@ -186,43 +210,43 @@ public class PermissionActivity extends AppCompatActivity {
     private void updateUI() {
         switch (currentStep) {
             case STEP_USAGE:
-                crossfadeText(tvTitle, "📊 Usage Access");
-                crossfadeText(tvDescription,
+                crossfadeText(binding.tvPermissionTitle, "📊 Usage Access");
+                crossfadeText(binding.tvPermissionDescription,
                         "MindTrace needs usage access to track your screen time patterns " +
                                 "and provide personalized wellness insights.\n\n" +
                                 "Find MindTrace AI in the list and enable access.");
-                if (btnSkip != null) UiMotion.fadeVisibility(btnSkip, false);
+                if (binding.btnSkip != null) UiMotion.fadeVisibility(binding.btnSkip, false);
                 break;
 
             case STEP_NOTIFICATIONS:
-                crossfadeText(tvTitle, "🔔 Notifications");
-                crossfadeText(tvDescription,
+                crossfadeText(binding.tvPermissionTitle, "🔔 Notifications");
+                crossfadeText(binding.tvPermissionDescription,
                         "Enable notifications for daily check-in reminders, " +
                                 "weekly wellness reports, streak alerts, and " +
                                 "critical safety notifications.\n\n" +
                                 "Crisis alerts can bypass Do Not Disturb for your safety.");
-                if (btnSkip != null) UiMotion.fadeVisibility(btnSkip, true);
+                if (binding.btnSkip != null) UiMotion.fadeVisibility(binding.btnSkip, true);
                 break;
 
             case STEP_ACCESSIBILITY:
-                crossfadeText(tvTitle, "♿ Accessibility Service");
-                crossfadeText(tvDescription,
+                crossfadeText(binding.tvPermissionTitle, "♿ Accessibility Service");
+                crossfadeText(binding.tvPermissionDescription,
                         "MindTrace uses an Accessibility Service to measure scroll " +
                                 "behaviour — detecting mindless scrolling patterns that " +
                                 "indicate compulsive use.\n\n" +
                                 "Find MindTrace AI in the list and enable it.\n\n" +
                                 "This data never leaves your device.");
-                if (btnSkip != null) UiMotion.fadeVisibility(btnSkip, true);
+                if (binding.btnSkip != null) UiMotion.fadeVisibility(binding.btnSkip, true);
                 break;
 
             case STEP_NOTIF_ACCESS:
-                crossfadeText(tvTitle, "📬 Notification Access");
-                crossfadeText(tvDescription,
+                crossfadeText(binding.tvPermissionTitle, "📬 Notification Access");
+                crossfadeText(binding.tvPermissionDescription,
                         "MindTrace measures how quickly you respond to notifications " +
                                 "to detect notification dependency patterns.\n\n" +
                                 "Find MindTrace AI in the list and enable it.\n\n" +
                                 "Only response timing is recorded — message content is never read.");
-                if (btnSkip != null) UiMotion.fadeVisibility(btnSkip, true);
+                if (binding.btnSkip != null) UiMotion.fadeVisibility(binding.btnSkip, true);
                 break;
         }
     }
@@ -298,5 +322,11 @@ public class PermissionActivity extends AppCompatActivity {
                 "enabled_notification_listeners");
         if (flat == null || flat.isEmpty()) return false;
         return flat.contains(getPackageName());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

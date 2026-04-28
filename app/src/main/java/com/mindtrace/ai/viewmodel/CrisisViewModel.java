@@ -22,7 +22,6 @@ import com.mindtrace.ai.repository.CrisisRepository;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 /**
@@ -42,7 +41,7 @@ import java.util.function.Consumer;
 public class CrisisViewModel extends AndroidViewModel {
 
     private static final String TAG = "CrisisViewModel";
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = com.mindtrace.ai.util.AppExecutors.diskIO();
 
     private final CrisisRepository crisisRepository;
     private final CrisisDetector crisisDetector;
@@ -101,6 +100,11 @@ public class CrisisViewModel extends AndroidViewModel {
                 // Fire notification if urgent+
                 com.mindtrace.ai.services.CrisisNotificationManager.notifyIfNeeded(
                         getApplication(), assessment);
+                
+                if (assessment.suicideRisk != null && assessment.suicideRisk.shouldAutoContact) {
+                    com.mindtrace.ai.services.CrisisNotificationManager.notifyTrustedContacts(
+                            getApplication(), assessment);
+                }
             }
         });
     }
@@ -339,6 +343,6 @@ public class CrisisViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        executor.shutdown();
+        // Shared executor — do not shutdown
     }
 }

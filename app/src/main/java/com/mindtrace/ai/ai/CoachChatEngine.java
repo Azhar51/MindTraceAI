@@ -22,7 +22,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * Advanced AI Coach Engine using Google Gemini API.
+ * Advanced AI Coach Engine using Groq API (OpenAI-compatible).
  * 
  * <p>Manages the full conversation lifecycle including context injection,
  * check-in data analysis, and action widget triggering.</p>
@@ -30,15 +30,16 @@ import okhttp3.Response;
 public class CoachChatEngine {
 
     private static final String TAG = "CoachChatEngine";
-    private static final String API_KEY = com.mindtrace.ai.BuildConfig.GEMINI_API_KEY; 
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + API_KEY;
+    private static final String API_KEY = com.mindtrace.ai.BuildConfig.GROQ_API_KEY;
+    private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
+    private static final String MODEL = "llama-3.3-70b-versatile";
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final OkHttpClient client;
     private final Gson gson;
     private HomeScreenState currentState;
     private QuestionnaireResponse latestCheckIn;
-    private JsonArray chatHistory;
+    private JsonArray chatHistory; // OpenAI-format messages array
     private int userMessageCount = 0;
 
     public interface ChatCallback {
@@ -47,7 +48,8 @@ public class CoachChatEngine {
 
     public CoachChatEngine() {
         client = new OkHttpClient.Builder()
-                .readTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(15, TimeUnit.SECONDS)
                 .build();
         gson = new Gson();
         chatHistory = new JsonArray();
@@ -62,39 +64,38 @@ public class CoachChatEngine {
     }
 
     public void sendMessage(String userMessage, ChatCallback callback) {
-        if (API_KEY.equals("YOUR_API_KEY_HERE") || API_KEY.isEmpty()) {
-            handler.postDelayed(() -> callback.onResponse("I am not connected to the internet yet! Please paste your Gemini API key into `CoachChatEngine.java`.", null), 1000);
+        if (API_KEY == null || API_KEY.isEmpty() || API_KEY.equals("YOUR_API_KEY_HERE")) {
+            handler.postDelayed(() -> callback.onResponse("Coach is not configured yet. Please add your Groq API key.", null), 1000);
             return;
         }
 
         userMessageCount++;
         final boolean isFirstMessage = (userMessageCount == 1);
 
-        // Add user message to history
-        JsonObject userMsgObj = new JsonObject();
-        userMsgObj.addProperty("role", "user");
-        JsonArray userParts = new JsonArray();
-        JsonObject userTextObj = new JsonObject();
-        userTextObj.addProperty("text", userMessage);
-        userParts.add(userTextObj);
-        userMsgObj.add("parts", userParts);
-        
-        chatHistory.add(userMsgObj);
+        // Add user message to history (OpenAI format: {"role": "user", "content": "..."})
+        JsonObject userMsg = new JsonObject();
+        userMsg.addProperty("role", "user");
+        userMsg.addProperty("content", userMessage);
+        chatHistory.add(userMsg);
+
+        // Build full messages array: system + chat history
+        JsonArray messages = new JsonArray();
+
+        // System message first
+        JsonObject systemMsg = new JsonObject();
+        systemMsg.addProperty("role", "system");
+        systemMsg.addProperty("content", buildSystemPrompt());
+        messages.add(systemMsg);
+
+        // Then all conversation history
+        messages.addAll(chatHistory);
 
         // Build payload
         JsonObject payload = new JsonObject();
-        
-        // Add System Instructions
-        JsonObject systemInstruction = new JsonObject();
-        JsonArray sysParts = new JsonArray();
-        JsonObject sysTextObj = new JsonObject();
-        sysTextObj.addProperty("text", buildSystemPrompt());
-        sysParts.add(sysTextObj);
-        systemInstruction.add("parts", sysParts);
-        payload.add("systemInstruction", systemInstruction);
-
-        // Add Chat History
-        payload.add("contents", chatHistory);
+        payload.addProperty("model", MODEL);
+        payload.add("messages", messages);
+        payload.addProperty("temperature", 0.7);
+        payload.addProperty("max_tokens", 1024);
 
         RequestBody body = RequestBody.create(
                 payload.toString(),
@@ -103,6 +104,8 @@ public class CoachChatEngine {
 
         Request request = new Request.Builder()
                 .url(API_URL)
+                .addHeader("Authorization", "Bearer " + API_KEY)
+                .addHeader("Content-Type", "application/json")
                 .post(body)
                 .build();
 
@@ -110,48 +113,50 @@ public class CoachChatEngine {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e(TAG, "API Call failed", e);
-                chatHistory.remove(chatHistory.size() - 1); // remove failed message
-                handler.post(() -> callback.onResponse("Network error. Please try again.", null));
+                chatHistory.remove(chatHistory.size() - 1); // remove failed user message
+                handler.post(() -> callback.onResponse("Network error. Please check your connection and try again.", null));
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) {
                     String err = response.body() != null ? response.body().string() : "";
-                    Log.e(TAG, "API Error: " + response.code() + " " + err);
+                    Log.e(TAG, "Groq API Error: " + response.code() + " " + err);
                     chatHistory.remove(chatHistory.size() - 1);
-                    handler.post(() -> callback.onResponse("I encountered an error communicating with the server. (" + response.code() + ")", null));
+
+                    String userMsg;
+                    if (response.code() == 429) {
+                        userMsg = "I'm thinking too fast! Please wait a moment and try again.";
+                    } else if (response.code() == 401) {
+                        userMsg = "Authentication failed. Please check your API key.";
+                    } else {
+                        userMsg = "I encountered a server error. (" + response.code() + ")";
+                    }
+                    handler.post(() -> callback.onResponse(userMsg, null));
                     return;
                 }
 
                 try {
                     String responseBody = response.body().string();
                     JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
-                    
-                    // Parse Gemini response
-                    String aiText = jsonObject.getAsJsonArray("candidates")
-                            .get(0).getAsJsonObject()
-                            .getAsJsonObject("content")
-                            .getAsJsonArray("parts")
-                            .get(0).getAsJsonObject()
-                            .get("text").getAsString();
 
-                    // Save AI response to history
-                    JsonObject aiMsgObj = new JsonObject();
-                    aiMsgObj.addProperty("role", "model");
-                    JsonArray aiParts = new JsonArray();
-                    JsonObject aiTextObj = new JsonObject();
-                    aiTextObj.addProperty("text", aiText);
-                    aiParts.add(aiTextObj);
-                    aiMsgObj.add("parts", aiParts);
-                    
-                    chatHistory.add(aiMsgObj);
+                    // Parse OpenAI-compatible response: choices[0].message.content
+                    String aiText = jsonObject.getAsJsonArray("choices")
+                            .get(0).getAsJsonObject()
+                            .getAsJsonObject("message")
+                            .get("content").getAsString();
+
+                    // Save AI response to history (OpenAI format)
+                    JsonObject aiMsg = new JsonObject();
+                    aiMsg.addProperty("role", "assistant");
+                    aiMsg.addProperty("content", aiText);
+                    chatHistory.add(aiMsg);
 
                     // Parse widgets out of text
                     parseAndReturnResponse(aiText, isFirstMessage, callback);
 
                 } catch (Exception e) {
-                    Log.e(TAG, "Error parsing response", e);
+                    Log.e(TAG, "Error parsing Groq response", e);
                     handler.post(() -> callback.onResponse("I didn't quite understand the server response.", null));
                 }
             }
@@ -160,70 +165,72 @@ public class CoachChatEngine {
 
     private String buildSystemPrompt() {
         StringBuilder prompt = new StringBuilder();
-        prompt.append("You are the MindTrace AI Coach — a deeply empathetic, insightful, and highly skilled digital wellness coach.\n\n");
-        
-        prompt.append("=== YOUR PERSONALITY ===\n");
-        prompt.append("- You feel the user's pain genuinely. You're not a chatbot — you're a trusted human-like coach.\n");
-        prompt.append("- You are warm, non-judgmental, and deeply caring.\n");
-        prompt.append("- You speak naturally and conversationally, like a wise friend who truly understands.\n");
-        prompt.append("- You give SPECIFIC, ACTIONABLE advice — not generic self-help platitudes.\n");
-        prompt.append("- Keep responses concise (3-6 sentences max). Be impactful, not wordy.\n");
-        prompt.append("- Ask follow-up Socratic questions to help the user reflect.\n\n");
-        
+        prompt.append("You are the MindTrace AI Coach — an advanced, intelligent AI assistant embedded inside the MindTrace mental wellness app.\n\n");
+
+        prompt.append("=== CORE RULES ===\n");
+        prompt.append("1. ALWAYS answer the user's EXACT question first. Read their message carefully and respond DIRECTLY to what they asked.\n");
+        prompt.append("2. Do NOT give generic wellness advice unless the user specifically asks for it.\n");
+        prompt.append("3. If the user asks a factual question (e.g., 'what is anxiety?', 'how does sleep affect mood?'), give a precise, accurate, educational answer.\n");
+        prompt.append("4. If the user shares how they feel, respond with empathy AND specific, actionable suggestions tailored to their exact words.\n");
+        prompt.append("5. If the user asks about their data (screen time, risk score, mood), reference the context data provided below.\n");
+        prompt.append("6. Keep responses concise — 2-5 sentences for simple questions, up to 8 sentences for complex topics.\n");
+        prompt.append("7. Never make up data you don't have. If you don't know something, say so honestly.\n");
+        prompt.append("8. Use markdown formatting (bold, bullets, line breaks) to make longer responses readable.\n\n");
+
+        prompt.append("=== YOUR CAPABILITIES ===\n");
+        prompt.append("- Mental health education (anxiety, depression, stress, sleep science, focus, habits)\n");
+        prompt.append("- Digital wellness coaching (screen time management, app addiction, social media detox)\n");
+        prompt.append("- Personalized advice based on the user's check-in data and usage patterns\n");
+        prompt.append("- Guided exercises (breathing, grounding, journaling prompts)\n");
+        prompt.append("- General knowledge and conversation — you can discuss ANY topic the user brings up\n\n");
+
+        prompt.append("=== TONE ===\n");
+        prompt.append("- Warm but direct. Not robotic, not overly flowery.\n");
+        prompt.append("- Like a smart, caring friend who gives straight answers.\n");
+        prompt.append("- Match the user's energy: if they're casual, be casual. If they're distressed, be gentle and supportive.\n\n");
+
         prompt.append("=== WHEN USER SUBMITS A DAILY CHECK-IN ===\n");
-        prompt.append("When the user says they completed their check-in with their answers:\n");
-        prompt.append("1. Acknowledge what you see in their data with genuine empathy.\n");
-        prompt.append("2. Identify the TOP 2-3 specific patterns or concerns from their answers.\n");
-        prompt.append("3. Give them a concrete, personalized action plan (not generic advice).\n");
-        prompt.append("4. If their 'What's on my mind' text is present, address it DIRECTLY — this is their real concern.\n");
-        prompt.append("5. End with an encouraging observation or a reflective question.\n");
-        prompt.append("6. If appropriate, suggest a widget action (breathing, grounding, etc.)\n\n");
+        prompt.append("When the user says they completed their check-in:\n");
+        prompt.append("1. Identify the TOP 2-3 specific patterns or concerns from their answers.\n");
+        prompt.append("2. Give concrete, personalized guidance (not generic advice).\n");
+        prompt.append("3. If their 'What's on my mind' text is present, address it DIRECTLY.\n\n");
 
         prompt.append("=== ACTION WIDGETS ===\n");
-        prompt.append("You can trigger interactive UI widgets by including ONE tag at the VERY END of your response:\n");
-        prompt.append("[WIDGET:ACTION_BREATHING] - For stress, anxiety, or overwhelm.\n");
-        prompt.append("[WIDGET:ACTION_GROUNDING] - For dissociation, numbness, or mental fog.\n");
-        prompt.append("[WIDGET:ACTION_LOCKDOWN] - For severe distraction or social media loops.\n");
-        prompt.append("[WIDGET:ACTION_FOCUS_MODE] - When the user is ready to start a focused task.\n");
-        prompt.append("[WIDGET:ACTION_CHECK_IN] - To clarify feelings or do a fresh assessment.\n");
-        prompt.append("[WIDGET:ACTION_SUPPORT_OPTIONS] - For crisis or needing external support.\n\n");
+        prompt.append("You can trigger interactive UI widgets by including ONE tag at the VERY END of your response (ONLY when relevant):\n");
+        prompt.append("[WIDGET:ACTION_BREATHING] - Only when user mentions stress, anxiety, or panic.\n");
+        prompt.append("[WIDGET:ACTION_GROUNDING] - Only for dissociation, numbness, or mental fog.\n");
+        prompt.append("[WIDGET:ACTION_LOCKDOWN] - Only for severe distraction or social media loops.\n");
+        prompt.append("[WIDGET:ACTION_FOCUS_MODE] - Only when user wants to start focused work.\n");
+        prompt.append("[WIDGET:ACTION_CHECK_IN] - Only to suggest a fresh mood assessment.\n");
+        prompt.append("[WIDGET:ACTION_SUPPORT_OPTIONS] - Only for crisis situations.\n");
+        prompt.append("Do NOT add widgets to every response — only when genuinely appropriate.\n\n");
 
         if (currentState != null) {
-            prompt.append("--- USER'S CURRENT APP STATE ---\n");
-            prompt.append("Risk Index (0-100, >70 is high): ").append(currentState.riskIndex).append("\n");
+            prompt.append("--- USER'S CURRENT APP STATE (use only when relevant to their question) ---\n");
+            prompt.append("Risk Index: ").append(currentState.riskIndex).append("/100\n");
             prompt.append("Risk Summary: ").append(currentState.riskSummary != null ? currentState.riskSummary : "Stable").append("\n");
-            prompt.append("Has Checked In Today: ").append(currentState.hasCheckedInToday).append("\n");
-            prompt.append("Has Exercised Today: ").append(currentState.hasExerciseToday).append("\n");
+            prompt.append("Checked In Today: ").append(currentState.hasCheckedInToday ? "Yes" : "No").append("\n");
+            prompt.append("Exercised Today: ").append(currentState.hasExerciseToday ? "Yes" : "No").append("\n");
         }
 
         if (latestCheckIn != null) {
-            prompt.append("\n--- USER'S LATEST PSYCHOLOGICAL CHECK-IN DATA ---\n");
+            prompt.append("\n--- USER'S LATEST CHECK-IN DATA (reference only when they ask about their state) ---\n");
             prompt.append("Mood: ").append(latestCheckIn.mood != null ? latestCheckIn.mood : "Unknown").append("\n");
-            prompt.append("Stress Level (1-5): ").append(latestCheckIn.stressLevel).append("\n");
-            prompt.append("Anxiety Level (1-5): ").append(latestCheckIn.anxietyLevel).append("\n");
-            prompt.append("Loneliness (1-5): ").append(latestCheckIn.lonelinessLevel).append("\n");
-            prompt.append("Motivation (1-5): ").append(latestCheckIn.motivationLevel).append("\n");
-            prompt.append("Urge to Scroll (1-5): ").append(latestCheckIn.urgeToScrollLevel).append("\n");
-            prompt.append("Biggest Distraction: ").append(latestCheckIn.biggestDistraction != null ? latestCheckIn.biggestDistraction : "None reported").append("\n");
-            prompt.append("Focus Level: ").append(latestCheckIn.focusLevel != null ? latestCheckIn.focusLevel : "Unknown").append("\n");
-            prompt.append("Energy Level: ").append(latestCheckIn.energyLevel != null ? latestCheckIn.energyLevel : "Unknown").append("\n");
-            prompt.append("Sleep: ").append(latestCheckIn.sleepHours).append(" hours, quality ").append(latestCheckIn.sleepQuality).append("/5\n");
-            prompt.append("Self-Worth (1-5): ").append(latestCheckIn.selfWorthScore).append("\n");
-            prompt.append("Purpose Score (1-5): ").append(latestCheckIn.purposeScore).append("\n");
-            prompt.append("Hope Level (1-5): ").append(latestCheckIn.hopeLevel).append("\n");
-            prompt.append("Felt Like Crying: ").append(latestCheckIn.feltLikeCrying).append("\n");
-            prompt.append("Wanted to Withdraw: ").append(latestCheckIn.wantedToWithdraw).append("\n");
-            prompt.append("Exercised Today: ").append(latestCheckIn.exercisedToday).append("\n");
-            prompt.append("Distress Severity (0.0-1.0): ").append(latestCheckIn.computedDistressSeverity).append("\n");
+            prompt.append("Stress: ").append(latestCheckIn.stressLevel).append("/5, ");
+            prompt.append("Anxiety: ").append(latestCheckIn.anxietyLevel).append("/5, ");
+            prompt.append("Loneliness: ").append(latestCheckIn.lonelinessLevel).append("/5\n");
+            prompt.append("Motivation: ").append(latestCheckIn.motivationLevel).append("/5, ");
+            prompt.append("Focus: ").append(latestCheckIn.focusLevel != null ? latestCheckIn.focusLevel : "Unknown").append(", ");
+            prompt.append("Energy: ").append(latestCheckIn.energyLevel != null ? latestCheckIn.energyLevel : "Unknown").append("\n");
+            prompt.append("Sleep: ").append(latestCheckIn.sleepHours).append("h, quality ").append(latestCheckIn.sleepQuality).append("/5\n");
+            prompt.append("Self-Worth: ").append(latestCheckIn.selfWorthScore).append("/5, ");
+            prompt.append("Purpose: ").append(latestCheckIn.purposeScore).append("/5, ");
+            prompt.append("Hope: ").append(latestCheckIn.hopeLevel).append("/5\n");
             if (latestCheckIn.currentConcern != null && !latestCheckIn.currentConcern.isEmpty()) {
-                prompt.append("USER'S PRIMARY CONCERN: ").append(latestCheckIn.currentConcern).append("\n");
-            }
-            if (latestCheckIn.gratitudeText != null && !latestCheckIn.gratitudeText.isEmpty()) {
-                prompt.append("Gratitude Entry: ").append(latestCheckIn.gratitudeText).append("\n");
+                prompt.append("User's concern: ").append(latestCheckIn.currentConcern).append("\n");
             }
         }
-        
-        prompt.append("\nIMPORTANT: Use check-in data naturally. Reference specific answers to show you truly understand. Never just list stats back.\n");
+
         return prompt.toString();
     }
 

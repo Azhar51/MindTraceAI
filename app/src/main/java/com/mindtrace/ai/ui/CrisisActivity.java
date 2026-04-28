@@ -19,12 +19,12 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.slider.Slider;
 import com.mindtrace.ai.R;
 import com.mindtrace.ai.ai.AdaptiveCrisisResponse;
 import com.mindtrace.ai.ai.ExerciseEngine;
 import com.mindtrace.ai.database.entity.SafetyPlan;
 import com.mindtrace.ai.database.entity.TrustedContact;
+import com.mindtrace.ai.databinding.ActivityCrisisBinding;
 import com.mindtrace.ai.viewmodel.CrisisViewModel;
 
 import java.util.List;
@@ -44,12 +44,13 @@ import java.util.Locale;
  *   <li>Safety plan view/edit</li>
  *   <li>Resolution method tracking for analytics</li>
  * </ul>
+ *
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
  */
 public class CrisisActivity extends AppCompatActivity {
 
+    private ActivityCrisisBinding binding;
     private CrisisViewModel crisisViewModel;
-    private Slider sliderDistress;
-    private TextView tvDistressEmoji, tvDistressValue, tvTimeHere, tvHeroEmoji;
     private int initialDistress = 5;
     private String lastExerciseUsed = null;
 
@@ -73,7 +74,8 @@ public class CrisisActivity extends AppCompatActivity {
                 android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         getWindow().setStatusBarColor(0x000D1B2A);
 
-        setContentView(R.layout.activity_crisis);
+        binding = ActivityCrisisBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // Crash-safe crisis flag (7.F.5)
         getSharedPreferences("mindtrace_crisis", MODE_PRIVATE)
@@ -82,7 +84,6 @@ public class CrisisActivity extends AppCompatActivity {
         crisisViewModel = new ViewModelProvider(this).get(CrisisViewModel.class);
         openedAtMs = System.currentTimeMillis();
 
-        bindViews();
         setupDistressSlider();
         setupBreathing();
         setupGrounding();
@@ -93,7 +94,7 @@ public class CrisisActivity extends AppCompatActivity {
         startTimeCounter();
         loadAdaptiveProfile();
 
-        // ── Premium enhancements ──
+        // Premium enhancements
         startContinuousParticles();
         animateSectionEntry();
         addDistressGradientBar();
@@ -172,21 +173,13 @@ public class CrisisActivity extends AppCompatActivity {
         }
     }
 
-    private void bindViews() {
-        sliderDistress = findViewById(R.id.slider_distress);
-        tvDistressEmoji = findViewById(R.id.tv_distress_emoji);
-        tvDistressValue = findViewById(R.id.tv_distress_value);
-        tvTimeHere = findViewById(R.id.tv_time_here);
-        tvHeroEmoji = findViewById(R.id.tv_hero_emoji);
-    }
-
     // ═══════════════════════════════════════════════════════════════════
     // HERO ANIMATION — Subtle breathing pulse on heart emoji
     // ═══════════════════════════════════════════════════════════════════
 
     private void startHeartAnimation() {
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(tvHeroEmoji, "scaleX", 1.0f, 1.15f, 1.0f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(tvHeroEmoji, "scaleY", 1.0f, 1.15f, 1.0f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(binding.tvHeroEmoji, "scaleX", 1.0f, 1.15f, 1.0f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(binding.tvHeroEmoji, "scaleY", 1.0f, 1.15f, 1.0f);
         scaleX.setDuration(3000);
         scaleY.setDuration(3000);
         scaleX.setRepeatCount(ValueAnimator.INFINITE);
@@ -208,9 +201,9 @@ public class CrisisActivity extends AppCompatActivity {
                 long elapsed = (System.currentTimeMillis() - openedAtMs) / 1000;
                 int mins = (int) (elapsed / 60);
                 if (mins == 0) {
-                    tvTimeHere.setText("You've been here for " + elapsed + " sec");
+                    binding.tvTimeHere.setText("You've been here for " + elapsed + " sec");
                 } else {
-                    tvTimeHere.setText("You've been here for " + mins + " min — that takes strength");
+                    binding.tvTimeHere.setText("You've been here for " + mins + " min — that takes strength");
                 }
                 timerHandler.postDelayed(this, 1000);
             }
@@ -222,18 +215,18 @@ public class CrisisActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void setupDistressSlider() {
-        sliderDistress.addOnChangeListener((slider, value, fromUser) -> {
+        binding.sliderDistress.addOnChangeListener((slider, value, fromUser) -> {
             int level = (int) value;
             initialDistress = level;
 
             // Update emoji with spring bounce
             String newEmoji = DISTRESS_EMOJIS[Math.min(level - 1, 9)];
-            tvDistressEmoji.setText(newEmoji);
-            tvDistressEmoji.animate()
+            binding.tvDistressEmoji.setText(newEmoji);
+            binding.tvDistressEmoji.animate()
                     .scaleX(1.3f).scaleY(1.3f)
                     .setDuration(100)
                     .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                    .withEndAction(() -> tvDistressEmoji.animate()
+                    .withEndAction(() -> binding.tvDistressEmoji.animate()
                             .scaleX(1f).scaleY(1f)
                             .setDuration(180)
                             .setInterpolator(new android.view.animation.OvershootInterpolator(2f))
@@ -241,7 +234,7 @@ public class CrisisActivity extends AppCompatActivity {
                     .start();
 
             // Update number
-            tvDistressValue.setText(String.valueOf(level));
+            binding.tvDistressValue.setText(String.valueOf(level));
 
             // Color shift: green → red based on level
             float ratio = (level - 1) / 9.0f;
@@ -249,7 +242,7 @@ public class CrisisActivity extends AppCompatActivity {
             int g = (int) (175 + (67 - 175) * ratio);
             int b = (int) (80 + (54 - 80) * ratio);
             int color = 0xFF000000 | (r << 16) | (g << 8) | b;
-            tvDistressValue.setTextColor(color);
+            binding.tvDistressValue.setTextColor(color);
 
             // Haptic on each step
             if (fromUser) UiMotion.hapticClick(slider);
@@ -265,11 +258,10 @@ public class CrisisActivity extends AppCompatActivity {
     private com.mindtrace.ai.ui.components.GradientProgressBar distressBar;
 
     /**
-     * Programmatically inject a GradientProgressBar below the distress slider
-     * showing green→yellow→red gradient.
+     * Programmatically inject a GradientProgressBar below the distress slider.
      */
     private void addDistressGradientBar() {
-        android.view.ViewParent parent = sliderDistress.getParent();
+        android.view.ViewParent parent = binding.sliderDistress.getParent();
         if (parent instanceof android.view.ViewGroup) {
             android.view.ViewGroup group = (android.view.ViewGroup) parent;
             distressBar = new com.mindtrace.ai.ui.components.GradientProgressBar(this);
@@ -285,15 +277,13 @@ public class CrisisActivity extends AppCompatActivity {
             distressBar.setGradientColors(new int[]{0xFF22C55E, 0xFFF59E0B, 0xFFFF6B6B, 0xFFEF4444});
             distressBar.setTrackColor(0xFF1A2540);
 
-            // Find slider index and insert after it
-            int idx = group.indexOfChild(sliderDistress);
+            int idx = group.indexOfChild(binding.sliderDistress);
             if (idx >= 0 && idx < group.getChildCount()) {
                 group.addView(distressBar, idx + 1);
             } else {
                 group.addView(distressBar);
             }
 
-            // Set initial progress
             float initialRatio = (initialDistress - 1) / 9.0f;
             distressBar.setProgressImmediate(initialRatio);
         }
@@ -304,9 +294,8 @@ public class CrisisActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void setupBreathing() {
-        android.view.View btnBreathing = findViewById(R.id.btn_breathing);
-        UiMotion.attachPressAnimation(btnBreathing);
-        btnBreathing.setOnClickListener(v -> {
+        UiMotion.attachPressAnimation(binding.btnBreathing);
+        binding.btnBreathing.setOnClickListener(v -> {
             UiMotion.hapticClick(v);
             List<ExerciseEngine.BreathingExercise> exercises = ExerciseEngine.getAllBreathingExercises();
             String[] names = new String[exercises.size()];
@@ -332,9 +321,8 @@ public class CrisisActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void setupGrounding() {
-        android.view.View btnGrounding = findViewById(R.id.btn_grounding);
-        UiMotion.attachPressAnimation(btnGrounding);
-        btnGrounding.setOnClickListener(v -> {
+        UiMotion.attachPressAnimation(binding.btnGrounding);
+        binding.btnGrounding.setOnClickListener(v -> {
             UiMotion.hapticClick(v);
             List<ExerciseEngine.GroundingExercise> exercises = ExerciseEngine.getAllGroundingExercises();
             String[] names = new String[exercises.size()];
@@ -360,7 +348,7 @@ public class CrisisActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void setupTrustedContacts() {
-        findViewById(R.id.btn_contact_trusted).setOnClickListener(v -> {
+        binding.btnContactTrusted.setOnClickListener(v -> {
             crisisViewModel.loadTrustedContacts(contacts -> {
                 runOnUiThread(() -> {
                     if (contacts == null || contacts.isEmpty()) {
@@ -413,7 +401,7 @@ public class CrisisActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void setupSafetyPlan() {
-        findViewById(R.id.btn_view_safety_plan).setOnClickListener(v -> {
+        binding.btnViewSafetyPlan.setOnClickListener(v -> {
             crisisViewModel.getSafetyPlan().observe(this, plan -> {
                 if (plan != null && plan.hasContent()) {
                     new AlertDialog.Builder(this)
@@ -441,17 +429,15 @@ public class CrisisActivity extends AppCompatActivity {
     // ═══════════════════════════════════════════════════════════════════
 
     private void setupResolution() {
-        android.view.View btnSafe = findViewById(R.id.btn_safe_now);
-        UiMotion.attachPressAnimation(btnSafe);
-        UiMotion.pulseGlow(btnSafe); // Green CTA glow
+        UiMotion.attachPressAnimation(binding.btnSafeNow);
+        UiMotion.pulseGlow(binding.btnSafeNow); // Green CTA glow
 
-        btnSafe.setOnClickListener(v -> {
-            int postDistress = (int) sliderDistress.getValue();
+        binding.btnSafeNow.setOnClickListener(v -> {
+            int postDistress = (int) binding.sliderDistress.getValue();
             String method = lastExerciseUsed != null ? lastExerciseUsed : "self_resolved";
 
             crisisViewModel.resolveCrisis(method, null, postDistress);
 
-            // ── Premium celebration ──
             UiMotion.hapticHeavy(v);
             UiMotion.confettiBurst(v, 14);
 
@@ -459,12 +445,12 @@ public class CrisisActivity extends AppCompatActivity {
                     "💚 That's great. We're glad you're feeling safer.",
                     Toast.LENGTH_SHORT).show();
 
-            // Delay finish for confetti to be visible
             v.postDelayed(this::finish, 800);
         });
 
-        android.view.View tvBack = findViewById(R.id.tv_back);
-        if (tvBack != null) tvBack.setOnClickListener(v -> finish());
+        if (binding.tvBack != null) {
+            binding.tvBack.setOnClickListener(v -> finish());
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -490,21 +476,19 @@ public class CrisisActivity extends AppCompatActivity {
 
     private void applyProfile(AdaptiveCrisisResponse.CrisisProfile profile) {
         // Personalized message
-        TextView tvMessage = findViewById(R.id.tv_crisis_message);
         if (profile.personalizedMessage != null && !profile.personalizedMessage.isEmpty()) {
-            tvMessage.setText(profile.personalizedMessage);
+            binding.tvCrisisMessage.setText(profile.personalizedMessage);
         }
 
         // Nighttime adjustments
         if (profile.isNightTimeProne) {
-            tvHeroEmoji.setText("🌙");
+            binding.tvHeroEmoji.setText("🌙");
         }
 
         // Recommended exercise hint
         if (profile.recommendedExercise != null) {
-            MaterialButton btnBreathing = findViewById(R.id.btn_breathing);
             if (profile.breathingMoreEffective) {
-                btnBreathing.setText("🌬️ " + profile.recommendedExercise + " (recommended)");
+                binding.btnBreathing.setText("🌬️ " + profile.recommendedExercise + " (recommended)");
             }
         }
     }
@@ -513,6 +497,7 @@ public class CrisisActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         timerHandler.removeCallbacksAndMessages(null);
+        binding = null;
     }
 
     @Override

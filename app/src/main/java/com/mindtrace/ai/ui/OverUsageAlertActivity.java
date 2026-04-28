@@ -2,34 +2,33 @@ package com.mindtrace.ai.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mindtrace.ai.R;
+import com.mindtrace.ai.databinding.ActivityOverUsageAlertBinding;
 
+/**
+ * Over-Usage Alert Activity — shown when screen time exceeds threshold.
+ *
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
+ */
 public class OverUsageAlertActivity extends AppCompatActivity {
+
+    private ActivityOverUsageAlertBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_over_usage_alert);
+        binding = ActivityOverUsageAlertBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        Button btn5Min = findViewById(R.id.btn_5_min);
-        Button btn15Min = findViewById(R.id.btn_15_min);
-        Button btn30Min = findViewById(R.id.btn_30_min);
-        Button btn1Hour = findViewById(R.id.btn_1_hour);
-        TextView btnDismiss = findViewById(R.id.btn_dismiss);
+        binding.btn5Min.setOnClickListener(v -> grantTime(5));
+        binding.btn15Min.setOnClickListener(v -> grantTime(15));
+        binding.btn30Min.setOnClickListener(v -> grantTime(30));
+        binding.btn1Hour.setOnClickListener(v -> grantTime(60));
 
-        btn5Min.setOnClickListener(v -> grantTime(5));
-        btn15Min.setOnClickListener(v -> grantTime(15));
-        btn30Min.setOnClickListener(v -> grantTime(30));
-        btn1Hour.setOnClickListener(v -> grantTime(60));
-        
-        btnDismiss.setOnClickListener(v -> {
+        binding.btnDismiss.setOnClickListener(v -> {
             Toast.makeText(this, "Reminders disabled for today.", Toast.LENGTH_SHORT).show();
             finish();
         });
@@ -39,19 +38,25 @@ public class OverUsageAlertActivity extends AppCompatActivity {
         // Logic to add 'minutes' to the allowed time
         // This would interact with SharedPreferences or the UsageEngine
         Toast.makeText(this, "Granted " + minutes + " more minutes.", Toast.LENGTH_SHORT).show();
-        
+
         // Return to home screen or resume the previous app
         Intent homeIntent = new Intent(Intent.ACTION_MAIN);
         homeIntent.addCategory(Intent.CATEGORY_HOME);
         homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(homeIntent);
-        
+
         finish();
     }
-    
+
     @Override
     public void onBackPressed() {
         // Force the user to choose an option, do not let them just press back to dismiss
         Toast.makeText(this, "Please select an option.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

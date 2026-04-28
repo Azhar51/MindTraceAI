@@ -24,9 +24,11 @@ public class CrisisRepository {
     private static final long COOLDOWN_MS = 30 * 60 * 1000; // 30 min
 
     private final CrisisEventDao dao;
+    private final Context context;
 
     public CrisisRepository(@NonNull Context context) {
-        this.dao = AppDatabase.getInstance(context.getApplicationContext()).crisisEventDao();
+        this.context = context.getApplicationContext();
+        this.dao = AppDatabase.getInstance(this.context).crisisEventDao();
     }
 
     // ═══════════════════════════════════════════════════════════════════
@@ -45,10 +47,60 @@ public class CrisisRepository {
         try {
             long id = dao.insert(event);
             Log.d(TAG, "Crisis event saved: " + assessment.level.label + " (id=" + id + ")");
+
+            // Auto-notify trusted contacts for URGENT+ crises
+            if (assessment.level.ordinal() >= 3) { // URGENT = 3, CRITICAL = 4
+                notifyTrustedContacts(event);
+            }
+
             return id;
         } catch (Exception e) {
             Log.e(TAG, "Failed to save crisis event", e);
             return -1;
+        }
+    }
+
+    /**
+     * Auto-notify all TrustedContacts flagged with notifyOnCrisis=true.
+     *
+     * <p>Uses SmsManager to send pre-composed crisis SMS messages.
+     * This is the critical bridge between SafetyPlan contacts and
+     * real-time crisis intervention.</p>
+     *
+     * <p>Only fires for URGENT/CRITICAL crises to prevent alert fatigue.</p>
+     */
+    private void notifyTrustedContacts(@NonNull CrisisEvent event) {
+        try {
+            AppDatabase db = AppDatabase.getInstance(context);
+            List<com.mindtrace.ai.database.entity.TrustedContact> contacts =
+                    db.trustedContactDao().getCrisisNotifyContactsSync();
+
+            if (contacts == null || contacts.isEmpty()) {
+                Log.d(TAG, "No crisis-notify contacts configured");
+                return;
+            }
+
+            for (com.mindtrace.ai.database.entity.TrustedContact contact : contacts) {
+                if (contact.phone != null && !contact.phone.isEmpty()) {
+                    try {
+                        android.telephony.SmsManager sms =
+                                android.telephony.SmsManager.getDefault();
+                        String message = contact.getCrisisSmsText();
+                        sms.sendTextMessage(contact.phone, null, message, null, null);
+                        Log.d(TAG, "Crisis SMS sent to: " + contact.name);
+                    } catch (SecurityException se) {
+                        // SMS permission not granted — fall through silently
+                        Log.w(TAG, "SMS permission denied for: " + contact.name);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Failed to send SMS to: " + contact.name, e);
+                    }
+                }
+            }
+
+            Log.d(TAG, "Notified " + contacts.size() + " trusted contacts for " +
+                    event.crisisLevel + " crisis");
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to notify trusted contacts", e);
         }
     }
 

@@ -47,7 +47,6 @@ import android.animation.ValueAnimator;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.Executors;
 
 public class MoodFragment extends Fragment {
     private DashboardViewModel dashboardViewModel;
@@ -692,7 +691,7 @@ public class MoodFragment extends Fragment {
     }
 
     private void checkWeeklyAssessmentDue() {
-        Executors.newSingleThreadExecutor().execute(() -> {
+        com.mindtrace.ai.util.AppExecutors.diskIO().execute(() -> {
             try {
                 AssessmentRepository repo = new AssessmentRepository(requireContext());
                 boolean isDue = repo.isWeeklyAssessmentDue();

@@ -78,8 +78,8 @@ import com.mindtrace.ai.database.entity.ErrorLog;
                 SuicideRiskEvent.class,
                 ErrorLog.class
         },
-        version = 27,
-        exportSchema = false
+        version = 28,
+        exportSchema = true
 )
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
@@ -871,6 +871,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     .addMigrations(MIGRATION_24_25)
                     .addMigrations(MIGRATION_25_26)
                     .addMigrations(MIGRATION_26_27)
+                    .addMigrations(MIGRATION_27_28)
                     .fallbackToDestructiveMigration()
                     .build();
         }
@@ -971,6 +972,24 @@ public abstract class AppDatabase extends RoomDatabase {
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_error_logs_workerName` ON `error_logs` (`workerName`)");
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_error_logs_category` ON `error_logs` (`category`)");
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_error_logs_workerName_category` ON `error_logs` (`workerName`, `category`)");
+        }
+    };
+
+    // ═════════════════════════════════════════════════════════════════════
+    // MIGRATION 27→28: Nutrition & Hydration Baseline
+    // Adds 8 columns to onboarding_profile for gut-brain axis tracking
+    // ═════════════════════════════════════════════════════════════════════
+    static final Migration MIGRATION_27_28 = new Migration(27, 28) {
+        @Override
+        public void migrate(@androidx.annotation.NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE onboarding_profile ADD COLUMN waterIntake INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE onboarding_profile ADD COLUMN caffeineLevel INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE onboarding_profile ADD COLUMN alcoholFrequency TEXT");
+            database.execSQL("ALTER TABLE onboarding_profile ADD COLUMN dietQuality INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE onboarding_profile ADD COLUMN mealRegularity INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE onboarding_profile ADD COLUMN sugarIntake INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE onboarding_profile ADD COLUMN emotionalEating INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE onboarding_profile ADD COLUMN lateNightEating INTEGER NOT NULL DEFAULT 0");
         }
     };
 }

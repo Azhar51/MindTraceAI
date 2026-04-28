@@ -27,7 +27,6 @@ import com.mindtrace.ai.viewmodel.DashboardViewModel;
 import com.mindtrace.ai.viewmodel.SettingsViewModel;
 
 import java.io.File;
-import java.util.concurrent.Executors;
 
 public class SettingsFragment extends Fragment {
     private SettingsViewModel settingsViewModel;
@@ -108,7 +107,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void exportAllData() {
-        Executors.newSingleThreadExecutor().execute(() -> {
+        com.mindtrace.ai.util.AppExecutors.diskIO().execute(() -> {
             DataExportRepository repo = new DataExportRepository(requireContext());
             File exported = repo.exportAllDataAsJson();
             if (getActivity() != null) {
@@ -130,7 +129,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void exportClinicianReport() {
-        Executors.newSingleThreadExecutor().execute(() -> {
+        com.mindtrace.ai.util.AppExecutors.diskIO().execute(() -> {
             DataExportRepository repo = new DataExportRepository(requireContext());
             File exported = repo.exportClinicianReport();
             if (getActivity() != null) {
@@ -173,7 +172,7 @@ public class SettingsFragment extends Fragment {
                         "including journals, check-ins, crisis history, and settings.\n\n" +
                         "This action cannot be undone.")
                 .setPositiveButton("Delete Everything", (dialog, which) -> {
-                    Executors.newSingleThreadExecutor().execute(() -> {
+                    com.mindtrace.ai.util.AppExecutors.diskIO().execute(() -> {
                         DataExportRepository repo = new DataExportRepository(requireContext());
                         boolean success = repo.deleteAllData();
                         if (getActivity() != null) {
@@ -249,7 +248,7 @@ public class SettingsFragment extends Fragment {
         TextView tvStorageInfo = view.findViewById(R.id.tv_storage_info);
         if (tvStorageInfo == null) return;
 
-        Executors.newSingleThreadExecutor().execute(() -> {
+        com.mindtrace.ai.util.AppExecutors.diskIO().execute(() -> {
             DataExportRepository repo = new DataExportRepository(requireContext());
             DataExportRepository.StorageStats stats = repo.getStorageStats();
             if (getActivity() != null) {

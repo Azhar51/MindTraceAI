@@ -195,6 +195,7 @@ public final class WorkScheduler {
         enqueue(wm, WORK_TASK_REMINDER,
                 new PeriodicWorkRequest.Builder(TaskReminderWorker.class, 4, TimeUnit.HOURS)
                         .addTag(WORK_TASK_REMINDER)
+                        .setConstraints(batteryOk)
                         .build());
 
         // ═════════════════════════════════════════════════════════════════
@@ -215,6 +216,7 @@ public final class WorkScheduler {
         enqueue(wm, WORK_EFFICACY_OBSERVATION,
                 new PeriodicWorkRequest.Builder(EfficacyWorker.class, 2, TimeUnit.HOURS)
                         .addTag(WORK_EFFICACY_OBSERVATION)
+                        .setConstraints(batteryOk)
                         .build());
 
         // ═════════════════════════════════════════════════════════════════
@@ -267,6 +269,7 @@ public final class WorkScheduler {
         enqueue(wm, WORK_BEHAVIORAL_NUDGE,
                 new PeriodicWorkRequest.Builder(NudgeWorker.class, 30, TimeUnit.MINUTES)
                         .addTag(WORK_BEHAVIORAL_NUDGE)
+                        .setConstraints(batteryOk)
                         .build());
 
         Log.d(TAG, "All 14 workers scheduled successfully");

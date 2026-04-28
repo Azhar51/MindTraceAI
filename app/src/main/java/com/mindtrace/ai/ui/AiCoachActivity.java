@@ -6,9 +6,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +22,7 @@ import com.google.android.material.button.MaterialButton;
 import com.mindtrace.ai.R;
 import com.mindtrace.ai.ai.CoachChatEngine;
 import com.mindtrace.ai.database.entity.QuestionnaireResponse;
+import com.mindtrace.ai.databinding.ActivityAiCoachBinding;
 import com.mindtrace.ai.viewmodel.DashboardViewModel;
 
 import java.util.ArrayList;
@@ -31,12 +30,14 @@ import java.util.List;
 
 import io.noties.markwon.Markwon;
 
+/**
+ * AI Coach Activity — context-aware conversational coaching.
+ *
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
+ */
 public class AiCoachActivity extends AppCompatActivity {
 
-    private RecyclerView rvChat;
-    private EditText etInput;
-    private MaterialButton btnSend;
-    private TextView tvStatus;
+    private ActivityAiCoachBinding binding;
     private ChatAdapter chatAdapter;
     private List<ChatMessage> messages = new ArrayList<>();
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -51,55 +52,45 @@ public class AiCoachActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         markwon = Markwon.create(this);
-        setContentView(R.layout.activity_ai_coach);
+        binding = ActivityAiCoachBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        rvChat = findViewById(R.id.rv_coach_chat);
-        etInput = findViewById(R.id.et_coach_input);
-        btnSend = findViewById(R.id.btn_coach_send);
-        tvStatus = findViewById(R.id.tv_coach_status);
-        ImageButton btnBack = findViewById(R.id.btn_coach_back);
-
-        btnBack.setOnClickListener(v -> finish());
+        binding.btnCoachBack.setOnClickListener(v -> finish());
 
         chatAdapter = new ChatAdapter(messages);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(true);
-        rvChat.setLayoutManager(layoutManager);
-        rvChat.setAdapter(chatAdapter);
+        binding.rvCoachChat.setLayoutManager(layoutManager);
+        binding.rvCoachChat.setAdapter(chatAdapter);
 
-        btnSend.setOnClickListener(v -> {
-            String text = etInput.getText().toString().trim();
+        binding.btnCoachSend.setOnClickListener(v -> {
+            String text = binding.etCoachInput.getText().toString().trim();
             if (!text.isEmpty()) {
                 sendMessage(text);
             }
         });
 
-        // Phase 2: Context Injection
-        tvStatus.setText("Gathering vital context...");
+        // Show coach as online immediately — no waiting
+        binding.tvCoachStatus.setText("Coach is online");
+
+        // Load user's real name from the database for the greeting
+        String firstName = resolveUserFirstName();
+        String greeting = firstName.isEmpty()
+                ? "Hey! I'm your MindTrace AI Coach. How can I help you today?"
+                : "Hey " + firstName + "! I'm your MindTrace AI Coach. How can I help you today?";
+
+        messages.add(new ChatMessage(greeting, false, null));
+        chatAdapter.notifyItemInserted(messages.size() - 1);
+        binding.rvCoachChat.scrollToPosition(messages.size() - 1);
+
+        // Inject context silently in the background — don't block the UI
         viewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
-        
+
         viewModel.getHomeScreenState().observe(this, state -> {
             if (state == null || state.isLoading) return;
-            
             chatEngine.updateContext(state);
-            
-            if (messages.isEmpty()) {
-                tvStatus.setText("Coach is online");
-                
-                // Build a dynamic greeting based on the injected context
-                String dynamicGreeting = "Hi Alex! I've reviewed your current state. ";
-                if (state.riskIndex > 70) {
-                    dynamicGreeting += "I noticed your risk index is high (" + state.riskIndex + "). " + state.riskSummary + " Let's talk about what's going on.";
-                } else {
-                    dynamicGreeting += "Your momentum is looking stable today. " + state.riskSummary + " How are you feeling?";
-                }
-                
-                messages.add(new ChatMessage(dynamicGreeting, false, null));
-                chatAdapter.notifyItemInserted(messages.size() - 1);
-                rvChat.scrollToPosition(messages.size() - 1);
-            }
         });
 
         viewModel.getStateHistory().observe(this, responses -> {
@@ -111,17 +102,38 @@ public class AiCoachActivity extends AppCompatActivity {
         setupQuickSuggestions();
     }
 
+    /**
+     * Reads the user's first name directly from the onboarding_profile table
+     * via a synchronous Room query. This is fast because the table has exactly
+     * one row and is cached by Room after the first read.
+     */
+    private String resolveUserFirstName() {
+        try {
+            com.mindtrace.ai.database.AppDatabase db =
+                    com.mindtrace.ai.database.AppDatabase.getInstance(this);
+            com.mindtrace.ai.database.entity.OnboardingProfile profile =
+                    db.onboardingProfileDao().getProfileSync();
+            if (profile != null && profile.name != null && !profile.name.trim().isEmpty()) {
+                String name = profile.name.trim();
+                int space = name.indexOf(' ');
+                return space > 0 ? name.substring(0, space) : name;
+            }
+        } catch (Exception e) {
+            android.util.Log.w("AiCoachActivity", "Could not resolve user name", e);
+        }
+        return "";
+    }
+
     private void setupQuickSuggestions() {
-        LinearLayout layoutSuggestions = findViewById(R.id.layout_coach_suggestions);
-        if (layoutSuggestions == null) return;
-        
+        if (binding.layoutCoachSuggestions == null) return;
+
         String[] suggestions = {
             "Feeling anxious",
             "Analyze my day",
             "I'm stuck in a loop",
             "Breathing exercise"
         };
-        
+
         for (String suggestion : suggestions) {
             MaterialButton chip = new MaterialButton(this, null, com.google.android.material.R.attr.materialButtonOutlinedStyle);
             chip.setText(suggestion);
@@ -130,20 +142,20 @@ public class AiCoachActivity extends AppCompatActivity {
             chip.setBackgroundTintList(android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#1A2235")));
             chip.setCornerRadius(32);
             chip.setAllCaps(false);
-            
+
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             );
             params.setMargins(0, 0, 16, 0);
             chip.setLayoutParams(params);
-            
+
             chip.setOnClickListener(v -> {
-                etInput.setText(suggestion);
+                binding.etCoachInput.setText(suggestion);
                 sendMessage(suggestion);
             });
-            
-            layoutSuggestions.addView(chip);
+
+            binding.layoutCoachSuggestions.addView(chip);
         }
     }
 
@@ -153,7 +165,6 @@ public class AiCoachActivity extends AppCompatActivity {
         super.onResume();
         if (waitingForCheckIn) {
             waitingForCheckIn = false;
-            // Delay slightly to let Room DB finish writing the check-in
             handler.postDelayed(this::processCheckInReturn, 2000);
         } else if (waitingForExercise) {
             waitingForExercise = false;
@@ -162,20 +173,18 @@ public class AiCoachActivity extends AppCompatActivity {
     }
 
     private void processExerciseReturn() {
-        // Show a system message indicating the exercise was completed
         messages.add(new ChatMessage("✅ I've completed the " + pendingExerciseName + " exercise.", true, null));
         chatAdapter.notifyItemInserted(messages.size() - 1);
-        rvChat.scrollToPosition(messages.size() - 1);
+        binding.rvCoachChat.scrollToPosition(messages.size() - 1);
 
-        tvStatus.setText("Coach is analyzing...");
+        binding.tvCoachStatus.setText("Coach is analyzing...");
 
-        // Build a system summary
         String summary = "System Context: The user just successfully completed the " + pendingExerciseName + " exercise. Praise them briefly and ask how they feel now.";
         chatEngine.sendMessage(summary, (textResponse, actionWidgetType) -> {
-            tvStatus.setText("Coach is online");
+            binding.tvCoachStatus.setText("Coach is online");
             messages.add(new ChatMessage(textResponse, false, actionWidgetType));
             chatAdapter.notifyItemInserted(messages.size() - 1);
-            rvChat.scrollToPosition(messages.size() - 1);
+            binding.rvCoachChat.scrollToPosition(messages.size() - 1);
         });
     }
 
@@ -185,30 +194,26 @@ public class AiCoachActivity extends AppCompatActivity {
      * generate a deeply personalized response.
      */
     private void processCheckInReturn() {
-        // Refresh latest check-in data from the LiveData snapshot
         List<QuestionnaireResponse> responses = viewModel.getStateHistory().getValue();
         if (responses != null && !responses.isEmpty()) {
             QuestionnaireResponse latest = responses.get(0);
             chatEngine.updateCheckIn(latest);
 
-            // Show a system message indicating the check-in was submitted
             messages.add(new ChatMessage("✅ I've completed my daily check-in.", true, null));
             chatAdapter.notifyItemInserted(messages.size() - 1);
-            rvChat.scrollToPosition(messages.size() - 1);
+            binding.rvCoachChat.scrollToPosition(messages.size() - 1);
 
-            tvStatus.setText("Coach is analyzing your check-in...");
+            binding.tvCoachStatus.setText("Coach is analyzing your check-in...");
 
-            // Build a rich summary of all check-in answers and send to AI
             String checkInSummary = buildCheckInSummary(latest);
             chatEngine.sendMessage(checkInSummary, (textResponse, actionWidgetType) -> {
-                tvStatus.setText("Coach is online");
+                binding.tvCoachStatus.setText("Coach is online");
                 messages.add(new ChatMessage(textResponse, false, actionWidgetType));
                 chatAdapter.notifyItemInserted(messages.size() - 1);
-                rvChat.scrollToPosition(messages.size() - 1);
+                binding.rvCoachChat.scrollToPosition(messages.size() - 1);
             });
         } else {
-            // Fallback if data not available yet
-            tvStatus.setText("Coach is online");
+            binding.tvCoachStatus.setText("Coach is online");
             messages.add(new ChatMessage("Welcome back! It looks like your check-in is still being processed. Give me a moment...", false, null));
             chatAdapter.notifyItemInserted(messages.size() - 1);
         }
@@ -262,29 +267,32 @@ public class AiCoachActivity extends AppCompatActivity {
     private void sendMessage(String text) {
         messages.add(new ChatMessage(text, true, null));
         chatAdapter.notifyItemInserted(messages.size() - 1);
-        rvChat.scrollToPosition(messages.size() - 1);
-        etInput.setText("");
+        binding.rvCoachChat.scrollToPosition(messages.size() - 1);
+        binding.etCoachInput.setText("");
 
-        // Show typing indicator
-        tvStatus.setText("Coach is typing...");
+        binding.tvCoachStatus.setText("Coach is typing...");
         ChatMessage typingMessage = new ChatMessage("...", false, null);
         typingMessage.isTyping = true;
         messages.add(typingMessage);
         chatAdapter.notifyItemInserted(messages.size() - 1);
-        rvChat.scrollToPosition(messages.size() - 1);
+        binding.rvCoachChat.scrollToPosition(messages.size() - 1);
 
-        // Pass message to engine
         chatEngine.sendMessage(text, (textResponse, actionWidgetType) -> {
-            tvStatus.setText("Coach is online");
-            // Remove typing indicator
+            binding.tvCoachStatus.setText("Coach is online");
             if (!messages.isEmpty() && messages.get(messages.size() - 1).isTyping) {
                 messages.remove(messages.size() - 1);
                 chatAdapter.notifyItemRemoved(messages.size());
             }
             messages.add(new ChatMessage(textResponse, false, actionWidgetType));
             chatAdapter.notifyItemInserted(messages.size() - 1);
-            rvChat.scrollToPosition(messages.size() - 1);
+            binding.rvCoachChat.scrollToPosition(messages.size() - 1);
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 
     private static class ChatMessage {
@@ -334,7 +342,7 @@ public class AiCoachActivity extends AppCompatActivity {
                 ((UserMessageViewHolder) holder).tvMessage.setText(message.text);
             } else if (holder instanceof AiMessageViewHolder) {
                 AiMessageViewHolder aiHolder = (AiMessageViewHolder) holder;
-                
+
                 if (message.isTyping) {
                     aiHolder.tvMessage.setText("...");
                     aiHolder.tvMessage.setTextSize(24f);
@@ -342,18 +350,15 @@ public class AiCoachActivity extends AppCompatActivity {
                     aiHolder.tvMessage.setTextSize(15f);
                     markwon.setMarkdown(aiHolder.tvMessage, message.text);
                 }
-                
-                // Clear previous widgets if any
+
                 aiHolder.containerWidget.removeAllViews();
-                
-                // Render Action Widget if present
+
                 if (message.actionWidgetType != null && !message.actionWidgetType.isEmpty()) {
                     aiHolder.containerWidget.setVisibility(View.VISIBLE);
-                    
-                    // Inflate widget button dynamically
+
                     MaterialButton actionBtn = new MaterialButton(aiHolder.itemView.getContext(), null, com.google.android.material.R.attr.materialButtonStyle);
                     actionBtn.setCornerRadius(32);
-                    
+
                     switch (message.actionWidgetType) {
                         case "ACTION_BREATHING":
                             actionBtn.setText("Start 2-min Breathing");
@@ -369,12 +374,10 @@ public class AiCoachActivity extends AppCompatActivity {
                             break;
                         case "ACTION_SUPPORT_OPTIONS":
                             actionBtn.setText("Seek Support");
-                            // Fallback to overview logic or launch SupportFragment equivalent
                             break;
                         case "ACTION_LOCKDOWN":
                             actionBtn.setText("\uD83D\uDD12  Start App Lockdown");
                             actionBtn.setOnClickListener(v -> {
-                                // Since we don't have a standalone lockdown activity yet, route to Focus/Lockdown logic
                                 Toast.makeText(AiCoachActivity.this, "Lockdown Mode starting...", Toast.LENGTH_SHORT).show();
                             });
                             break;

@@ -27,6 +27,7 @@ import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.mindtrace.ai.R;
+import com.mindtrace.ai.databinding.ActivityQuestionnaireBinding;
 import com.mindtrace.ai.ui.theme.ColorSystem;
 import com.mindtrace.ai.database.entity.OnboardingProfile;
 import com.mindtrace.ai.viewmodel.OnboardingViewModel;
@@ -37,8 +38,10 @@ import java.util.Locale;
 
 public class QuestionnaireActivity extends AppCompatActivity {
 
-    private static final int TOTAL_STEPS = 6;
-    private static final int STEP_COMPLETE = 6; // index of completion view
+    private ActivityQuestionnaireBinding binding;
+
+    private static final int TOTAL_STEPS = 7;
+    private static final int STEP_COMPLETE = 7; // index of completion view
     private static final String PREFS_NAME = "onboarding_progress";
     private static final String KEY_STEP = "current_step";
 
@@ -48,16 +51,18 @@ public class QuestionnaireActivity extends AppCompatActivity {
             "How is your day-to-day functioning?",
             "What does your phone behavior look like?",
             "How stable does your routine feel?",
-            "Choose the support you want visible."
+            "Choose the support you want visible.",
+            "What does your nutrition look like?"
     };
 
     private final String[] stepSubtitles = {
             "This gives MindTrace a clear starting point for your daily guidance.",
-            "No judgment — we only use this to shape calmer, more useful recommendations.",
+            "No judgment \u2014 we only use this to shape calmer, more useful recommendations.",
             "These answers help the app understand your energy, focus, and sleep.",
             "We use this to estimate distraction risk before enough live data arrives.",
             "Routine and direction matter because motivation usually follows structure.",
-            "Support stays respectful, optional, and easier to reach only if you want it."
+            "Support stays respectful, optional, and easier to reach only if you want it.",
+            "What you eat and drink shapes your mood, focus, and sleep more than you think."
     };
 
     private OnboardingViewModel viewModel;
@@ -106,6 +111,14 @@ public class QuestionnaireActivity extends AppCompatActivity {
     private TextView tvSupportDesc, tvSocialQualityDesc, tvReadinessDesc;
     private SwitchMaterial switchSupportNeeded, switchSafetySupport;
 
+    // Step 6 — Nutrition
+    private Slider sliderWaterIntake, sliderCaffeineIntake, sliderDietQuality;
+    private Slider sliderMealRegularity, sliderSugarIntake, sliderEmotionalEating, sliderLateEating;
+    private TextView tvWaterIntakeVal, tvCaffeineVal, tvDietQualityVal;
+    private TextView tvMealRegularityVal, tvSugarIntakeVal, tvEmotionalEatingVal, tvLateEatingVal;
+    private TextView tvWaterIntakeDesc, tvCaffeineDesc, tvDietQualityDesc, tvEmotionalEatingDesc;
+    private ChipGroup chipGroupAlcohol;
+
     // Completion
     private View viewCompleteCircle;
     private LinearProgressIndicator progressComplete;
@@ -113,7 +126,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_questionnaire);
+        binding = ActivityQuestionnaireBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         configureSystemBars();
 
         viewModel = new ViewModelProvider(this).get(OnboardingViewModel.class);
@@ -123,6 +137,19 @@ public class QuestionnaireActivity extends AppCompatActivity {
         restoreState(savedInstanceState);
         setupInteractions();
         updateStepUi(false);
+
+        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (currentStep > 0 && currentStep < TOTAL_STEPS) {
+                    currentStep--;
+                    updateStepUi(true);
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
 
         viewModel.getSubmissionResult().observe(this, result -> {
             if (result == null) return;
@@ -150,20 +177,23 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 startActivity(nextIntent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 finish();
-            }, 2200);
+            }, 600);
         });
     }
 
     // ─── View Binding ────────────────────────────────────────────────
 
     private void bindViews() {
-        tvStepBadge = findViewById(R.id.tv_onboarding_step_badge);
-        tvTitle = findViewById(R.id.tv_onboarding_title);
-        tvSubtitle = findViewById(R.id.tv_onboarding_subtitle);
-        progressIndicator = findViewById(R.id.progress_onboarding);
-        viewFlipper = findViewById(R.id.view_flipper_onboarding);
-        btnBack = findViewById(R.id.btn_onboarding_back);
-        btnNext = findViewById(R.id.btn_onboarding_next);
+        tvStepBadge = binding.tvOnboardingStepBadge;
+        tvTitle = binding.tvOnboardingTitle;
+        tvSubtitle = binding.tvOnboardingSubtitle;
+        progressIndicator = binding.progressOnboarding;
+        viewFlipper = binding.viewFlipperOnboarding;
+        btnBack = binding.btnOnboardingBack;
+        btnNext = binding.btnOnboardingNext;
+
+        // Step views live inside unnamed <include> layouts inside ViewFlipper.
+        // ViewBinding cannot reference them — must use findViewById.
 
         // Step 1
         etName = findViewById(R.id.et_onboarding_name);
@@ -259,6 +289,27 @@ public class QuestionnaireActivity extends AppCompatActivity {
         switchSupportNeeded = findViewById(R.id.switch_support_needed);
         switchSafetySupport = findViewById(R.id.switch_safety_support);
 
+        // Step 6 — Nutrition
+        sliderWaterIntake = findViewById(R.id.slider_water_intake);
+        sliderCaffeineIntake = findViewById(R.id.slider_caffeine_intake);
+        sliderDietQuality = findViewById(R.id.slider_diet_quality);
+        sliderMealRegularity = findViewById(R.id.slider_meal_regularity);
+        sliderSugarIntake = findViewById(R.id.slider_sugar_intake);
+        sliderEmotionalEating = findViewById(R.id.slider_emotional_eating);
+        sliderLateEating = findViewById(R.id.slider_late_eating);
+        tvWaterIntakeVal = findViewById(R.id.tv_water_intake_value);
+        tvCaffeineVal = findViewById(R.id.tv_caffeine_value);
+        tvDietQualityVal = findViewById(R.id.tv_diet_quality_value);
+        tvMealRegularityVal = findViewById(R.id.tv_meal_regularity_value);
+        tvSugarIntakeVal = findViewById(R.id.tv_sugar_intake_value);
+        tvEmotionalEatingVal = findViewById(R.id.tv_emotional_eating_value);
+        tvLateEatingVal = findViewById(R.id.tv_late_eating_value);
+        tvWaterIntakeDesc = findViewById(R.id.tv_water_intake_desc);
+        tvCaffeineDesc = findViewById(R.id.tv_caffeine_desc);
+        tvDietQualityDesc = findViewById(R.id.tv_diet_quality_desc);
+        tvEmotionalEatingDesc = findViewById(R.id.tv_emotional_eating_desc);
+        chipGroupAlcohol = findViewById(R.id.chip_group_alcohol);
+
         // Completion
         viewCompleteCircle = findViewById(R.id.view_complete_circle);
         progressComplete = findViewById(R.id.progress_complete);
@@ -306,6 +357,15 @@ public class QuestionnaireActivity extends AppCompatActivity {
         wireIntSlider(sliderSocialQuality, tvSocialQualityVal);
         wireIntSlider(sliderReadiness, tvReadinessVal);
         wireIntSlider(sliderScreenAwareness, tvScreenAwarenessVal);
+
+        // Nutrition sliders
+        wireIntSlider(sliderWaterIntake, tvWaterIntakeVal);
+        wireIntSlider(sliderCaffeineIntake, tvCaffeineVal);
+        wireIntSlider(sliderDietQuality, tvDietQualityVal);
+        wireIntSlider(sliderMealRegularity, tvMealRegularityVal);
+        wireIntSlider(sliderSugarIntake, tvSugarIntakeVal);
+        wireIntSlider(sliderEmotionalEating, tvEmotionalEatingVal);
+        wireIntSlider(sliderLateEating, tvLateEatingVal);
 
         // ── Live clinical descriptors (Advanced) ──
         wireDescriptor(sliderSocialMediaUse, tvSocialMediaDesc, new String[]{
@@ -366,6 +426,36 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 "Action — actively making changes",
                 "Action — building new habits",
                 "Maintenance — sustaining progress"
+        });
+
+        // ── Nutrition descriptors ──
+        wireDescriptor(sliderWaterIntake, tvWaterIntakeDesc, new String[]{
+                "Critically low — barely any water",
+                "Low — 2-3 glasses, often dehydrated",
+                "Moderate — some water but could improve",
+                "Good — regular hydration throughout the day",
+                "Excellent — well hydrated, 2+ liters daily"
+        });
+        wireDescriptor(sliderCaffeineIntake, tvCaffeineDesc, new String[]{
+                "None — caffeine-free",
+                "Light — 1 cup, minimal impact",
+                "Moderate — 2-3 cups, within safe range",
+                "High — 4+ cups, likely affecting sleep",
+                "Heavy — 5+ cups, anxiety/sleep disruption risk"
+        });
+        wireDescriptor(sliderDietQuality, tvDietQualityDesc, new String[]{
+                "Poor — mostly processed and fast food",
+                "Below average — limited variety",
+                "Mixed — some healthy, some processed",
+                "Good — mostly whole foods and variety",
+                "Excellent — balanced, nutrient-rich diet"
+        });
+        wireDescriptor(sliderEmotionalEating, tvEmotionalEatingDesc, new String[]{
+                "Never — food isn't a coping mechanism",
+                "Rarely — occasional comfort eating",
+                "Sometimes — stress triggers snacking",
+                "Often — regularly eat to manage emotions",
+                "Constant — food is my primary coping tool"
         });
 
         // ── Digital risk preview (live-updating) ──
@@ -607,6 +697,17 @@ public class QuestionnaireActivity extends AppCompatActivity {
         p.socialQualityBaseline = sliderInt(sliderSocialQuality);
         p.readinessToChange = sliderInt(sliderReadiness);
 
+        // Nutrition & hydration baseline
+        p.waterIntake = sliderInt(sliderWaterIntake);
+        p.caffeineLevel = sliderInt(sliderCaffeineIntake);
+        String alcohol = selectedChipText(chipGroupAlcohol);
+        p.alcoholFrequency = alcohol.isEmpty() ? "Never" : alcohol;
+        p.dietQuality = sliderInt(sliderDietQuality);
+        p.mealRegularity = sliderInt(sliderMealRegularity);
+        p.sugarIntake = sliderInt(sliderSugarIntake);
+        p.emotionalEating = sliderInt(sliderEmotionalEating);
+        p.lateNightEating = sliderInt(sliderLateEating);
+
         // Auto-compute coping style from patterns
         p.copingStyle = inferCopingStyle(p);
         p.onboardingComplete = true;
@@ -735,5 +836,11 @@ public class QuestionnaireActivity extends AppCompatActivity {
         if (currentStep < TOTAL_STEPS) {
             savePartialProgress();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

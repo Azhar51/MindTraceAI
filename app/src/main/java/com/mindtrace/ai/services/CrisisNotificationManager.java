@@ -14,7 +14,15 @@ import androidx.core.app.NotificationCompat;
 import com.mindtrace.ai.R;
 import com.mindtrace.ai.ai.CrisisDetector;
 import com.mindtrace.ai.ai.MultiModalClassifier;
+import com.mindtrace.ai.database.AppDatabase;
+import com.mindtrace.ai.database.entity.TrustedContact;
 import com.mindtrace.ai.ui.CrisisActivity;
+
+import android.telephony.SmsManager;
+import androidx.core.content.ContextCompat;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import java.util.List;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -114,6 +122,40 @@ public class CrisisNotificationManager {
         }
 
         return true;
+    }
+
+    /**
+     * Auto-notify trusted contacts via SMS in CRITICAL situations.
+     * Only runs if SEND_SMS permission is granted.
+     */
+    public static void notifyTrustedContacts(@NonNull Context ctx, @NonNull CrisisDetector.CrisisAssessment assessment) {
+        if (!assessment.level.requiresMonitoring()) return;
+
+        // Ensure we have permission
+        if (ContextCompat.checkSelfPermission(ctx, Manifest.permission.SEND_SMS) 
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Cannot auto-notify trusted contacts: SEND_SMS permission missing");
+            return;
+        }
+
+        com.mindtrace.ai.util.AppExecutors.diskIO().execute(() -> {
+            try {
+                AppDatabase db = AppDatabase.getInstance(ctx);
+                List<TrustedContact> contacts = db.trustedContactDao().getCrisisNotifyContactsSync();
+                if (contacts == null || contacts.isEmpty()) return;
+
+                SmsManager smsManager = SmsManager.getDefault();
+                String message = "MindTrace Alert: I am currently experiencing a severe mental health crisis. "
+                               + "Please check on me when you can.";
+
+                for (TrustedContact contact : contacts) {
+                    smsManager.sendTextMessage(contact.phone, null, message, null, null);
+                    Log.i(TAG, "Sent crisis SMS to trusted contact: " + contact.name);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to auto-notify trusted contacts", e);
+            }
+        });
     }
 
     // ═══════════════════════════════════════════════════════════════════

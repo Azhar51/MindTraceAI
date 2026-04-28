@@ -11,6 +11,9 @@ import com.mindtrace.ai.service.WorkScheduler;
 import android.content.IntentFilter;
 import android.content.Intent;
 
+import dagger.hilt.android.HiltAndroidApp;
+
+@HiltAndroidApp
 public class MindTraceApp extends Application {
 
     // ═══════════════════════════════════════════════════════════════════

@@ -1,8 +1,14 @@
 package com.mindtrace.ai.ui;
 
+import android.accessibilityservice.AccessibilityServiceInfo;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.MenuItem;
+import android.view.accessibility.AccessibilityManager;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -10,10 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.mindtrace.ai.R;
+import com.mindtrace.ai.databinding.ActivityMainBinding;
 import com.mindtrace.ai.ui.panel.InsightsFragment;
 import com.mindtrace.ai.ui.panel.MoodFragment;
 import com.mindtrace.ai.ui.panel.OverviewFragment;
@@ -23,6 +28,16 @@ import com.mindtrace.ai.ui.panel.TasksFragment;
 import com.mindtrace.ai.ui.panel.UsageFragment;
 import com.mindtrace.ai.viewmodel.DashboardViewModel;
 
+import java.util.List;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+/**
+ * Main Activity — navigation shell hosting all dashboard fragments.
+ *
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
+ */
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_START_DESTINATION = "start_destination";
     public static final String DEST_OVERVIEW = "overview";
@@ -36,9 +51,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String STATE_CURRENT_DESTINATION = "state_current_destination";
     private static final String STATE_LAST_PRIMARY_DESTINATION = "state_last_primary_destination";
 
-    private MaterialToolbar topAppBar;
-    private BottomNavigationView bottomNavigationView;
-    private FloatingActionButton fabCheckIn;
+    /** Prefs for tracking optional permission prompts. */
+    private static final String PREFS_OPTIONAL_PERMS = "optional_permission_prompts";
+    private static final String KEY_LAST_PROMPT_DAY = "last_optional_prompt_day";
+    private static final String KEY_FIRST_LAUNCH_DAY = "first_launch_day";
+
+    private ActivityMainBinding binding;
     private DashboardViewModel dashboardViewModel;
 
     private String currentDestination = DEST_OVERVIEW;
@@ -47,30 +65,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
 
-        topAppBar = findViewById(R.id.top_app_bar);
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        fabCheckIn = findViewById(R.id.fab_check_in);
+        setSupportActionBar(binding.topAppBar);
+        binding.topAppBar.setOnMenuItemClickListener(this::handleToolbarAction);
 
-        setSupportActionBar(topAppBar);
-        topAppBar.setOnMenuItemClickListener(this::handleToolbarAction);
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
             navigateTo(resolvePrimaryDestination(item.getItemId()), true);
             return true;
         });
 
-        UiMotion.attachPressAnimation(fabCheckIn);
-        fabCheckIn.setOnClickListener(v -> startActivity(new Intent(this, DailyCheckInActivity.class)));
+        UiMotion.attachPressAnimation(binding.fabCheckIn);
+        binding.fabCheckIn.setOnClickListener(v -> startActivity(new Intent(this, DailyCheckInActivity.class)));
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 if (isSecondaryDestination(currentDestination)) {
                     navigateTo(lastPrimaryDestination, true);
+                    return;
+                }
+
+                if (!DEST_OVERVIEW.equals(currentDestination)) {
+                    navigateTo(DEST_OVERVIEW, true);
                     return;
                 }
 
@@ -91,12 +111,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         navigateTo(startDestination, !isSecondaryDestination(startDestination));
+
+        // Record first launch day for optional permission timing
+        SharedPreferences prefs = getSharedPreferences(PREFS_OPTIONAL_PERMS, MODE_PRIVATE);
+        if (prefs.getLong(KEY_FIRST_LAUNCH_DAY, 0) == 0) {
+            prefs.edit().putLong(KEY_FIRST_LAUNCH_DAY, todayDayNumber()).apply();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         dashboardViewModel.refreshDashboard();
+        checkOptionalPermissions();
     }
 
     @Override
@@ -153,10 +180,10 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(
-                        R.anim.fade_in,   // enter
-                        R.anim.fade_out,   // exit
-                        R.anim.fade_in,   // popEnter
-                        R.anim.fade_out    // popExit
+                        R.anim.fade_in,
+                        R.anim.fade_out,
+                        R.anim.fade_in,
+                        R.anim.fade_out
                 )
                 .replace(R.id.fragment_container, createFragment(sanitizedDestination), sanitizedDestination)
                 .commit();
@@ -165,14 +192,10 @@ public class MainActivity extends AppCompatActivity {
         syncBottomNavigationSelection(sanitizedDestination);
 
         // Hide the activity-level check-in FAB and App Bar on Overview (it has its own FAB and AppBar)
-        if (fabCheckIn != null) {
-            fabCheckIn.setVisibility(DEST_OVERVIEW.equals(sanitizedDestination)
-                    ? android.view.View.GONE : android.view.View.VISIBLE);
-        }
-        if (topAppBar != null) {
-            topAppBar.setVisibility(DEST_OVERVIEW.equals(sanitizedDestination)
-                    ? android.view.View.GONE : android.view.View.VISIBLE);
-        }
+        binding.fabCheckIn.setVisibility(DEST_OVERVIEW.equals(sanitizedDestination)
+                ? android.view.View.GONE : android.view.View.VISIBLE);
+        binding.topAppBar.setVisibility(DEST_OVERVIEW.equals(sanitizedDestination)
+                ? android.view.View.GONE : android.view.View.VISIBLE);
     }
 
     private Fragment createFragment(String destination) {
@@ -196,15 +219,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateToolbar(String destination) {
-        topAppBar.setTitle(getDestinationTitle(destination));
-        topAppBar.setSubtitle(getDestinationSubtitle(destination));
+        binding.topAppBar.setTitle(getDestinationTitle(destination));
+        binding.topAppBar.setSubtitle(getDestinationSubtitle(destination));
 
         if (isSecondaryDestination(destination)) {
-            topAppBar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material);
-            topAppBar.setNavigationOnClickListener(v -> navigateTo(lastPrimaryDestination, true));
+            binding.topAppBar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material);
+            binding.topAppBar.setNavigationOnClickListener(v -> navigateTo(lastPrimaryDestination, true));
         } else {
-            topAppBar.setNavigationIcon(null);
-            topAppBar.setNavigationOnClickListener(null);
+            binding.topAppBar.setNavigationIcon(null);
+            binding.topAppBar.setNavigationOnClickListener(null);
         }
     }
 
@@ -216,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        MenuItem menuItem = bottomNavigationView.getMenu().findItem(selectedItemId);
+        MenuItem menuItem = binding.bottomNavigation.getMenu().findItem(selectedItemId);
         if (menuItem != null) {
             menuItem.setChecked(true);
         }
@@ -311,5 +334,77 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return "Your wellbeing summary";
         }
+    }
+
+    // ═════════════════════════════════════════════════════════════════
+    // PROGRESSIVE PERMISSION PROMPTS (optional enhancement permissions)
+    // ═════════════════════════════════════════════════════════════════
+
+    /**
+     * Contextually prompt for optional permissions (Accessibility, NotificationListener)
+     * after the user has been using the app for a few days.
+     */
+    public void checkOptionalPermissions() {
+        boolean hasAccessibility = hasAccessibilityPermission();
+        boolean hasNotifListener = hasNotificationListenerPermission();
+        if (hasAccessibility && hasNotifListener) return;
+
+        SharedPreferences prefs = getSharedPreferences(PREFS_OPTIONAL_PERMS, MODE_PRIVATE);
+        long firstLaunchDay = prefs.getLong(KEY_FIRST_LAUNCH_DAY, 0);
+        long lastPromptDay = prefs.getLong(KEY_LAST_PROMPT_DAY, 0);
+        long today = todayDayNumber();
+
+        if (firstLaunchDay == 0 || today - firstLaunchDay < 3) return;
+        if (lastPromptDay == today) return;
+
+        prefs.edit().putLong(KEY_LAST_PROMPT_DAY, today).apply();
+
+        String message = !hasAccessibility
+                ? "Enable scroll tracking for deeper behavioral insights"
+                : "Enable notification tracking for response pattern analysis";
+
+        Snackbar.make(binding.fragmentContainer, message, Snackbar.LENGTH_LONG)
+                .setAction("Enable", v -> {
+                    Intent intent = new Intent(this, PermissionActivity.class);
+                    intent.putExtra(PermissionActivity.EXTRA_SHOW_OPTIONAL, true);
+                    startActivity(intent);
+                })
+                .setActionTextColor(getResources().getColor(R.color.primary, getTheme()))
+                .show();
+    }
+
+    private boolean hasAccessibilityPermission() {
+        try {
+            AccessibilityManager am = (AccessibilityManager)
+                    getSystemService(Context.ACCESSIBILITY_SERVICE);
+            List<AccessibilityServiceInfo> services =
+                    am.getEnabledAccessibilityServiceList(
+                            AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
+            String myPackage = getPackageName();
+            for (AccessibilityServiceInfo info : services) {
+                ComponentName cn = new ComponentName(
+                        info.getResolveInfo().serviceInfo.packageName,
+                        info.getResolveInfo().serviceInfo.name);
+                if (cn.getPackageName().equals(myPackage)) return true;
+            }
+        } catch (Exception ignored) {}
+        return false;
+    }
+
+    private boolean hasNotificationListenerPermission() {
+        String flat = Settings.Secure.getString(
+                getContentResolver(), "enabled_notification_listeners");
+        if (flat == null || flat.isEmpty()) return false;
+        return flat.contains(getPackageName());
+    }
+
+    private long todayDayNumber() {
+        return System.currentTimeMillis() / (24L * 60 * 60 * 1000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

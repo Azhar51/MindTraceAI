@@ -92,6 +92,7 @@
         <include layout="@layout/onboarding_step_digital" />
         <include layout="@layout/onboarding_step_lifestyle" />
         <include layout="@layout/onboarding_step_support" />
+        <include layout="@layout/onboarding_step_nutrition" />
         <include layout="@layout/onboarding_step_complete" />
     </ViewFlipper>
 

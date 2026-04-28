@@ -87,7 +87,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class OverviewFragment extends Fragment {
     private DashboardViewModel dashboardViewModel;
@@ -206,6 +205,7 @@ public class OverviewFragment extends Fragment {
     private FloatingActionButton fabJournal;
     private FloatingActionButton fabBreathe;
     private FloatingActionButton fabReset;
+    private FloatingActionButton fabFocus;
     private View fabActionsContainer;
     private LinearLayout layoutInsightDots;
 
@@ -463,6 +463,7 @@ public class OverviewFragment extends Fragment {
         fabJournal = view.findViewById(R.id.fab_overview_journal);
         fabBreathe = view.findViewById(R.id.fab_overview_breathe);
         fabReset = view.findViewById(R.id.fab_overview_reset);
+        fabFocus = view.findViewById(R.id.fab_overview_focus);
 
         btnPrimaryAction = view.findViewById(R.id.btn_overview_primary_action);
         btnSupport = view.findViewById(R.id.btn_overview_support);
@@ -642,6 +643,7 @@ public class OverviewFragment extends Fragment {
         UiMotion.attachPressAnimation(fabJournal);
         UiMotion.attachPressAnimation(fabBreathe);
         UiMotion.attachPressAnimation(fabReset);
+        UiMotion.attachPressAnimation(fabFocus);
 
         // B.3: Glassmorphism borders on Quick Stats cards
         applyGlassBorder(cardStatScreenTime);
@@ -664,7 +666,7 @@ public class OverviewFragment extends Fragment {
                 showPatternRadarBottomSheet(currentState.patternRadarCard);
             }
         });
-        cardFocusWindow.setOnClickListener(v -> handleFocusWindowAction());
+        cardFocusWindow.setOnClickListener(v -> openAiCoach());
         cardAiInsight.setOnClickListener(v -> insightDelegate.showBottomSheet(requireContext()));
         tvInsightLearnMore.setOnClickListener(v -> insightDelegate.showBottomSheet(requireContext()));
         tvInsightBadge.setOnClickListener(v -> insightDelegate.advanceInsight());
@@ -689,7 +691,7 @@ public class OverviewFragment extends Fragment {
             performHaptic(10);
             handlePrimaryAction();
         });
-        btnFocusAction.setOnClickListener(v -> handleFocusWindowAction());
+        btnFocusAction.setOnClickListener(v -> openAiCoach());
         btnSupport.setOnClickListener(v -> openSupportPanel());
         btnWeeklyPrompt.setOnClickListener(v -> {
             performHaptic(10);
@@ -719,6 +721,11 @@ public class OverviewFragment extends Fragment {
             performHaptic(12);
             fabDelegate.setExpanded(false, true);
             startActivity(new Intent(requireContext(), BreathingExerciseActivity.class));
+        });
+        fabFocus.setOnClickListener(v -> {
+            performHaptic(12);
+            fabDelegate.setExpanded(false, true);
+            startActivity(new Intent(requireContext(), com.mindtrace.ai.ui.FocusSessionActivity.class));
         });
         fabReset.setOnClickListener(v -> {
             performHaptic(12);
@@ -1745,20 +1752,20 @@ public class OverviewFragment extends Fragment {
         populateInsightRows(reasonsLayout, focusCard.ritualItems);
 
         boolean needsCheckIn = HomeScreenState.ACTION_CHECK_IN.equals(focusCard.actionType);
-        primaryButton.setText("Open Coach Chat");
+        primaryButton.setText("Start Focus Timer");
         primaryButton.setOnClickListener(v -> {
             dialog.dismiss();
-            openAiCoach();
+            startActivity(new Intent(requireContext(), com.mindtrace.ai.ui.FocusSessionActivity.class));
         });
         secondaryButton.setVisibility(View.VISIBLE);
-        secondaryButton.setText(needsCheckIn ? "Update Check-In" : "View Focus Plan");
+        secondaryButton.setText(needsCheckIn ? "Update Check-In" : "Open Coach Chat");
         secondaryButton.setOnClickListener(v -> {
             dialog.dismiss();
             if (needsCheckIn) {
                 startActivity(new Intent(requireContext(), DailyCheckInActivity.class));
                 return;
             }
-            navigateToTab(MainActivity.DEST_TASKS);
+            openAiCoach();
         });
 
         dialog.setContentView(sheet);
@@ -2194,10 +2201,8 @@ public class OverviewFragment extends Fragment {
 
 
     private void checkWeeklyAssessmentDue() {
-        if (weeklyCheckExecutor != null) {
-            weeklyCheckExecutor.shutdownNow();
-        }
-        weeklyCheckExecutor = Executors.newSingleThreadExecutor();
+        // Use shared executor — no shutdown needed
+        weeklyCheckExecutor = com.mindtrace.ai.util.AppExecutors.diskIO();
         weeklyCheckExecutor.execute(() -> {
             try {
                 AssessmentRepository repo = new AssessmentRepository(requireContext());
@@ -2267,9 +2272,7 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (weeklyCheckExecutor != null) {
-            weeklyCheckExecutor.shutdownNow();
-        }
+        // weeklyCheckExecutor is AppExecutors.diskIO() — never shut down the shared pool
         if (pulseRisk != null) {
             pulseRisk.stopPulse();
         }
@@ -2465,6 +2468,58 @@ public class OverviewFragment extends Fragment {
         }
         chipBehaviorScore.setText("Behavior: " + label);
         chipBehaviorScore.setChipColors(translucent(color, 40), color);
+
+        chipBehaviorScore.setOnClickListener(v -> {
+            performHaptic(10);
+            showBehaviorBottomSheet(report, label);
+        });
+    }
+
+    private void showBehaviorBottomSheet(@androidx.annotation.NonNull com.mindtrace.ai.behavior.BehaviorReport report, String badgeLabel) {
+        com.google.android.material.bottomsheet.BottomSheetDialog dialog = new com.google.android.material.bottomsheet.BottomSheetDialog(requireContext());
+        View sheet = android.view.LayoutInflater.from(requireContext()).inflate(R.layout.sheet_overview_insight, null);
+        
+        TextView headerView = sheet.findViewById(R.id.tv_sheet_insight_header);
+        TextView bodyView = sheet.findViewById(R.id.tv_sheet_insight_body);
+        LinearLayout reasonsLayout = sheet.findViewById(R.id.layout_sheet_insight_reasons);
+        sheet.findViewById(R.id.layout_sheet_insight_more).setVisibility(View.GONE);
+        
+        headerView.setText("Behavior Breakdown");
+        
+        String body = "Current status: " + badgeLabel + "\n\n" + 
+                      (report.summaryLabel != null ? report.summaryLabel + "\n" : "") + 
+                      (report.explanation != null ? report.explanation : "");
+        bodyView.setText(body.trim());
+        
+        java.util.List<String> details = new java.util.ArrayList<>();
+        if (report.hasLoopPattern) details.add("Looping behavior detected");
+        if (report.bingeSessionCount > 0) details.add(report.bingeSessionCount + " prolonged sessions recorded");
+        if (report.rapidSwitchCount > 0) details.add("High context switching (" + report.rapidSwitchCount + " rapid app swaps)");
+        if (report.frequentAppLoops != null && !report.frequentAppLoops.isEmpty()) {
+            details.add("Common loop: " + String.join(" ↔ ", report.frequentAppLoops));
+        }
+        if (report.activeVsPassiveRatio > 0) {
+            details.add(String.format(java.util.Locale.US, "Active/Passive ratio: %.1f", report.activeVsPassiveRatio));
+        }
+        if (report.reasoningNotes != null) {
+            details.addAll(report.reasoningNotes);
+        }
+        
+        if (details.isEmpty()) {
+            details.add("Your device behavior is balanced and within normal limits.");
+        }
+        
+        populateInsightRows(reasonsLayout, details);
+        
+        com.google.android.material.button.MaterialButton primaryButton = sheet.findViewById(R.id.btn_sheet_insight_primary);
+        primaryButton.setText("View screen time details");
+        primaryButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            navigateToTab(MainActivity.DEST_USAGE);
+        });
+        
+        dialog.setContentView(sheet);
+        dialog.show();
     }
 
     // ── C.5: Crisis Banner ───────────────────────────────────────────────
@@ -2561,6 +2616,7 @@ public class OverviewFragment extends Fragment {
         setContentDesc(fabJournal, "Open journal");
         setContentDesc(fabBreathe, "Start breathing exercise");
         setContentDesc(fabReset, "Reset session");
+        setContentDesc(fabFocus, "Start focus timer");
         setContentDesc(cardStatScreenTime, "Screen time statistics");
         setContentDesc(cardStatStreak, "Current streak statistics");
         setContentDesc(cardStatTasks, "Task completion statistics");

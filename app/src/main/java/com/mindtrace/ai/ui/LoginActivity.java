@@ -5,72 +5,54 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import com.mindtrace.ai.R;
 import com.mindtrace.ai.database.AppDatabase;
 import com.mindtrace.ai.database.entity.User;
+import com.mindtrace.ai.databinding.ActivityLoginBinding;
 
-import java.util.concurrent.Executors;
 
 /**
  * Premium Login Screen — Blueprint §2E1.2
  *
  * <p>Dark glassmorphism design with gradient CTA button, loading state,
  * error shake animation, and staggered card entry animation.</p>
+ *
+ * <p>Migrated to ViewBinding for type-safe view access.</p>
  */
 public class LoginActivity extends AppCompatActivity {
-    private TextInputEditText etEmail, etPassword;
-    private TextInputLayout tilEmail, tilPassword;
-    private MaterialButton btnLogin, btnLinkSignup;
-    private MaterialCardView cardLogin;
+    private ActivityLoginBinding binding;
     private boolean isLoading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // Transparent status bar
         getWindow().setStatusBarColor(android.graphics.Color.TRANSPARENT);
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-        bindViews();
         setupListeners();
         animateEntry();
     }
 
-    private void bindViews() {
-        etEmail = findViewById(R.id.et_email);
-        etPassword = findViewById(R.id.et_password);
-        btnLogin = findViewById(R.id.btn_login);
-        btnLinkSignup = findViewById(R.id.btn_link_signup);
-
-        // Find the TextInputLayouts (parents of EditTexts)
-        tilEmail = (TextInputLayout) etEmail.getParent().getParent();
-        tilPassword = (TextInputLayout) etPassword.getParent().getParent();
-    }
-
     private void setupListeners() {
-        btnLogin.setOnClickListener(v -> {
+        binding.btnLogin.setOnClickListener(v -> {
             if (!isLoading) {
                 UiMotion.hapticClick(v);
                 login();
             }
         });
-        btnLinkSignup.setOnClickListener(v ->
+        binding.btnLinkSignup.setOnClickListener(v ->
                 startActivity(new Intent(this, SignupActivity.class)));
 
         // CTA pulsing glow animation
-        UiMotion.pulseGlow(btnLogin);
+        UiMotion.pulseGlow(binding.btnLogin);
     }
 
     /**
@@ -78,40 +60,37 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void animateEntry() {
         // Logo
-        View logo = findViewById(R.id.ivLogo);
-        if (logo != null) {
-            logo.setAlpha(0f);
-            logo.setTranslationY(-20f);
-            logo.animate().alpha(1f).translationY(0f).setDuration(350)
-                    .setInterpolator(new DecelerateInterpolator()).start();
-        }
+        binding.ivLogo.setAlpha(0f);
+        binding.ivLogo.setTranslationY(-20f);
+        binding.ivLogo.animate().alpha(1f).translationY(0f).setDuration(350)
+                .setInterpolator(new DecelerateInterpolator()).start();
 
         // Title + subtitle
-        View tvTitle = findViewById(R.id.tvLoginTitle);
-        View tvSubtitle = findViewById(R.id.tvLoginSubtitle);
-        if (tvTitle != null) {
-            tvTitle.setAlpha(0f);
-            tvTitle.animate().alpha(1f).setStartDelay(150).setDuration(300).start();
-        }
-        if (tvSubtitle != null) {
-            tvSubtitle.setAlpha(0f);
-            tvSubtitle.animate().alpha(1f).setStartDelay(250).setDuration(300).start();
-        }
+        binding.tvLoginTitle.setAlpha(0f);
+        binding.tvLoginTitle.animate().alpha(1f).setStartDelay(150).setDuration(300).start();
+
+        binding.tvLoginSubtitle.setAlpha(0f);
+        binding.tvLoginSubtitle.animate().alpha(1f).setStartDelay(250).setDuration(300).start();
 
         // Card
-        cardLogin = findViewById(R.id.cardLogin);
-        if (cardLogin != null) {
-            cardLogin.setAlpha(0f);
-            cardLogin.setTranslationY(32f);
-            cardLogin.animate().alpha(1f).translationY(0f)
-                    .setStartDelay(300).setDuration(350)
-                    .setInterpolator(new DecelerateInterpolator()).start();
-        }
+        binding.cardLogin.setAlpha(0f);
+        binding.cardLogin.setTranslationY(32f);
+        binding.cardLogin.animate().alpha(1f).translationY(0f)
+                .setStartDelay(300).setDuration(350)
+                .setInterpolator(new DecelerateInterpolator()).start();
     }
 
     private void login() {
-        String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
-        String pass = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
+        String email = binding.etEmail.getText() != null
+                ? binding.etEmail.getText().toString().trim() : "";
+        String pass = binding.etPassword.getText() != null
+                ? binding.etPassword.getText().toString().trim() : "";
+
+        // tilEmail/tilPassword are the parent TextInputLayouts
+        com.google.android.material.textfield.TextInputLayout tilEmail =
+                (com.google.android.material.textfield.TextInputLayout) binding.etEmail.getParent().getParent();
+        com.google.android.material.textfield.TextInputLayout tilPassword =
+                (com.google.android.material.textfield.TextInputLayout) binding.etPassword.getParent().getParent();
 
         // Validate
         if (email.isEmpty()) {
@@ -131,21 +110,32 @@ public class LoginActivity extends AppCompatActivity {
         // Loading state
         setLoading(true);
 
-        Executors.newSingleThreadExecutor().execute(() -> {
-            User user = AppDatabase.getInstance(this).userDao().login(email, pass);
+        com.mindtrace.ai.util.AppExecutors.diskIO().execute(() -> {
+            AppDatabase db = AppDatabase.getInstance(this);
+            User user = db.userDao().findByEmail(email);
+            boolean authenticated = user != null
+                    && com.mindtrace.ai.security.PasswordHasher.verify(pass, user.password);
+
+            // Auto-migrate legacy plaintext passwords to hashed format
+            if (authenticated
+                    && com.mindtrace.ai.security.PasswordHasher.isLegacyPlaintext(user.password)) {
+                user.password = com.mindtrace.ai.security.PasswordHasher.hash(pass);
+                db.userDao().update(user);
+            }
+
             runOnUiThread(() -> {
                 setLoading(false);
-                if (user != null) {
+                if (authenticated) {
                     // Success — scale press effect then navigate
-                    btnLogin.animate().scaleX(0.97f).scaleY(0.97f).setDuration(80)
+                    binding.btnLogin.animate().scaleX(0.97f).scaleY(0.97f).setDuration(80)
                             .withEndAction(() -> {
-                                btnLogin.animate().scaleX(1f).scaleY(1f).setDuration(80).start();
+                                binding.btnLogin.animate().scaleX(1f).scaleY(1f).setDuration(80).start();
                                 startActivity(new Intent(this, SplashActivity.class));
                                 finish();
                             }).start();
                 } else {
                     Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show();
-                    shakeView(btnLogin);
+                    shakeView(binding.btnLogin);
                 }
             });
         });
@@ -157,14 +147,14 @@ public class LoginActivity extends AppCompatActivity {
     private void setLoading(boolean loading) {
         isLoading = loading;
         if (loading) {
-            btnLogin.setText("");
-            btnLogin.setIcon(null);
-            btnLogin.setEnabled(false);
+            binding.btnLogin.setText("");
+            binding.btnLogin.setIcon(null);
+            binding.btnLogin.setEnabled(false);
             // Add a simple text indicator since we can't easily embed a ProgressBar
-            btnLogin.setText("Signing in…");
+            binding.btnLogin.setText("Signing in…");
         } else {
-            btnLogin.setText("Sign In");
-            btnLogin.setEnabled(true);
+            binding.btnLogin.setText("Sign In");
+            binding.btnLogin.setEnabled(true);
         }
     }
 
@@ -177,5 +167,11 @@ public class LoginActivity extends AppCompatActivity {
                 0, dp8, -dp8, dp8, -dp8, dp8, -dp8, 0);
         shake.setDuration(300);
         shake.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }
