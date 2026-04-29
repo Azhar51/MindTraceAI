@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
                 return "Settings";
             case DEST_OVERVIEW:
             default:
-                return "Overview";
+                return "Dashboard";
         }
     }
 

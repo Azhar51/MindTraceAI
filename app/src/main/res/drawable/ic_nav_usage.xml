@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Usage icon: rounded bar chart -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Left bar -->
+    <path
+        android:fillColor="@color/text_secondary"
+        android:pathData="M4,13h3c0.55,0 1,0.45 1,1v6c0,0.55 -0.45,1 -1,1h-3c-0.55,0 -1,-0.45 -1,-1v-6c0,-0.55 0.45,-1 1,-1z" />
+    <!-- Middle bar -->
+    <path
+        android:fillColor="@color/text_secondary"
+        android:pathData="M10.5,7h3c0.55,0 1,0.45 1,1v12c0,0.55 -0.45,1 -1,1h-3c-0.55,0 -1,-0.45 -1,-1v-12c0,-0.55 0.45,-1 1,-1z" />
+    <!-- Right bar -->
+    <path
+        android:fillColor="@color/text_secondary"
+        android:pathData="M17,3h3c0.55,0 1,0.45 1,1v16c0,0.55 -0.45,1 -1,1h-3c-0.55,0 -1,-0.45 -1,-1v-16c0,-0.55 0.45,-1 1,-1z" />
+</vector>

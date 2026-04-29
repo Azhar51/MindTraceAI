@@ -13,7 +13,7 @@
         <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="android:windowBackground">@drawable/bg_app_background</item>
         <item name="android:statusBarColor">@color/background</item>
-        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:navigationBarColor">#101828</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
         <item name="materialCardViewStyle">@style/MindTraceCard</item>
@@ -39,5 +39,14 @@
         <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
         <item name="sliderStyle">@style/Widget.Material3.Slider</item>
+    </style>
+
+    <!-- Black-start splash screen theme — prevents white flash on cold launch -->
+    <style name="Theme.MindTraceAI.Splash" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_splash_red</item>
+        <item name="android:statusBarColor">#000000</item>
+        <item name="android:navigationBarColor">#000000</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
     </style>
 </resources>

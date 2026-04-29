@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Premium glassmorphic bottom navigation panel -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Subtle accent glow line at the top edge -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="0"
+                android:startColor="#00FFFFFF"
+                android:centerColor="#287C8FFF"
+                android:endColor="#00FFFFFF"
+                android:type="linear" />
+            <size android:height="1dp" />
+        </shape>
+    </item>
+
+    <!-- Main body: deep navy gradient with slight blue tint -->
+    <item android:top="1dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="90"
+                android:startColor="#F5101828"
+                android:endColor="#F5131D2E" />
+        </shape>
+    </item>
+
+</layer-list>

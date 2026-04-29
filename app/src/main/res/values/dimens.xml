@@ -53,7 +53,7 @@
     <!-- COMPONENT SIZES                                -->
     <!-- ═══════════════════════════════════════════════ -->
     <dimen name="button_height">52dp</dimen>
-    <dimen name="bottom_nav_height">64dp</dimen>
+    <dimen name="bottom_nav_height">68dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="card_padding">16dp</dimen>
     <dimen name="screen_padding">20dp</dimen>

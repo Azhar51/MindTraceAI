@@ -33,9 +33,42 @@
     </style>
 
     <style name="MindTraceBottomNavigation" parent="Widget.Material3.BottomNavigationView">
-        <item name="android:background">@color/surface</item>
+        <item name="android:background">@drawable/bg_bottom_nav_premium</item>
         <item name="elevation">0dp</item>
-        <item name="itemActiveIndicatorStyle">@style/Widget.Material3.BottomNavigationView.ActiveIndicator</item>
+        <item name="itemActiveIndicatorStyle">@style/MindTraceBottomNavActiveIndicator</item>
+        <item name="itemIconSize">22dp</item>
+        <item name="itemTextAppearanceActive">@style/MindTraceBottomNavTextActive</item>
+        <item name="itemTextAppearanceInactive">@style/MindTraceBottomNavTextInactive</item>
+        <item name="itemPaddingTop">10dp</item>
+        <item name="itemPaddingBottom">10dp</item>
+        <item name="android:minHeight">68dp</item>
+    </style>
+
+    <!-- Rounded pill active indicator behind the selected icon -->
+    <style name="MindTraceBottomNavActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:width">56dp</item>
+        <item name="android:height">32dp</item>
+        <item name="shapeAppearance">@style/MindTraceBottomNavIndicatorShape</item>
+        <item name="android:color">#1A3B82F6</item>
+    </style>
+
+    <style name="MindTraceBottomNavIndicatorShape" parent="ShapeAppearance.Material3.Corner.Full">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <!-- Active label: slightly bolder, brighter -->
+    <style name="MindTraceBottomNavTextActive" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <!-- Inactive label: lighter, smaller weight -->
+    <style name="MindTraceBottomNavTextInactive" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:letterSpacing">0.01</item>
     </style>
 
     <!-- Legacy onboarding styles (kept for reference / other screens) -->

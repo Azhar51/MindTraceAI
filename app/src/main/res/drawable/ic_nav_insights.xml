@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Insights icon: rounded lightbulb/sparkle -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Lightbulb body -->
+    <path
+        android:fillColor="@color/text_secondary"
+        android:pathData="M12,2C8.14,2 5,5.14 5,9c0,2.38 1.19,4.47 3,5.74V17c0,0.55 0.45,1 1,1h6c0.55,0 1,-0.45 1,-1v-2.26c1.81,-1.27 3,-3.36 3,-5.74 0,-3.86 -3.14,-7 -7,-7zM14,16h-4v-1h4v1zM14.57,13.41l-0.57,0.4V15h-4v-1.19l-0.57,-0.4C8.57,12.32 7.5,10.74 7.5,9c0,-2.48 2.02,-4.5 4.5,-4.5s4.5,2.02 4.5,4.5c0,1.74 -1.07,3.32 -2.43,4.41z" />
+    <!-- Bottom band 1 -->
+    <path
+        android:fillColor="@color/text_secondary"
+        android:pathData="M10,19.5h4c0.28,0 0.5,0.22 0.5,0.5s-0.22,0.5 -0.5,0.5h-4c-0.28,0 -0.5,-0.22 -0.5,-0.5s0.22,-0.5 0.5,-0.5z" />
+    <!-- Bottom band 2 -->
+    <path
+        android:fillColor="@color/text_secondary"
+        android:pathData="M10.5,21.5h3c0.28,0 0.5,0.22 0.5,0.5s-0.22,0.5 -0.5,0.5h-3c-0.28,0 -0.5,-0.22 -0.5,-0.5s0.22,-0.5 0.5,-0.5z" />
+</vector>

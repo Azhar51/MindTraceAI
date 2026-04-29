@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Premium Splash Screen — Blueprint §2E1.1 -->
+<!-- Premium Splash: Black → Red ripple drop → Blue MindTrace branding -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/splashRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_splash_radial">
+    android:background="#000000"
+    android:clipChildren="false">
 
-    <!-- Center content -->
+    <!-- Ripple container: red circles spawn here -->
+    <FrameLayout
+        android:id="@+id/rippleContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false" />
+
+    <!-- Dark radial background (MindTrace AI blue theme) — fades in behind ripples -->
+    <View
+        android:id="@+id/blueBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_splash_radial"
+        android:alpha="0" />
+
+    <!-- Center content for MindTrace branding -->
     <LinearLayout
+        android:id="@+id/brandingContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:alpha="0">
 
         <!-- Logo with glow halo -->
         <FrameLayout
@@ -59,7 +78,7 @@
             android:fontFamily="sans-serif-medium"
             android:alpha="0" />
 
-        <!-- Tagline (fades in at 800ms) -->
+        <!-- Tagline -->
         <TextView
             android:id="@+id/tvTagline"
             android:layout_width="wrap_content"
@@ -78,6 +97,7 @@
             android:layout_height="6dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/bg_loading_dot"
-            android:alpha="0.3" />
+            android:alpha="0" />
     </LinearLayout>
+
 </FrameLayout>
