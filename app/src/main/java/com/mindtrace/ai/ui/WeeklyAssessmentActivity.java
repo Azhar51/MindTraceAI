@@ -311,6 +311,10 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
         attachLabel(binding.sbRoutineStability, binding.tvRoutineLabel, this::describeRoutine);
         attachLabel(binding.sbScreenFree, binding.tvScreenFreeLabel, this::describeScreenFree);
         attachLabel(binding.sbSocialQuality, binding.tvSocialQualityLabel, this::describeSocialQuality);
+        attachLabel(binding.sbCognitiveClarity, binding.tvCognitiveLabel, this::describeCognitive);
+        attachLabel(binding.sbSelfCompassion, binding.tvCompassionLabel, this::describeCompassion);
+        attachLabel(binding.sbDigitalBoundaries, binding.tvDigitalBoundariesLabel, this::describeDigitalBoundaries);
+        attachLabel(binding.sbGratitudeLevel, binding.tvGratitudeLabel, this::describeGratitude);
     }
 
     private void attachLabel(SeekBar seekBar, TextView label, LabelFormatter formatter) {
@@ -417,6 +421,46 @@ public class WeeklyAssessmentActivity extends AppCompatActivity {
         else if (v == 3) desc = "Neutral interactions";
         else if (v == 4) desc = "Meaningful connections";
         else desc = "Deeply fulfilling";
+        return v + "/" + max + " — " + desc;
+    }
+
+    private String describeCognitive(int v, int max) {
+        String desc;
+        if (v <= 2) desc = "Heavy brain fog";
+        else if (v <= 4) desc = "Somewhat foggy";
+        else if (v <= 6) desc = "Average clarity";
+        else if (v <= 8) desc = "Sharp and focused";
+        else desc = "Crystal clear";
+        return v + "/" + max + " — " + desc;
+    }
+
+    private String describeCompassion(int v, int max) {
+        String desc;
+        if (v <= 2) desc = "Very self-critical";
+        else if (v <= 4) desc = "Often harsh on self";
+        else if (v <= 6) desc = "Moderate self-kindness";
+        else if (v <= 8) desc = "Compassionate";
+        else desc = "Deeply self-compassionate";
+        return v + "/" + max + " — " + desc;
+    }
+
+    private String describeDigitalBoundaries(int v, int max) {
+        String desc;
+        if (v <= 1) desc = "No boundaries set";
+        else if (v == 2) desc = "Weak boundaries";
+        else if (v == 3) desc = "Some boundaries";
+        else if (v == 4) desc = "Good boundaries";
+        else desc = "Excellent discipline";
+        return v + "/" + max + " — " + desc;
+    }
+
+    private String describeGratitude(int v, int max) {
+        String desc;
+        if (v <= 2) desc = "Hard to feel grateful";
+        else if (v <= 4) desc = "Occasional gratitude";
+        else if (v <= 6) desc = "Some gratitude";
+        else if (v <= 8) desc = "Frequently grateful";
+        else desc = "Overflowing with gratitude";
         return v + "/" + max + " — " + desc;
     }
 

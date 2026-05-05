@@ -229,6 +229,9 @@ public class OverviewFragment extends Fragment {
     private LinearLayout layoutMoodTrendEmojis;
     private StateChipView chipBehaviorScore;
     private StateChipView chipAssessmentDue;
+    private View viewBehaviorStatusDot;
+    private View cardBehaviorBadge;
+    private android.animation.ObjectAnimator behaviorDotPulse;
 
     // ── Wellness Insights (Efficacy Closed-Loop) ─────────────────────────
     private MaterialCardView cardWellnessInsights;
@@ -429,6 +432,8 @@ public class OverviewFragment extends Fragment {
         layoutMoodTrendEmojis = view.findViewById(R.id.layout_mood_trend_emojis);
         chipBehaviorScore = view.findViewById(R.id.chip_behavior_score);
         chipAssessmentDue = view.findViewById(R.id.chip_assessment_due);
+        viewBehaviorStatusDot = view.findViewById(R.id.view_behavior_status_dot);
+        cardBehaviorBadge = view.findViewById(R.id.card_behavior_badge);
 
         // Wellness Insights bindings
         cardWellnessInsights = view.findViewById(R.id.card_overview_wellness_insights);
@@ -2297,6 +2302,8 @@ public class OverviewFragment extends Fragment {
         fabDelegate.cleanup();
         // Pipeline progress strip cleanup
         stopPipelineDotPulse();
+        // Behavior badge pulse cleanup
+        stopBehaviorDotPulse();
     }
 
     // ── B.3: Glassmorphism border for premium stat cards ─────────────────
@@ -2445,11 +2452,12 @@ public class OverviewFragment extends Fragment {
         UiMotion.animateCardEntry(cardMoodTrend, 4);
     }
 
-    // ── C.4: Behavior Score Badge ────────────────────────────────────────
+    // ── C.4: Behavior Score Badge — Premium ────────────────────────────────
     private void renderBehaviorBadge(@Nullable com.mindtrace.ai.behavior.BehaviorReport report) {
         if (chipBehaviorScore == null || layoutBehaviorBadge == null) return;
         if (report == null || !report.dataAvailable) {
             layoutBehaviorBadge.setVisibility(View.GONE);
+            stopBehaviorDotPulse();
             return;
         }
 
@@ -2469,57 +2477,285 @@ public class OverviewFragment extends Fragment {
         chipBehaviorScore.setText("Behavior: " + label);
         chipBehaviorScore.setChipColors(translucent(color, 40), color);
 
-        chipBehaviorScore.setOnClickListener(v -> {
+        // Premium: Color the status dot and start pulsing animation
+        if (viewBehaviorStatusDot != null) {
+            android.graphics.drawable.GradientDrawable dotBg = new android.graphics.drawable.GradientDrawable();
+            dotBg.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+            dotBg.setColor(color);
+            viewBehaviorStatusDot.setBackground(dotBg);
+            startBehaviorDotPulse();
+        }
+
+        // Premium: Clickable area is the entire card container
+        View clickTarget = cardBehaviorBadge != null ? cardBehaviorBadge : chipBehaviorScore;
+        clickTarget.setOnClickListener(v -> {
             performHaptic(10);
+            // Micro-press animation
+            v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(80).withEndAction(() ->
+                    v.animate().scaleX(1f).scaleY(1f).setDuration(120).start()
+            ).start();
             showBehaviorBottomSheet(report, label);
         });
     }
 
+    private void startBehaviorDotPulse() {
+        stopBehaviorDotPulse();
+        if (viewBehaviorStatusDot == null) return;
+        behaviorDotPulse = android.animation.ObjectAnimator.ofFloat(viewBehaviorStatusDot, View.ALPHA, 1f, 0.3f);
+        behaviorDotPulse.setRepeatMode(android.animation.ObjectAnimator.REVERSE);
+        behaviorDotPulse.setRepeatCount(android.animation.ObjectAnimator.INFINITE);
+        behaviorDotPulse.setDuration(1200L);
+        behaviorDotPulse.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
+        behaviorDotPulse.start();
+    }
+
+    private void stopBehaviorDotPulse() {
+        if (behaviorDotPulse != null) {
+            behaviorDotPulse.cancel();
+            behaviorDotPulse = null;
+        }
+    }
+
     private void showBehaviorBottomSheet(@androidx.annotation.NonNull com.mindtrace.ai.behavior.BehaviorReport report, String badgeLabel) {
         com.google.android.material.bottomsheet.BottomSheetDialog dialog = new com.google.android.material.bottomsheet.BottomSheetDialog(requireContext());
-        View sheet = android.view.LayoutInflater.from(requireContext()).inflate(R.layout.sheet_overview_insight, null);
-        
-        TextView headerView = sheet.findViewById(R.id.tv_sheet_insight_header);
-        TextView bodyView = sheet.findViewById(R.id.tv_sheet_insight_body);
-        LinearLayout reasonsLayout = sheet.findViewById(R.id.layout_sheet_insight_reasons);
-        sheet.findViewById(R.id.layout_sheet_insight_more).setVisibility(View.GONE);
-        
-        headerView.setText("Behavior Breakdown");
-        
-        String body = "Current status: " + badgeLabel + "\n\n" + 
-                      (report.summaryLabel != null ? report.summaryLabel + "\n" : "") + 
-                      (report.explanation != null ? report.explanation : "");
-        bodyView.setText(body.trim());
-        
-        java.util.List<String> details = new java.util.ArrayList<>();
-        if (report.hasLoopPattern) details.add("Looping behavior detected");
-        if (report.bingeSessionCount > 0) details.add(report.bingeSessionCount + " prolonged sessions recorded");
-        if (report.rapidSwitchCount > 0) details.add("High context switching (" + report.rapidSwitchCount + " rapid app swaps)");
-        if (report.frequentAppLoops != null && !report.frequentAppLoops.isEmpty()) {
-            details.add("Common loop: " + String.join(" ↔ ", report.frequentAppLoops));
+        View sheet = android.view.LayoutInflater.from(requireContext()).inflate(R.layout.sheet_behavior_breakdown, null);
+
+        // ── Header ──────────────────────────────────────────────────────────
+        StateChipView statusChip = sheet.findViewById(R.id.chip_behavior_sheet_status);
+        TextView subtitleView = sheet.findViewById(R.id.tv_behavior_sheet_subtitle);
+        TextView explanationView = sheet.findViewById(R.id.tv_behavior_sheet_explanation);
+
+        int statusColor;
+        if (badgeLabel.contains("Watch")) {
+            statusColor = ColorSystem.AMBER;
+        } else if (badgeLabel.contains("Alert")) {
+            statusColor = ColorSystem.RED;
+        } else {
+            statusColor = ColorSystem.GREEN;
         }
-        if (report.activeVsPassiveRatio > 0) {
-            details.add(String.format(java.util.Locale.US, "Active/Passive ratio: %.1f", report.activeVsPassiveRatio));
+        statusChip.setText(badgeLabel);
+        statusChip.setChipColors(translucent(statusColor, 40), statusColor);
+
+        subtitleView.setText(report.summaryLabel != null ? report.summaryLabel : "Analyzing behavior patterns");
+        if (report.explanation != null && !report.explanation.isEmpty()) {
+            explanationView.setVisibility(View.VISIBLE);
+            explanationView.setText(report.explanation);
+        } else {
+            explanationView.setVisibility(View.GONE);
+        }
+
+        // ── Signal Cards with Icons ──────────────────────────────────────────
+        LinearLayout signalCardsLayout = sheet.findViewById(R.id.layout_behavior_signal_cards);
+        signalCardsLayout.removeAllViews();
+
+        java.util.List<String[]> signalItems = new java.util.ArrayList<>();
+        if (report.hasLoopPattern) {
+            signalItems.add(new String[]{"🔄", "Looping behavior detected", "Repetitive app cycling identified"});
+        }
+        if (report.rapidSwitchCount > 0) {
+            signalItems.add(new String[]{"🔀", "High context switching", report.rapidSwitchCount + " rapid app swaps detected"});
+        }
+        if (report.bingeSessionCount > 0) {
+            signalItems.add(new String[]{"⏱", "Prolonged sessions", report.bingeSessionCount + " extended usage sessions"});
         }
         if (report.reasoningNotes != null) {
-            details.addAll(report.reasoningNotes);
+            for (String note : report.reasoningNotes) {
+                signalItems.add(new String[]{"📊", note, null});
+            }
         }
-        
-        if (details.isEmpty()) {
-            details.add("Your device behavior is balanced and within normal limits.");
+        if (signalItems.isEmpty()) {
+            signalItems.add(new String[]{"✅", "Balanced behavior", "No concerning patterns detected"});
         }
-        
-        populateInsightRows(reasonsLayout, details);
-        
-        com.google.android.material.button.MaterialButton primaryButton = sheet.findViewById(R.id.btn_sheet_insight_primary);
-        primaryButton.setText("View screen time details");
-        primaryButton.setOnClickListener(v -> {
+
+        for (int i = 0; i < signalItems.size(); i++) {
+            String[] item = signalItems.get(i);
+            signalCardsLayout.addView(createPremiumSignalCard(item[0], item[1], item[2], i));
+        }
+
+        // ── Loop Visualization with App Icons ──────────────────────────────
+        LinearLayout loopSection = sheet.findViewById(R.id.layout_behavior_loop_section);
+        LinearLayout loopIconsLayout = sheet.findViewById(R.id.layout_behavior_loop_icons);
+        TextView loopDetail = sheet.findViewById(R.id.tv_behavior_loop_detail);
+        if (report.frequentAppLoops != null && !report.frequentAppLoops.isEmpty()) {
+            loopSection.setVisibility(View.VISIBLE);
+            loopIconsLayout.removeAllViews();
+
+            android.content.pm.PackageManager pm = requireContext().getPackageManager();
+            // Parse unique packages from loop entries (format: "com.pkg1 -> com.pkg2 (Nx)")
+            java.util.LinkedHashSet<String> loopPackages = new java.util.LinkedHashSet<>();
+            for (String entry : report.frequentAppLoops) {
+                // Strip count suffix like " (11x)"
+                String cleaned = entry.replaceAll("\\s*\\(\\d+x\\)\\s*$", "").trim();
+                // Split on " -> "
+                String[] parts = cleaned.split("\\s*->\\s*");
+                for (String part : parts) {
+                    String pkg = part.trim();
+                    if (!pkg.isEmpty()) loopPackages.add(pkg);
+                }
+            }
+
+            int loopIndex = 0;
+            for (String pkg : loopPackages) {
+                // Add arrow separator between icons
+                if (loopIndex > 0) {
+                    TextView arrow = new TextView(requireContext());
+                    arrow.setText("→");
+                    arrow.setTextColor(ColorSystem.TEXT_SECONDARY);
+                    arrow.setTextSize(16f);
+                    arrow.setPadding((int) dp(6), 0, (int) dp(6), 0);
+                    arrow.setGravity(android.view.Gravity.CENTER);
+                    loopIconsLayout.addView(arrow);
+                }
+
+                // Build icon + label column
+                LinearLayout iconColumn = new LinearLayout(requireContext());
+                iconColumn.setOrientation(LinearLayout.VERTICAL);
+                iconColumn.setGravity(android.view.Gravity.CENTER);
+                int colPad = (int) dp(4);
+                iconColumn.setPadding(colPad, 0, colPad, 0);
+
+                // App icon
+                android.widget.ImageView iconView = new android.widget.ImageView(requireContext());
+                int iconSize = (int) dp(36);
+                LinearLayout.LayoutParams iconLp = new LinearLayout.LayoutParams(iconSize, iconSize);
+                iconView.setLayoutParams(iconLp);
+                try {
+                    android.graphics.drawable.Drawable appIcon = pm.getApplicationIcon(pkg);
+                    iconView.setImageDrawable(appIcon);
+                } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+                    // Fallback: show a default circle with first letter
+                    iconView.setBackgroundResource(R.drawable.bg_behavior_sheet_icon_circle);
+                }
+                iconColumn.addView(iconView);
+
+                // App name label
+                TextView nameLabel = new TextView(requireContext());
+                String displayName = pkg;
+                try {
+                    android.content.pm.ApplicationInfo appInfo = pm.getApplicationInfo(pkg, 0);
+                    CharSequence label = pm.getApplicationLabel(appInfo);
+                    if (label != null) displayName = label.toString();
+                } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+                    // Simplify package name
+                    if (displayName.contains(".")) {
+                        String[] parts = displayName.split("\\.");
+                        displayName = parts[parts.length - 1];
+                    }
+                }
+                // Truncate long names
+                if (displayName.length() > 10) {
+                    displayName = displayName.substring(0, 9) + "…";
+                }
+                nameLabel.setText(displayName);
+                nameLabel.setTextColor(ColorSystem.TEXT_SECONDARY);
+                nameLabel.setTextSize(10f);
+                nameLabel.setGravity(android.view.Gravity.CENTER);
+                LinearLayout.LayoutParams nameLp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                nameLp.topMargin = (int) dp(4);
+                nameLabel.setLayoutParams(nameLp);
+                iconColumn.addView(nameLabel);
+
+                loopIconsLayout.addView(iconColumn);
+                loopIndex++;
+            }
+        } else {
+            loopSection.setVisibility(View.GONE);
+        }
+
+        // ── Quick Stats Row — Always visible with real-time data ─────────
+        TextView ratioValue = sheet.findViewById(R.id.tv_behavior_stat_ratio_value);
+        TextView switchesValue = sheet.findViewById(R.id.tv_behavior_stat_switches_value);
+
+        // Active/Passive ratio — real-time from behavior signal
+        ratioValue.setText(String.format(java.util.Locale.US, "%.1f", report.activeVsPassiveRatio));
+
+        // App switches — use total switch count (real-time)
+        switchesValue.setText(String.valueOf(report.appSwitchCount));
+
+        // ── Action Button ────────────────────────────────────────────────────
+        com.google.android.material.button.MaterialButton actionBtn = sheet.findViewById(R.id.btn_behavior_sheet_action);
+        actionBtn.setOnClickListener(v -> {
             dialog.dismiss();
             navigateToTab(MainActivity.DEST_USAGE);
         });
-        
+
         dialog.setContentView(sheet);
         dialog.show();
+
+        // Premium stagger animation for signal cards
+        for (int i = 0; i < signalCardsLayout.getChildCount(); i++) {
+            View child = signalCardsLayout.getChildAt(i);
+            child.setAlpha(0f);
+            child.setTranslationY(dp(20));
+            child.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setStartDelay(120L + i * 80L)
+                    .setDuration(300L)
+                    .setInterpolator(new android.view.animation.DecelerateInterpolator())
+                    .start();
+        }
+    }
+
+    private View createPremiumSignalCard(String icon, String title, @Nullable String subtitle, int index) {
+        LinearLayout card = new LinearLayout(requireContext());
+        card.setOrientation(LinearLayout.HORIZONTAL);
+        card.setBackgroundResource(R.drawable.bg_behavior_sheet_card);
+        card.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        int h = (int) dp(16);
+        int v = (int) dp(14);
+        card.setPadding(h, v, h, v);
+
+        LinearLayout.LayoutParams cardLp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        if (index > 0) cardLp.topMargin = (int) dp(10);
+        card.setLayoutParams(cardLp);
+
+        // Icon circle
+        TextView iconView = new TextView(requireContext());
+        iconView.setText(icon);
+        iconView.setTextSize(20f);
+        iconView.setGravity(android.view.Gravity.CENTER);
+        iconView.setBackgroundResource(R.drawable.bg_behavior_sheet_icon_circle);
+        LinearLayout.LayoutParams iconLp = new LinearLayout.LayoutParams((int) dp(42), (int) dp(42));
+        iconView.setLayoutParams(iconLp);
+        card.addView(iconView);
+
+        // Text column
+        LinearLayout textCol = new LinearLayout(requireContext());
+        textCol.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams textLp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        textLp.setMarginStart((int) dp(14));
+        textCol.setLayoutParams(textLp);
+
+        TextView titleView = new TextView(requireContext());
+        titleView.setText(title);
+        titleView.setTextColor(ColorSystem.TEXT_PRIMARY);
+        titleView.setTextSize(14f);
+        titleView.setTypeface(null, android.graphics.Typeface.BOLD);
+        textCol.addView(titleView);
+
+        if (subtitle != null && !subtitle.isEmpty()) {
+            TextView subtitleView = new TextView(requireContext());
+            subtitleView.setText(subtitle);
+            subtitleView.setTextColor(ColorSystem.TEXT_SECONDARY);
+            subtitleView.setTextSize(12f);
+            LinearLayout.LayoutParams stLp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            stLp.topMargin = (int) dp(3);
+            subtitleView.setLayoutParams(stLp);
+            textCol.addView(subtitleView);
+        }
+
+        card.addView(textCol);
+        return card;
     }
 
     // ── C.5: Crisis Banner ───────────────────────────────────────────────
@@ -2549,7 +2785,9 @@ public class OverviewFragment extends Fragment {
                 .start();
     }
 
-    // ── C.7: Assessment Due Indicator ────────────────────────────────────
+    // ── C.7: Assessment Due Indicator — Glow Effect ─────────────────────
+    private android.animation.AnimatorSet assessmentGlowAnim;
+
     private void renderAssessmentDueChip() {
         if (chipAssessmentDue == null) return;
         SharedPreferences prefs = requireContext().getSharedPreferences("assessment_state", Context.MODE_PRIVATE);
@@ -2558,19 +2796,50 @@ public class OverviewFragment extends Fragment {
 
         if (lastAssessmentTime == 0 || daysSince >= 7) {
             chipAssessmentDue.setVisibility(View.VISIBLE);
+            int statusColor;
             if (daysSince > 14) {
                 chipAssessmentDue.setText("Assessment overdue");
-                chipAssessmentDue.setChipColors(translucent(ColorSystem.RED, 40), ColorSystem.RED);
+                statusColor = ColorSystem.RED;
             } else {
                 chipAssessmentDue.setText("Assessment due");
-                chipAssessmentDue.setChipColors(translucent(ColorSystem.AMBER, 40), ColorSystem.AMBER);
+                statusColor = ColorSystem.AMBER;
             }
+            chipAssessmentDue.setChipColors(translucent(statusColor, 40), statusColor);
+
+            // Glowing pulse animation
+            stopAssessmentGlow();
+            android.animation.ObjectAnimator alphaAnim =
+                    android.animation.ObjectAnimator.ofFloat(chipAssessmentDue, View.ALPHA, 1f, 0.55f);
+            alphaAnim.setRepeatMode(android.animation.ObjectAnimator.REVERSE);
+            alphaAnim.setRepeatCount(android.animation.ObjectAnimator.INFINITE);
+            android.animation.ObjectAnimator scaleX =
+                    android.animation.ObjectAnimator.ofFloat(chipAssessmentDue, View.SCALE_X, 1f, 1.04f);
+            scaleX.setRepeatMode(android.animation.ObjectAnimator.REVERSE);
+            scaleX.setRepeatCount(android.animation.ObjectAnimator.INFINITE);
+            android.animation.ObjectAnimator scaleY =
+                    android.animation.ObjectAnimator.ofFloat(chipAssessmentDue, View.SCALE_Y, 1f, 1.04f);
+            scaleY.setRepeatMode(android.animation.ObjectAnimator.REVERSE);
+            scaleY.setRepeatCount(android.animation.ObjectAnimator.INFINITE);
+            assessmentGlowAnim = new android.animation.AnimatorSet();
+            assessmentGlowAnim.playTogether(alphaAnim, scaleX, scaleY);
+            assessmentGlowAnim.setDuration(1200L);
+            assessmentGlowAnim.setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator());
+            assessmentGlowAnim.start();
+
             chipAssessmentDue.setOnClickListener(v -> {
                 performHaptic(8);
                 startActivity(new android.content.Intent(requireContext(), WeeklyAssessmentActivity.class));
             });
         } else {
             chipAssessmentDue.setVisibility(View.GONE);
+            stopAssessmentGlow();
+        }
+    }
+
+    private void stopAssessmentGlow() {
+        if (assessmentGlowAnim != null) {
+            assessmentGlowAnim.cancel();
+            assessmentGlowAnim = null;
         }
     }
 

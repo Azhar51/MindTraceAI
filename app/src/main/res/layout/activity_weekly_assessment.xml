@@ -3,767 +3,952 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/bg_app_background"
+    android:background="@drawable/bg_assessment_screen"
+    android:overScrollMode="never"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingStart="20dp"
+        android:paddingTop="28dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="32dp">
 
         <!-- ══════════════════════════════════════════════════════════
-             HEADER
+             PREMIUM HEADER: STARRY NIGHT
              ══════════════════════════════════════════════════════════ -->
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Weekly Assessment"
-            android:textColor="@color/text_main"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Weekly Assessment"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_assessment_inner_section"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:text="🧠 4 sections"
+                android:textColor="#94A3B8"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_week_range"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Week of Apr 14 – Apr 20"
-            android:textColor="@color/text_secondary"
+            android:layout_marginTop="6dp"
+            android:text="Week of Apr 20 – Apr 26"
+            android:textColor="#64748B"
             android:textSize="14sp" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="Reflect on the past 7 days. This powers your long-term trend analysis."
-            android:textColor="@color/text_secondary"
+            android:lineSpacingExtra="3dp"
+            android:text="Reflect on the past 7 days. Your responses power long-term trend analysis and wellness scoring."
+            android:textColor="#475569"
             android:textSize="13sp" />
 
         <!-- ══════════════════════════════════════════════════════════
-             CARD 1: OVERALL MOOD & REFLECTION
+             SECTION 1: OVERALL MOOD & REFLECTION
              ══════════════════════════════════════════════════════════ -->
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/MindTraceCard"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="22dp"
+            android:background="@drawable/bg_assessment_card"
+            android:orientation="vertical"
+            android:padding="18dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_assessment_inner_section"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="#38BDF8"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:text="How was your week?"
-                    android:textColor="@color/text_main"
+                    android:textColor="@color/white"
                     android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Overall mood for the week"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <RadioGroup
+                android:id="@+id/rg_overall_mood"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rb_mood_thriving"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🌟 Thriving — everything clicked"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_mood_good"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="😊 Good — more ups than downs"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_mood_okay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="😐 Okay — got through it"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_mood_struggling"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="😞 Struggling — tough week"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_mood_exhausted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="😫 Exhausted — running on empty"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_mood_crisis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🆘 Crisis — I need help"
+                    android:textColor="#E2E8F0" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Biggest struggle this week"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <RadioGroup
+                android:id="@+id/rg_core_struggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rb_struggle_distraction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Distraction / Phone addiction"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_struggle_anxiety"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Anxiety / Worry"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_struggle_loneliness"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loneliness / Isolation"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_struggle_workload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Workload / Academic pressure"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_struggle_sleep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sleep problems"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_struggle_motivation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Motivation / Apathy"
+                    android:textColor="#E2E8F0" />
+
+                <RadioButton
+                    android:id="@+id/rb_struggle_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="None — it was a good week"
+                    android:textColor="#E2E8F0" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <!-- ══════════════════════════════════════════════════════════
+             SECTION 2: PSYCHOLOGICAL DEPTH
+             ══════════════════════════════════════════════════════════ -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_assessment_card"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_assessment_inner_section"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textColor="#38BDF8"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Overall mood for the week"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-
-                <RadioGroup
-                    android:id="@+id/rg_overall_mood"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:id="@+id/rb_mood_thriving"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🌟 Thriving — everything clicked"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_mood_good"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="😊 Good — more ups than downs"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_mood_okay"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="😐 Okay — got through it"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_mood_struggling"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="😞 Struggling — tough week"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_mood_exhausted"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="😫 Exhausted — running on empty"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_mood_crisis"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🆘 Crisis — I need help"
-                        android:textColor="@color/text_main" />
-                </RadioGroup>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Biggest struggle this week"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-
-                <RadioGroup
-                    android:id="@+id/rg_core_struggle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:id="@+id/rb_struggle_distraction"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Distraction / Phone addiction"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_struggle_anxiety"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Anxiety / Worry"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_struggle_loneliness"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Loneliness / Isolation"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_struggle_workload"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Workload / Academic pressure"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_struggle_sleep"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Sleep problems"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_struggle_motivation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Motivation / Apathy"
-                        android:textColor="@color/text_main" />
-
-                    <RadioButton
-                        android:id="@+id/rb_struggle_none"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="None — it was a good week"
-                        android:textColor="@color/text_main" />
-                </RadioGroup>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- ══════════════════════════════════════════════════════════
-             CARD 2: CLINICAL MARKERS
-             ══════════════════════════════════════════════════════════ -->
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/MindTraceCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:text="Psychological Depth"
-                    android:textColor="@color/text_main"
+                    android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
-
-                <!-- Addiction Awareness (Task 2.F.3) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Phone/addiction awareness"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_addiction_awareness"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="10"
-                    android:min="1"
-                    android:progress="5" />
-
-                <TextView
-                    android:id="@+id/tv_addiction_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="5/10 — Moderate awareness"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <!-- Purpose Score (Task 2.F.4) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Sense of purpose this week"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_purpose"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="10"
-                    android:min="1"
-                    android:progress="5" />
-
-                <TextView
-                    android:id="@+id/tv_purpose_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="5/10 — Some direction"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <!-- Social Connection -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Social connection"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_social_connection"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="10"
-                    android:min="1"
-                    android:progress="5" />
-
-                <TextView
-                    android:id="@+id/tv_social_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="5/10 — Moderate connection"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <!-- Burnout Risk -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Burnout level"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_burnout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="10"
-                    android:min="1"
-                    android:progress="3" />
-
-                <TextView
-                    android:id="@+id/tv_burnout_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="3/10 — Low burnout"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <!-- Self-Efficacy -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Self-efficacy"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_self_efficacy"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="10"
-                    android:min="1"
-                    android:progress="5" />
-
-                <TextView
-                    android:id="@+id/tv_efficacy_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="5/10 — Moderate confidence"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <!-- Anhedonia (Enjoyment) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Enjoyment of activities"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_anhedonia"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="10"
-                    android:min="1"
-                    android:progress="6" />
-
-                <TextView
-                    android:id="@+id/tv_anhedonia_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="6/10 — Moderate enjoyment"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+
+            <!-- Addiction Awareness -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Phone/addiction awareness"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_addiction_awareness"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:min="1"
+                android:progress="5" />
+
+            <TextView
+                android:id="@+id/tv_addiction_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="5/10 — Moderate awareness"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- Purpose -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Sense of purpose this week"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_purpose"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:min="1"
+                android:progress="5" />
+
+            <TextView
+                android:id="@+id/tv_purpose_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="5/10 — Some direction"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- Social Connection -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Social connection"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_social_connection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:min="1"
+                android:progress="5" />
+
+            <TextView
+                android:id="@+id/tv_social_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="5/10 — Moderate connection"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- Burnout -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Burnout level"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_burnout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:min="1"
+                android:progress="3" />
+
+            <TextView
+                android:id="@+id/tv_burnout_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="3/10 — Low burnout"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- Self-Efficacy -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Self-efficacy (confidence)"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_self_efficacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:min="1"
+                android:progress="5" />
+
+            <TextView
+                android:id="@+id/tv_efficacy_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="5/10 — Moderate confidence"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- Anhedonia -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Enjoyment of activities (Anhedonia)"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_anhedonia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:min="1"
+                android:progress="6" />
+
+            <TextView
+                android:id="@+id/tv_anhedonia_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="6/10 — Moderate enjoyment"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- NEW: Cognitive Clarity -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="🧠 Cognitive clarity"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_cognitive_clarity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:min="1"
+                android:progress="5" />
+
+            <TextView
+                android:id="@+id/tv_cognitive_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="5/10 — Average clarity"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- NEW: Self-Compassion -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="💜 Self-compassion"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_self_compassion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:min="1"
+                android:progress="5" />
+
+            <TextView
+                android:id="@+id/tv_compassion_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="5/10 — Neutral"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <!-- ══════════════════════════════════════════════════════════
-             CARD 3: PROTECTIVE FACTORS
+             SECTION 3: LIFESTYLE & PROTECTIVE FACTORS
              ══════════════════════════════════════════════════════════ -->
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/MindTraceCard"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_assessment_card"
+            android:orientation="vertical"
+            android:padding="18dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lifestyle &amp; Protective Factors"
-                    android:textColor="@color/text_main"
-                    android:textSize="18sp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_assessment_inner_section"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="#38BDF8"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
-                <!-- Exercise Frequency (Task 2.F.6) -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="How often did you exercise this week?"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <RadioGroup
-                    android:id="@+id/rg_exercise_frequency"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/rb_exercise_never"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Never"
-                        android:textColor="@color/text_main"
-                        android:textSize="12sp" />
-
-                    <RadioButton
-                        android:id="@+id/rb_exercise_1_2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:checked="true"
-                        android:text="1-2x"
-                        android:textColor="@color/text_main"
-                        android:textSize="12sp" />
-
-                    <RadioButton
-                        android:id="@+id/rb_exercise_3_4"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="3-4x"
-                        android:textColor="@color/text_main"
-                        android:textSize="12sp" />
-
-                    <RadioButton
-                        android:id="@+id/rb_exercise_daily"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Daily"
-                        android:textColor="@color/text_main"
-                        android:textSize="12sp" />
-                </RadioGroup>
-
-                <!-- Routine Stability (Task 2.F.5) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="How stable was your routine this week?"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_routine_stability"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="5"
-                    android:min="1"
-                    android:progress="3" />
-
-                <TextView
-                    android:id="@+id/tv_routine_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="3/5 — Moderate stability"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <!-- Average Sleep Hours -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Average hours of sleep per night"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/et_avg_sleep"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="e.g. 6.5"
-                    android:inputType="numberDecimal"
-                    android:textColor="@color/text_main"
-                    android:textColorHint="@color/text_secondary" />
-
-                <!-- Average Sleep Quality -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Average sleep quality (1 = terrible, 5 = excellent)"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_sleep_quality"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="5"
-                    android:min="1"
-                    android:progress="3" />
-
-                <!-- Social Interaction Days -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Days with meaningful social interaction (0-7)"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_social_days"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="7"
-                    android:min="0"
-                    android:progress="3" />
-
-                <!-- Emotional Stability -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Emotional stability (1 = extreme swings, 10 = very steady)"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_emotional_stability"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="10"
-                    android:min="1"
-                    android:progress="5" />
-
-                <!-- Negative Mood Days -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Days you felt sad, anxious, or numb (0-7)"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_negative_days"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="7"
-                    android:min="0"
-                    android:progress="1" />
-
-                <!-- Screen-Free Activities (Task 2.F.7) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Screen-free activities this week (reading, outdoors, hobbies)"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_screen_free"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="5"
-                    android:min="0"
-                    android:progress="2" />
-
-                <TextView
-                    android:id="@+id/tv_screen_free_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="2/5 — Some offline time"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <!-- Social Quality (Task 2.F.8) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Quality of social interactions this week"
-                    android:textColor="@color/text_main"
-                    android:textSize="14sp" />
-
-                <SeekBar
-                    android:id="@+id/sb_social_quality"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="5"
-                    android:min="1"
-                    android:progress="3" />
-
-                <TextView
-                    android:id="@+id/tv_social_quality_label"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="3/5 — Neutral interactions"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp" />
+                    android:layout_marginStart="12dp"
+                    android:text="Lifestyle \u0026 Protective Factors"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+
+            <!-- Exercise -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Exercise frequency"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <RadioGroup
+                android:id="@+id/rg_exercise_frequency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_exercise_never"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Never"
+                    android:textColor="#E2E8F0"
+                    android:textSize="11sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_exercise_1_2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="1-2x"
+                    android:textColor="#E2E8F0"
+                    android:textSize="11sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_exercise_3_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="3-4x"
+                    android:textColor="#E2E8F0"
+                    android:textSize="11sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_exercise_daily"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Daily"
+                    android:textColor="#E2E8F0"
+                    android:textSize="11sp" />
+            </RadioGroup>
+
+            <!-- Routine -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Routine stability"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_routine_stability"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="5"
+                android:min="1"
+                android:progress="3" />
+
+            <TextView
+                android:id="@+id/tv_routine_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="3/5 — Moderate stability"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- Sleep -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Average hours of sleep"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/et_avg_sleep"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_assessment_inner_section"
+                android:hint="e.g. 6.5"
+                android:inputType="numberDecimal"
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="#475569" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Sleep quality (1-5)"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_sleep_quality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="5"
+                android:min="1"
+                android:progress="3" />
+
+            <!-- Social Days -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Meaningful social days (0-7)"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_social_days"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="7"
+                android:min="0"
+                android:progress="3" />
+
+            <!-- Emotional Stability -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Emotional stability (1-10)"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_emotional_stability"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:min="1"
+                android:progress="5" />
+
+            <!-- Negative Days -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Negative mood days (0-7)"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_negative_days"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="7"
+                android:min="0"
+                android:progress="1" />
+
+            <!-- Screen-Free -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Screen-free activities count (0-5)"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_screen_free"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="5"
+                android:min="0"
+                android:progress="2" />
+
+            <TextView
+                android:id="@+id/tv_screen_free_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="2/5 — Some offline time"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- Social Quality (RESTORED) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Quality of social interactions (1-5)"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_social_quality"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="5"
+                android:min="1"
+                android:progress="3" />
+
+            <TextView
+                android:id="@+id/tv_social_quality_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="3/5 — Neutral interactions"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- NEW: Digital Boundaries -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="📵 Digital boundaries"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_digital_boundaries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="5"
+                android:min="1"
+                android:progress="3" />
+
+            <TextView
+                android:id="@+id/tv_digital_boundaries_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="3/5 — Some boundaries"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+
+            <!-- NEW: Gratitude Level -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="🙏 Gratitude level"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/sb_gratitude_level"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:min="1"
+                android:progress="5" />
+
+            <TextView
+                android:id="@+id/tv_gratitude_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="5/10 — Some gratitude"
+                android:textColor="#64748B"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <!-- ══════════════════════════════════════════════════════════
-             CARD 4: REFLECTION (Free Text)
+             SECTION 4: WEEKLY REFLECTION
              ══════════════════════════════════════════════════════════ -->
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/MindTraceCard"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_assessment_card"
+            android:orientation="vertical"
+            android:padding="18dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_assessment_inner_section"
+                    android:gravity="center"
+                    android:text="4"
+                    android:textColor="#38BDF8"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
                     android:text="Weekly Reflection"
-                    android:textColor="@color/text_main"
+                    android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="The more you write, the better MindTrace can understand your patterns."
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
-                    android:fontStyle="italic" />
-
-                <!-- Highlight (Task 2.F.9) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="🌟 What was the highlight of your week?"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/et_primary_win"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/bg_card_surface"
-                    android:gravity="top|start"
-                    android:hint="A moment, achievement, or connection that mattered..."
-                    android:inputType="textMultiLine"
-                    android:lines="3"
-                    android:minLines="2"
-                    android:padding="12dp"
-                    android:textColor="@color/text_main"
-                    android:textColorHint="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tv_win_char_count"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="0 chars"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="11sp" />
-
-                <!-- Challenge (Task 2.F.10) -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="⚠️ What was the biggest challenge?"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/et_core_struggle_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/bg_card_surface"
-                    android:gravity="top|start"
-                    android:hint="What made this week hard... patterns you noticed..."
-                    android:inputType="textMultiLine"
-                    android:lines="3"
-                    android:minLines="2"
-                    android:padding="12dp"
-                    android:textColor="@color/text_main"
-                    android:textColorHint="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tv_struggle_char_count"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="0 chars"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="11sp" />
-
-                <!-- Next Week Intention -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="🎯 What do you want to focus on next week?"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/et_next_week_intention"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/bg_card_surface"
-                    android:gravity="top|start"
-                    android:hint="One intention to carry forward..."
-                    android:inputType="textMultiLine"
-                    android:lines="2"
-                    android:minLines="1"
-                    android:padding="12dp"
-                    android:textColor="@color/text_main"
-                    android:textColorHint="@color/text_secondary" />
-
-                <TextView
-                    android:id="@+id/tv_intention_char_count"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="0 chars"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="11sp" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <!-- ══════════════════════════════════════════════════════════
-             SUBMIT BUTTON
-             ══════════════════════════════════════════════════════════ -->
+            <!-- Highlight -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="🌟 Highlight of your week?"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
 
-        <com.google.android.material.button.MaterialButton
+            <EditText
+                android:id="@+id/et_primary_win"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_assessment_inner_section"
+                android:gravity="top|start"
+                android:hint="A moment that mattered..."
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="#475569" />
+
+            <TextView
+                android:id="@+id/tv_win_char_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="0 chars"
+                android:textColor="#64748B"
+                android:textSize="11sp" />
+
+            <!-- Struggle (RESTORED etCoreStruggleText) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="🌊 Reflections on core struggle"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/et_core_struggle_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_assessment_inner_section"
+                android:gravity="top|start"
+                android:hint="What made this week hard..."
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="#475569" />
+
+            <TextView
+                android:id="@+id/tv_struggle_char_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="0 chars"
+                android:textColor="#64748B"
+                android:textSize="11sp" />
+
+            <!-- Next Week -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="🎯 Next week's focus"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/et_next_week_intention"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_assessment_inner_section"
+                android:hint="One intention..."
+                android:padding="12dp"
+                android:textColor="@color/white"
+                android:textColorHint="#475569" />
+
+            <TextView
+                android:id="@+id/tv_intention_char_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:text="0 chars"
+                android:textColor="#64748B"
+                android:textSize="11sp" />
+
+            <!-- One word -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="💭 One word for the week"
+                android:textColor="#94A3B8"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/et_one_word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_assessment_inner_section"
+                android:gravity="center"
+                android:hint="One word..."
+                android:maxLength="30"
+                android:padding="14dp"
+                android:textColor="@color/white"
+                android:textColorHint="#475569"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <Button
             android:id="@+id/btn_submit_weekly"
             style="@style/MindTracePrimaryButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="24dp"
-            android:text="Complete Weekly Assessment" />
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:text="Complete Assessment" />
 
     </LinearLayout>
 </ScrollView>
